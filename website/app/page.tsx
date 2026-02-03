@@ -40,7 +40,7 @@ export default function HomePage() {
             <p className="text-xl md:text-2xl font-bold italic text-white leading-relaxed text-center max-w-5xl mx-auto">
               Enterprise AI doesn&apos;t require massive investments in
               proprietary LLM platforms. This case study follows a $1.3B
-              international organization through a complete AI transformation
+              international enterprise through a complete AI transformation
               — showing how mid-to-large enterprises can build their own AI
               capabilities, tailored to their context, discoverable through
               use, and strategically differentiating. It demonstrates
