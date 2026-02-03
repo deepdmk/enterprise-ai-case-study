@@ -8,7 +8,7 @@ export function Footer() {
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-bold text-white mb-4">AI Habitat Framework</h3>
+            <h3 className="text-lg font-bold text-white mb-4">Emergent Enterprise AI</h3>
             <p className="text-sm text-white/60">
               Bottom-up enterprise AI deployment through organic unit-level experimentation.
             </p>
@@ -43,12 +43,12 @@ export function Footer() {
                   href={`mailto:${SITE_CONFIG.email}`}
                   className="hover:text-teal focus:outline-none focus:text-teal focus:underline transition-colors rounded"
                 >
-                  {SITE_CONFIG.email}
+                  E-mail
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com/anthropics"
+                  href="https://github.com/deepdmk/enterprise-ai-case-study"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-teal focus:outline-none focus:text-teal focus:underline transition-colors rounded"
