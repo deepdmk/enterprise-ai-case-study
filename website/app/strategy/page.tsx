@@ -8,6 +8,7 @@ import {
   StrategicAnalysisTabs,
   StrategyDevelopmentTabs,
 } from "./StrategyTabs";
+import { getAssetPath } from "@/lib/assets";
 
 export const metadata: Metadata = {
   title: "Strategy",
@@ -26,7 +27,7 @@ export default function StrategyPage() {
         <Container>
           <div className="flex justify-center">
             <Image
-              src="/strategy-flow.png"
+              src={getAssetPath("/strategy-flow.png")}
               alt="Strategy Flow: Strategic Analysis (Stakeholder Consultations, 7S + SWOT Analysis, 5 Forces) feeds into CTQs (Stakeholder, Organizational, Competitive), which flow through Solution Options Development and Option Scoring to Solution Strategy Selected, leading to Transformation Framework (3 Horizons, Roadmap, Balanced Scorecard)"
               width={1200}
               height={392}

@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout";
 import { PageNav } from "@/components/layout/PageNav";
 import { Container } from "@/components/layout/Container";
 import { TransformationFrameworkTabs } from "./TransformationTabs";
+import { getAssetPath } from "@/lib/assets";
 
 export const metadata: Metadata = {
   title: "Transformation Framework",
@@ -26,7 +27,7 @@ export default function TransformationPage() {
         <Container>
           <div className="flex justify-center">
             <Image
-              src="/transformation-flow.png"
+              src={getAssetPath("/transformation-flow.png")}
               alt="Strategy Flow: Strategic Analysis → Strategy Development → Transformation Framework"
               width={1200}
               height={400}

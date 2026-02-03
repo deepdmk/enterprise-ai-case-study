@@ -7,6 +7,7 @@ import { PhaseNav } from "@/components/phases/PhaseNav";
 import { PhaseNavTop } from "@/components/phases/PhaseNavTop";
 import { PhaseTabs } from "@/components/phases/PhaseTabs";
 import { Phase2ArchitectureDiagram } from "@/components/phases/Phase2ArchitectureDiagram";
+import { getAssetPath } from "@/lib/assets";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -246,7 +247,7 @@ export default function Phase2() {
 
                   <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden border border-gray-200">
                     <Image
-                      src="/visuals/SLM_visual.png"
+                      src={getAssetPath("/visuals/SLM_visual.png")}
                       alt="Phase 2 Task-Specific SLM Architecture showing 14 specialized models across Fundraising, Business Development, and Field Operations"
                       fill
                       className="object-contain"

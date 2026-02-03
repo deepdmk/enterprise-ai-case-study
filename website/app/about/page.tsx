@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SITE_CONFIG } from "@/lib/constants";
+import { getAssetPath } from "@/lib/assets";
 import {
   Mail,
   Github,
@@ -126,7 +127,7 @@ export default function AboutPage() {
               <div className="md:col-span-1">
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                   <Image
-                    src="/images/daniel-dimick-headshot.jpg"
+                    src={getAssetPath("/images/daniel-dimick-headshot.jpg")}
                     alt="Daniel Dimick"
                     fill
                     className="object-cover"
