@@ -42,7 +42,7 @@ export default function HomePage() {
         <Container>
           {/* Section 2: Elevator Pitch - top of connected unit */}
           <div className="bg-navy p-10 rounded-t-lg">
-            <p className="text-2xl md:text-3xl font-bold italic text-white leading-relaxed text-center max-w-5xl mx-auto">
+            <p className="text-xl md:text-2xl font-bold italic text-white leading-relaxed text-center max-w-5xl mx-auto">
               Enterprise AI doesn&apos;t require massive investments in
               proprietary LLM platforms. This case study follows a $1.3B
               international organization through a complete AI transformation
