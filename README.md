@@ -1,4 +1,4 @@
-# Enterprise AI Habitat
+# Emergent Enterprise AI Development
 
 > **Bottom-up AI emergence framework for enterprise transformation**
 
