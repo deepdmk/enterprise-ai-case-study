@@ -950,7 +950,7 @@ pytest tests/ -v
           />
 
           {/* Next Steps CTA */}
-          <div className="bg-navy text-white p-8 rounded-lg mb-12">
+          <div className="bg-navy text-white p-8 rounded-lg mt-12 mb-12">
             <h3 className="text-2xl font-bold mb-4">Next: Phase 1 - Shared Embedding Space</h3>
             <p className="text-white/90 mb-4">
               With Phase 0 infrastructure in place—data staged, registries configured, experiment tracking enabled—you&apos;re ready to begin building AI capabilities. Phase 1 creates the <strong>Unified Embedding Space</strong> that enables semantic search and cross-divisional pattern discovery without centralized orchestration.

@@ -1429,7 +1429,7 @@ python -m src.program4_search.main --test-mode`}
           />
 
           {/* Next Steps CTA */}
-          <div className="bg-navy text-white p-8 rounded-lg mb-12">
+          <div className="bg-navy text-white p-8 rounded-lg mt-12 mb-12">
             <h3 className="text-2xl font-bold mb-4">Next: Phase 2 - Task-Specific SLMs</h3>
             <p className="text-white/90 mb-6">
               With unified semantic infrastructure in place, Phase 2 fine-tunes task-specific small language models for each division&apos;s unique workflows. While Phase 1 enables cross-division discovery through shared embeddings, Phase 2 creates specialized intelligence for individual tasks like portfolio analysis, project assessment, and competitive research. These task models become the expert components in Phase 3&apos;s mixture-of-experts routing system.

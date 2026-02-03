@@ -778,7 +778,7 @@ python -m src.program5_export.main --unit fundraising`}
           />
 
           {/* Next Steps CTA */}
-          <div className="bg-navy text-white p-8 rounded-lg">
+          <div className="bg-navy text-white p-8 rounded-lg mt-12">
             <h3 className="text-2xl font-bold mb-4">Next: Phase 4 - Agentic Discovery</h3>
             <p className="text-white/90 mb-4">
               Phase 3 delivers three division-level agents with specialized intelligence. Phase 4 opens cross-division experimentation, enabling agents to discover collaboration patterns and identify opportunities spanning multiple divisions. This discovery phase generates the training data that powers Phase 5&apos;s orchestrated system.

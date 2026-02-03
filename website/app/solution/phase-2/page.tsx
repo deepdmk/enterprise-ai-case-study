@@ -691,7 +691,7 @@ print(response.json()["analysis"])`}
           />
 
           {/* Next Steps CTA */}
-          <div className="bg-navy text-white p-8 rounded-lg mb-12">
+          <div className="bg-navy text-white p-8 rounded-lg mt-12 mb-12">
             <h3 className="text-2xl font-bold mb-4">Next: Phase 3 - Mixture-of-Experts Agents</h3>
             <p className="text-white/90 mb-4">
               Phase 3 merges your 14 task SLMs into <strong>3 intelligent MoE agents</strong>—one per division. Each agent routes queries to the appropriate expert, combining specialized capabilities into multi-task assistants.
