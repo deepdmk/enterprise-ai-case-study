@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SITE_CONFIG } from "@/lib/constants";
@@ -192,12 +193,12 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
+              <Link
                 href="/solution"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-navy font-medium rounded-md hover:bg-white/90 transition-colors"
               >
                 <span>Review the Phases</span>
-              </a>
+              </Link>
               <a
                 href="https://github.com/deepdmk/enterprise-ai-case-study"
                 target="_blank"
