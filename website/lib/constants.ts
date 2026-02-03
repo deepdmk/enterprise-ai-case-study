@@ -1,10 +1,10 @@
 export const SITE_CONFIG = {
   title: "Emergent Enterprise AI",
   description: "A complete implementation demonstrating bottom-up AI emergence for enterprise funder intelligence",
-  email: "work.dimick@gmail.com",
+  email: "d.dimick@eastsoutheast.international",
   author: "Chris Dimick",
   linkedin: "https://www.linkedin.com/in/dpdimick",
-  github: "https://github.com/emergent-enterprise-ai",
+  github: "https://github.com/deepdmk/enterprise-ai-case-study",
 } as const;
 
 export const PHASES = [

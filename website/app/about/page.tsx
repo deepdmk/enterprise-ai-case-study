@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { SITE_CONFIG } from "@/lib/constants";
-import { getAssetPath } from "@/lib/assets";
 import {
   Mail,
   Github,
@@ -127,7 +126,7 @@ export default function AboutPage() {
               <div className="md:col-span-1">
                 <div className="relative w-full aspect-square rounded-lg overflow-hidden">
                   <Image
-                    src={getAssetPath("/images/daniel-dimick-headshot.jpg")}
+                    src="/images/daniel-dimick-headshot.jpg"
                     alt="Daniel Dimick"
                     fill
                     className="object-cover"
@@ -165,7 +164,7 @@ export default function AboutPage() {
                     <span className="text-base font-medium">LinkedIn</span>
                   </a>
                   <a
-                    href="https://github.com/emergent-enterprise-ai"
+                    href="https://github.com/deepdmk/enterprise-ai-case-study"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-navy hover:text-teal transition-colors"
@@ -200,7 +199,7 @@ export default function AboutPage() {
                 <span>Review the Phases</span>
               </a>
               <a
-                href="https://github.com/emergent-enterprise-ai"
+                href="https://github.com/deepdmk/enterprise-ai-case-study"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-teal/20 text-white border border-white/20 font-medium rounded-md hover:bg-teal/30 transition-colors"

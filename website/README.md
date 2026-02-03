@@ -179,7 +179,7 @@ website/
 
 ## Contact
 
-**Email:** work.dimick@gmail.com
+**Email:** d.dimick@eastsoutheast.international
 
 ---
 

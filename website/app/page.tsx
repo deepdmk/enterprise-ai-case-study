@@ -82,7 +82,7 @@ export default function HomePage() {
                   <span className="text-base font-medium">LinkedIn</span>
                 </a>
                 <a
-                  href="https://github.com/emergent-enterprise-ai"
+                  href="https://github.com/deepdmk/enterprise-ai-case-study"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-white/80 hover:text-teal transition-colors"
@@ -91,7 +91,7 @@ export default function HomePage() {
                   <span className="text-base font-medium">GitHub</span>
                 </a>
                 <a
-                  href="mailto:work.dimick@gmail.com"
+                  href="mailto:d.dimick@eastsoutheast.international"
                   className="inline-flex items-center gap-2 text-white/80 hover:text-teal transition-colors"
                 >
                   <Mail className="w-5 h-5" />
