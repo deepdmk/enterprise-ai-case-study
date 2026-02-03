@@ -5,6 +5,7 @@ import { CodeBlock } from "@/components/ui/CodeBlock";
 import { PhaseNav } from "@/components/phases/PhaseNav";
 import { PhaseNavTop } from "@/components/phases/PhaseNavTop";
 import { PhaseTabs } from "@/components/phases/PhaseTabs";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -977,7 +978,7 @@ Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimiza
                 What starts as a model registry and embedding space evolves through task-specific models, division-level agents, and sandboxed discovery into a unified orchestrator trained on the organization&apos;s discovered patterns. The modular architecture preserves strategic optionality: scale to cloud platforms when needed, swap model backends without rewriting coordination logic, and retrain as organizational needs evolve.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <a
+                <Link
                   href="/"
                   className="inline-flex items-center px-6 py-3 bg-magenta hover:bg-magenta/90 text-white font-medium rounded-lg transition-colors"
                 >
@@ -985,13 +986,13 @@ Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimiza
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/solution"
                   className="inline-flex items-center px-6 py-3 bg-navy hover:bg-navy/90 text-white font-medium rounded-lg transition-colors"
                 >
                   Review All Phases
-                </a>
+                </Link>
               </div>
             </div>
           </Card>
