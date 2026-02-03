@@ -49,10 +49,13 @@ export default function StrategyPage() {
           </h2>
 
           <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-10">
-            Three independent analyses defined the situation: stakeholder consultations revealed needs,
-            organizational assessment (7S + SWOT) exposed cultural, capability, and structural realities,
-            and competitive analysis (Five Forces) identified market imperatives. Together, these produced
-            19 Critical to Quality requirements that any solution must satisfy.
+            We conducted three independent analyses to map the landscape and build a complete
+            picture of the context, stakeholders, and organizational dynamics. First, we consulted
+            stakeholders to understand their needs. Then, we analyzed the competitive landscape (Five Forces)
+            to identify market imperatives. Finally, we assessed the organization (7S + SWOT) to expose
+            cultural, capability, and structural realities. Brought together, these produced 19 Critical
+            to Quality requirements that established the starting point for viable strategies and
+            transformation pathways.
           </p>
 
           <StrategicAnalysisTabs />
