@@ -14,7 +14,7 @@ export default function SummaryPage() {
       <div className="bg-navy text-white py-16">
         <Container>
           <h1 className="text-5xl md:text-6xl font-bold mb-4">
-            Building Unique AI Capabilities Through Your Data and People
+            Building Unique AI Capabilities Through the Company's Data and People
           </h1>
           <p className="text-xl text-white/80">
             A phased transformation delivering value at every milestone without $2M gambles or vendor lock-in
