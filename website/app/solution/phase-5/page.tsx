@@ -1036,18 +1036,18 @@ assert predicted == expected
           {/* Next Steps CTA */}
           <Card className="bg-gradient-to-br from-magenta/5 to-navy/5 border-magenta/20 p-12 mt-12">
             <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold mb-4">Project Complete: Orchestrated Intelligence at Enterprise Scale</h2>
+              <h2 className="text-3xl font-bold mb-4">Next: Scaling to Production</h2>
               <p className="text-lg text-gray-700 mb-6">
-                This concludes the six-phase implementation journey from foundational infrastructure to orchestrated agentic intelligence. The final system—trained for $163.1K Direct Investment across all phases—delivers company-specific AI capabilities that cannot be replicated by competitors.
+                With orchestrated intelligence in place, the next step is deploying this system to enterprise-grade infrastructure. The Scaling Production section covers how every phase&apos;s training output maps directly to AWS managed services—preserving your $163.1K investment while gaining enterprise scale, security, and operational simplicity.
               </p>
               <p className="text-gray-700 mb-6">
-                What starts as a model registry and embedding space evolves through task-specific models, division-level agents, and sandboxed discovery into a unified orchestrator trained on the organization&apos;s discovered patterns. The modular architecture preserves strategic optionality: scale to cloud platforms when needed, swap model backends without rewriting coordination logic, and retrain as organizational needs evolve.
+                Your models, agents, and orchestrator transfer to SageMaker, Aurora PostgreSQL, and ECS without retraining or architectural changes. The modular design built across all phases ensures each component deploys independently—start with a pilot and scale to enterprise as adoption grows.
               </p>
               <Link
-                href="/"
+                href="/solution/scaling-production"
                 className="inline-flex items-center px-6 py-3 bg-magenta hover:bg-magenta/90 text-white font-medium rounded-lg transition-colors"
               >
-                Return to Homepage
+                Continue to Scaling Production
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

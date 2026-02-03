@@ -962,34 +962,39 @@ Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimiza
                   </div>
                 </div>
 
-                {/* Next Steps CTA */}
-                <div className="bg-gradient-to-br from-navy to-teal text-white p-12 rounded-lg text-center mt-16">
-                  <h2 className="text-3xl font-bold mb-4">
-                    Ready to Deploy Your Multi-Agent System
-                  </h2>
-                  <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-                    You&apos;ve completed the training pipeline across all five phases. Now deploy to production using AWS managed services for enterprise-scale reliability.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a
-                      href="/solution"
-                      className="inline-block px-8 py-4 bg-white text-navy font-medium rounded-md hover:bg-white/90 transition-colors"
-                    >
-                      Review All Phases
-                    </a>
-                    <a
-                      href="https://github.com/emergent-enterprise-ai"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block px-8 py-4 bg-teal text-white font-medium rounded-md hover:bg-teal/90 transition-colors"
-                    >
-                      View on GitHub
-                    </a>
-                  </div>
-                </div>
               </>
             }
           />
+
+          {/* Project Complete CTA */}
+          <Card className="bg-gradient-to-br from-magenta/5 to-navy/5 border-magenta/20 p-12 mt-12">
+            <div className="max-w-3xl">
+              <h2 className="text-3xl font-bold mb-4">Project Complete: Orchestrated Intelligence at Enterprise Scale</h2>
+              <p className="text-lg text-gray-700 mb-6">
+                This concludes the six-phase implementation journey from foundational infrastructure to orchestrated agentic intelligence deployed on enterprise-grade cloud services. The final system—trained for $163.1K Direct Investment across all phases—delivers company-specific AI capabilities that cannot be replicated by competitors.
+              </p>
+              <p className="text-gray-700 mb-6">
+                What starts as a model registry and embedding space evolves through task-specific models, division-level agents, and sandboxed discovery into a unified orchestrator trained on the organization&apos;s discovered patterns. The modular architecture preserves strategic optionality: scale to cloud platforms when needed, swap model backends without rewriting coordination logic, and retrain as organizational needs evolve.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="/"
+                  className="inline-flex items-center px-6 py-3 bg-magenta hover:bg-magenta/90 text-white font-medium rounded-lg transition-colors"
+                >
+                  Return to Homepage
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </a>
+                <a
+                  href="/solution"
+                  className="inline-flex items-center px-6 py-3 bg-navy hover:bg-navy/90 text-white font-medium rounded-lg transition-colors"
+                >
+                  Review All Phases
+                </a>
+              </div>
+            </div>
+          </Card>
         </Container>
       </section>
 
