@@ -25,7 +25,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-24">
           <Link
             href="/"
-            className="text-2xl font-bold text-white hover:text-teal transition-colors focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2 focus:ring-offset-navy rounded whitespace-nowrap"
+            className="text-lg font-bold text-white hover:text-teal transition-colors focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2 focus:ring-offset-navy rounded whitespace-nowrap"
           >
             Daniel Dimick | Emergent Enterprise AI
           </Link>
