@@ -74,7 +74,7 @@ function ThreeHorizonsJourney() {
 
       <Link
         href="/transformation/three-horizons"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View Three Horizons Framework &rarr;
       </Link>
@@ -130,7 +130,7 @@ function TransformationRoadmap() {
 
       <Link
         href="/transformation/roadmap"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View Transformation Roadmap &rarr;
       </Link>
@@ -167,7 +167,7 @@ function MonitoringProgress() {
 
       <Link
         href="/transformation/balanced-scorecard"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View Balanced Scorecard &rarr;
       </Link>

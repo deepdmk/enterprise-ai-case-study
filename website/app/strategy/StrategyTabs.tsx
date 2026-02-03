@@ -74,7 +74,7 @@ function StakeholderAnalysis() {
 
       <Link
         href="/strategy/stakeholder-ctq"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View Full Analysis &rarr;
       </Link>
@@ -152,7 +152,7 @@ function OrganizationalAnalysis() {
 
       <Link
         href="/strategy/mckinsey-7s"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed 7S + SWOT analysis &rarr;
       </Link>
@@ -213,7 +213,7 @@ function CompetitiveAnalysis() {
 
       <Link
         href="/porters-five-forces"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed 5 Forces analysis &rarr;
       </Link>
@@ -312,7 +312,7 @@ function OptionScoring() {
 
       <Link
         href="/strategy/pugh-matrix"
-        className="inline-flex items-center text-lg text-teal hover:text-teal/80 font-semibold"
+        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed Pugh Matrix analysis &rarr;
       </Link>
