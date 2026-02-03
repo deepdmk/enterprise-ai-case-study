@@ -3,7 +3,7 @@ import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PageNav } from "@/components/layout/PageNav";
 import { PHASES } from "@/lib/constants";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Github } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -41,7 +41,17 @@ export default function PhasesPortal() {
       <PageHeader
         title="Phase-by-Phase Implementation"
         subtitle="How three siloed divisions became an autonomous multi-agent intelligence system in 6 progressive phases"
-      />
+      >
+        <a
+          href="https://github.com/deepdmk/enterprise-ai-case-study"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-base"
+        >
+          <Github className="w-5 h-5" />
+          deepdmk/enterprise-ai-case-study
+        </a>
+      </PageHeader>
       <PageNav current="/solution" />
 
       <section className="py-20">
