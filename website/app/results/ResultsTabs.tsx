@@ -61,7 +61,7 @@ export function InvestmentTabs() {
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="px-4 py-3 font-medium">Timeline to Value</td>
-                  <td className="px-4 py-3 text-center font-bold text-teal">Weeks per phase</td>
+                  <td className="px-4 py-3 text-center font-bold text-teal">Several months per phase</td>
                   <td className="px-4 py-3 text-center text-gray-600">18&ndash;36 months</td>
                 </tr>
                 <tr>
