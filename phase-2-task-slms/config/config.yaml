@@ -1,0 +1,106 @@
+# Phase 2 Task SLMs - Main Configuration
+
+# Base Model Configuration
+model:
+  base_model: "unsloth/Meta-Llama-3.1-8B-bnb-4bit"
+  max_seq_length: 2048
+  dtype: null  # Auto-detect (float16 for GPU, float32 for CPU)
+  load_in_4bit: true
+
+# LoRA Configuration (matches Phase 3 MoE expectations)
+lora:
+  r: 16
+  lora_alpha: 16
+  lora_dropout: 0
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - up_proj
+    - down_proj
+    - gate_proj
+  use_rslora: true
+  bias: "none"
+  task_type: "CAUSAL_LM"
+
+# Training Configuration
+training:
+  epochs: 3
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 3.0e-4
+  warmup_steps: 10
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  lr_scheduler_type: "linear"
+  logging_steps: 10
+  save_steps: 100
+  eval_steps: 100
+  fp16: true
+  bf16: false
+  seed: 42
+
+# Test Mode Configuration
+test_mode:
+  samples: 50
+  epochs: 1
+  batch_size: 2
+  gradient_accumulation_steps: 1
+  logging_steps: 1
+
+# Data Configuration
+data:
+  train_split: 0.9
+  val_split: 0.1
+  max_samples_per_task: 500
+  min_samples_per_task: 200
+  shuffle: true
+
+# Paths
+paths:
+  data_dir: "data"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  models_dir: "data/models"
+  evaluations_dir: "data/evaluations"
+  rlhf_dir: "data/rlhf"
+  registry_dir: "data/registry"
+
+# Phase 1 Integration
+phase1:
+  config_path: "../phase-1-embed-space/config/config.yaml"
+  enabled: false
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - format_compliance
+    - content_coverage
+    - generation_latency
+  num_eval_samples: 20
+  max_new_tokens: 512
+  temperature: 0.7
+
+# Registry Configuration
+registry:
+  registry_file: "model_registry.json"
+  export_merged: true
+  export_format: "safetensors"
+
+# Units Configuration
+units:
+  - id: "fundraising"
+    name: "Fundraising Intelligence Unit"
+    tasks_file: "config/tasks/fundraising.yaml"
+  - id: "field_operations"
+    name: "Field Operations Intelligence Unit"
+    tasks_file: "config/tasks/field_operations.yaml"
+  - id: "business_development"
+    name: "Business Development Intelligence Unit"
+    tasks_file: "config/tasks/business_development.yaml"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "json"

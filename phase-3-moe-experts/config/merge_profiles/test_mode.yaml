@@ -1,0 +1,33 @@
+# Merge Profile: Test Mode (Minimal)
+# Uses 2 mock experts for quick testing without GPU
+
+name: test_mode
+description: "Minimal 2-expert MoE for testing pipeline without GPU"
+
+# Architecture (reduced for testing)
+architecture: mixtral
+gate_mode: hidden
+dtype: float16
+experts_per_token: 1
+
+# Mock expert definitions
+units:
+  test_unit:
+    tasks:
+      - mock_task_1
+      - mock_task_2
+
+# Mock base model (small for testing)
+base_model: "HuggingFaceTB/SmolLM-135M"
+
+# Merge settings (optimized for CPU)
+merge_settings:
+  lazy_unpickle: true
+  trust_remote_code: true
+  copy_tokenizer: true
+  use_cuda: false
+
+# Test mode flags
+test_mode:
+  skip_actual_merge: true
+  generate_mock_exports: true

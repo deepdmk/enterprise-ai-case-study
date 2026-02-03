@@ -1,0 +1,79 @@
+[project]
+name = "phase-1-embed-space"
+version = "1.0.0"
+description = "Phase 1: Unified Embedding Space for Enterprise AI Habitat"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    # Core ML/Embeddings
+    "sentence-transformers>=3.0.0",
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "datasets>=2.18.0",
+
+    # Vector Database
+    "chromadb>=0.5.0",
+
+    # Database
+    "asyncpg>=0.29.0",
+    "psycopg2-binary>=2.9.9",
+
+    # Configuration
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.0",
+
+    # UI
+    "gradio>=4.15.0",
+
+    # Text Processing
+    "langchain-text-splitters>=0.0.1",
+
+    # Utilities
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+    "tqdm>=4.66.0",
+    "httpx>=0.26.0",
+    "structlog>=24.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "black>=24.1.0",
+    "ruff>=0.2.0",
+    "mypy>=1.8.0",
+]
+
+[project.scripts]
+generate-dataset = "src.program1_dataset_generator.main:main"
+fine-tune = "src.program2_fine_tuning.main:main"
+ingest = "src.program3_ingestion.main:main"
+search = "src.program4_search.main:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "config*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]

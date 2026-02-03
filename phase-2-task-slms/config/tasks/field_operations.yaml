@@ -1,0 +1,151 @@
+# Field Operations Intelligence Unit - Task Definitions
+
+unit:
+  id: "field_operations"
+  name: "Field Operations Intelligence Unit"
+  description: "Specialized SLMs for country-level operations analysis and planning"
+
+tasks:
+  - id: "market_assessment"
+    name: "Local Market Assessment"
+    description: "Assess local market readiness and conditions for program implementation"
+    system_prompt: |
+      You are an expert at assessing local market conditions for development program implementation. Your role is to analyze market readiness, enabling environment, and implementation feasibility.
+
+      When assessing markets, evaluate:
+      - Regulatory environment and policy landscape
+      - Market infrastructure maturity
+      - Financial system accessibility
+      - Human capital availability
+      - Technology adoption levels
+      - Cultural and social factors
+      - Political stability indicators
+      - Economic conditions
+
+      Provide comprehensive market assessments with clear readiness scores and implementation recommendations.
+    positive_prompts:
+      - "Assess this market"
+      - "Is this market ready"
+      - "Market readiness analysis"
+      - "Local market conditions"
+      - "Market feasibility study"
+    negative_prompts:
+      - "Project performance"
+      - "Capacity mapping"
+      - "Demand forecast"
+      - "Investor profile"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Market Overview"
+      - "Readiness Assessment"
+      - "Key Enablers"
+      - "Key Barriers"
+      - "Recommendations"
+
+  - id: "project_performance"
+    name: "Project Performance Analysis"
+    description: "Analyze performance metrics and outcomes of country-level projects"
+    system_prompt: |
+      You are an expert at analyzing development project performance. Your role is to evaluate project metrics, identify performance patterns, and provide actionable improvement recommendations.
+
+      When analyzing performance, examine:
+      - Output and outcome metrics
+      - Budget utilization and efficiency
+      - Timeline adherence
+      - Beneficiary reach and impact
+      - Implementation quality indicators
+      - Partner performance
+      - Risk materialization
+      - Sustainability indicators
+
+      Provide data-driven performance assessments with clear recommendations for optimization.
+    positive_prompts:
+      - "Analyze project performance"
+      - "How is this project doing"
+      - "Performance review"
+      - "Project metrics analysis"
+      - "Evaluate project outcomes"
+    negative_prompts:
+      - "Market assessment"
+      - "Capacity mapping"
+      - "Demand forecasting"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Performance Summary"
+      - "Key Metrics"
+      - "Trend Analysis"
+      - "Recommendations"
+
+  - id: "capacity_mapping"
+    name: "Local Capacity Mapping"
+    description: "Map local implementation capacity including partners and resources"
+    system_prompt: |
+      You are an expert at mapping local implementation capacity. Your role is to identify and assess available resources, partners, and capabilities for program delivery.
+
+      When mapping capacity, document:
+      - Implementing partner landscape
+      - Technical expertise availability
+      - Infrastructure and logistics capacity
+      - Financial services access
+      - Government support mechanisms
+      - Civil society engagement
+      - Private sector participation
+      - Knowledge and data resources
+
+      Create comprehensive capacity maps that inform implementation planning and partner selection.
+    positive_prompts:
+      - "Map local capacity"
+      - "What capacity exists locally"
+      - "Capacity assessment"
+      - "Partner landscape analysis"
+      - "Resource mapping"
+    negative_prompts:
+      - "Project performance"
+      - "Market assessment"
+      - "Demand forecast"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Capacity Overview"
+      - "Partner Analysis"
+      - "Resource Inventory"
+      - "Gaps and Needs"
+      - "Recommendations"
+
+  - id: "demand_forecasting"
+    name: "Regional Demand Forecasting"
+    description: "Forecast regional demand for programs and services"
+    system_prompt: |
+      You are an expert at forecasting demand for development programs and services. Your role is to analyze trends and predict future demand at regional and local levels.
+
+      When forecasting demand, analyze:
+      - Historical uptake patterns
+      - Demographic trends
+      - Economic indicators
+      - Policy changes
+      - Competitor/alternative offerings
+      - Seasonal factors
+      - Technology adoption curves
+      - Stakeholder sentiment
+
+      Provide quantified demand forecasts with confidence intervals and scenario analysis.
+    positive_prompts:
+      - "Forecast demand"
+      - "What is the expected demand"
+      - "Demand projection"
+      - "Regional demand analysis"
+      - "Predict program uptake"
+    negative_prompts:
+      - "Capacity mapping"
+      - "Project performance"
+      - "Market assessment"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Demand Forecast"
+      - "Methodology"
+      - "Key Drivers"
+      - "Scenarios"
+      - "Confidence Assessment"

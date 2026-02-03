@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-01-18T04:35:45.149341+00:00",
+  "models": {
+    "phase-4/fundraising/a2a-adapter/v1": {
+      "model_id": "phase-4/fundraising/a2a-adapter/v1",
+      "phase": "4",
+      "unit": "fundraising",
+      "task": "a2a-adapter",
+      "model_type": "adapter",
+      "base_model": "fundraising_moe",
+      "adapter_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-4-agentic-discovery/data/models/a2a_adapters/fundraising",
+      "model_path": null,
+      "status": "registered",
+      "created_at": "2026-01-18T04:35:45.149334+00:00",
+      "updated_at": "2026-01-18T04:35:45.149336+00:00",
+      "schema_version": "1.0",
+      "tags": [
+        "a2a",
+        "protocol",
+        "lora",
+        "mock"
+      ],
+      "source_dataset_id": "phase-4/fundraising/a2a-training/v1",
+      "positive_prompts": [],
+      "negative_prompts": []
+    }
+  }
+}

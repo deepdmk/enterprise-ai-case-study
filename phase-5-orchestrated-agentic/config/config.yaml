@@ -1,0 +1,119 @@
+# Phase 5: Orchestrated Agentic Configuration
+
+# Global settings
+test_mode: false
+device: null  # Auto-detect: cuda, mps, or cpu
+log_level: INFO
+
+# Program 1: Data Conversion
+data_conversion:
+  test_mode_samples: 100
+  full_mode_samples: 71000
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  augmentation_factor: 3
+  max_synthetic_intents: 5
+
+# Program 2: SLM Fine-tuning
+slm_finetuning:
+  base_model: "Qwen/Qwen2.5-7B"
+  alternative_model: "microsoft/phi-4"
+
+  # LoRA configuration
+  lora_rank: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - "q_proj"
+    - "v_proj"
+
+  # Training configuration
+  learning_rate: 0.0002
+  num_epochs: 3
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  max_seq_length: 2048
+  warmup_steps: 100
+
+  # Evaluation
+  eval_steps: 100
+  save_steps: 500
+  target_accuracy: 0.94
+  target_latency_ms: 150
+
+# Program 3: Inference Server
+inference_server:
+  server_type: "vllm"  # Options: vllm, tgi
+  host: "0.0.0.0"
+  port: 8100
+
+  # vLLM settings
+  vllm_gpu_memory_utilization: 0.9
+  vllm_max_model_len: 2048
+  vllm_tensor_parallel_size: 1
+
+  # TGI settings
+  tgi_max_concurrent_requests: 128
+  tgi_max_batch_total_tokens: 16384
+
+  # Health monitoring
+  health_check_interval_seconds: 30
+  max_latency_ms: 200
+
+# Program 4: Orchestrator Service
+orchestrator_service:
+  host: "0.0.0.0"
+  port: 8000
+
+  # Agent registry (Phase 4 agent URLs)
+  agent_registry:
+    fundraising-agent: "http://localhost:8001"
+    business-development-agent: "http://localhost:8002"
+    field-operations-agent: "http://localhost:8003"
+
+  # Inference server connection
+  inference_server_url: "http://localhost:8100/generate"
+
+  # Request settings
+  max_concurrent_agent_calls: 5
+  agent_timeout_ms: 10000
+  routing_timeout_ms: 500
+
+  # Response synthesis
+  enable_response_synthesis: true
+
+  # Agno Framework Integration (Agno 2.4.1)
+  agno:
+    enabled: false  # Set to true to use Agno Team mode
+    show_members_responses: true  # Show member responses in final output
+    respond_directly: true  # Members respond directly (vs coordinator synthesizing)
+
+    # Model configuration
+    model_timeout: 30.0  # Inference timeout in seconds
+    model_max_tokens: 512  # Maximum tokens for coordinator
+    model_temperature: 0.1  # Sampling temperature
+    use_openai_compatible: false  # Use OpenAI-compatible endpoint (requires /v1 suffix)
+
+    # AG-UI Configuration (optional streaming interface)
+    agui:
+      enabled: false  # Set to true to enable AG-UI streaming
+      path: "/agui"  # AG-UI endpoint path
+
+    # Training logger (capture data for future fine-tuning)
+    training_logger:
+      enabled: true  # Log orchestration interactions
+      log_dir: "data/training/agno_logs"  # Log directory
+
+# Path configuration
+paths:
+  data_dir: "data"
+  models_dir: "data/models"
+  training_dir: "data/training"
+  checkpoints_dir: "data/checkpoints"
+  exports_dir: "data/exports"
+  phase4_imports_dir: "data/phase4_imports"
+
+  # Phase 4 integration (will be auto-detected if not specified)
+  phase4_path: null  # e.g., "../phase-4-agentic-discovery"
+  phase4_exports_dir: null  # e.g., "../phase-4-agentic-discovery/data/exports"

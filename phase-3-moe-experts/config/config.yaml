@@ -1,0 +1,94 @@
+# Phase 3: MoE Experts Configuration
+# Creates 3 separate MoE models, one per organizational unit
+
+# MoE Architecture settings (applied to each unit's MoE)
+moe:
+  architecture: mixtral
+  gate_mode: hidden
+  dtype: float16
+  experts_per_token: 2  # Select 2 experts per token within each unit's MoE
+
+# Unit definitions - each becomes a separate MoE model
+units:
+  fundraising:
+    name: "Fundraising"
+    description: "Investor intelligence and opportunity matching"
+    tasks:
+      - investor_profiling
+      - funding_opportunity_analysis
+      - proposal_evaluation
+      - portfolio_matching
+      - engagement_recommendation
+
+  business_development:
+    name: "Business Development"
+    description: "RFP analysis and competitive landscape"
+    tasks:
+      - rfp_analysis
+      - competitive_landscape
+      - proposal_scoring
+      - funding_trends
+
+  field_operations:
+    name: "Field Operations"
+    description: "Local market intelligence and operations"
+    tasks:
+      - market_intelligence
+      - project_performance
+      - partner_assessment
+      - regulatory_compliance
+      - risk_assessment
+
+# Merge execution settings
+merge:
+  use_cuda: true
+  lazy_unpickle: true
+  allow_crimes: false
+  trust_remote_code: true
+  timeout_minutes: 60  # Per-unit merge time
+  copy_tokenizer: true
+  out_shard_size: 5000000000  # 5GB shards
+
+# Phase 2 import settings
+import_config:
+  phase2_export_dir: "../phase-2-task-slms/exports"
+  validate_adapters: true
+  required_files:
+    - adapter_config.json
+
+# Phase 4 export settings
+export_config:
+  generate_agent_configs: true
+  generate_routing_embeddings: true
+  embedding_model: "BAAI/bge-base-en-v1.5"
+  export_format: safetensors
+
+# Path configuration
+paths:
+  data_dir: data
+  imports_dir: data/imports
+  configs_dir: data/configs
+  merged_dir: data/merged
+  exports_dir: data/exports
+
+# Test mode settings (for quick validation without GPU)
+test_mode:
+  num_experts_per_unit: 2  # 2 mock experts per unit = 6 total
+  mock_base_model: "HuggingFaceTB/SmolLM-135M"
+  skip_actual_merge: true
+  generate_mock_exports: true
+
+# Optional fine-tuning settings (per-unit)
+finetune:
+  enabled: false
+  epochs: 2
+  batch_size: 4
+  learning_rate: 0.00001
+  lora_r: 8
+  lora_alpha: 16
+  max_samples: 1000
+
+# Logging
+logging:
+  level: INFO
+  format: json

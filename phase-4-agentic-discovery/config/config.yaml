@@ -1,0 +1,53 @@
+# Phase 4: Agentic Discovery - Configuration
+
+# A2A Protocol Settings
+a2a_protocol:
+  default_max_depth: 3
+  default_timeout_ms: 5000
+  max_cascade_depth: 4
+
+# Program 1: A2A Fine-Tuning
+a2a_finetuning:
+  num_training_examples: 1000
+  lora_rank: 16
+  lora_alpha: 32
+  learning_rate: 0.0002
+  num_epochs: 3
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  max_seq_length: 512
+
+# Program 2: Agent Services
+agent_services:
+  base_port: 8000
+  host: "0.0.0.0"
+  agent_ports:
+    fundraising-agent: 8001
+    business-development-agent: 8002
+    field-operations-agent: 8003
+
+# Program 3: Discovery Pipeline
+discovery_pipeline:
+  queries_per_day: 10
+  test_mode_days: 7
+  full_experiment_days: 90
+
+# Program 4: Adaptive Analyzer
+adaptive_analyzer:
+  min_success_rate: 0.8
+  min_sample_size: 5
+
+# Path Configuration
+paths:
+  data_dir: "data"
+  models_dir: "data/models"
+  training_dir: "data/training"
+  logs_dir: "data/logs"
+  exports_dir: "data/exports"
+  # Optional: Set these if Phase 1 or Phase 3 are in non-standard locations
+  # phase3_path: "../phase-3-moe-experts"
+  # phase1_path: "../phase-1-embed-space"
+
+# General Settings
+test_mode: false
+# device: "cuda"  # Uncomment to force specific device

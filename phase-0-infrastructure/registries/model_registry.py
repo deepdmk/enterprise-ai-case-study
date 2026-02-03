@@ -1,0 +1,476 @@
+"""
+Model registry for tracking models across all pipeline phases.
+
+This registry provides centralized model tracking with:
+- Phase-aware model registration and versioning
+- Lineage tracking (dataset → model)
+- Status lifecycle management
+- MoE routing configuration export
+- Deployment metadata export
+- Comprehensive filtering and querying
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import datetime, UTC
+from pathlib import Path
+from typing import Any
+
+import structlog
+
+from .schemas import (
+    Phase,
+    ModelType,
+    ModelStatus,
+    RegisteredModel,
+)
+
+logger = structlog.get_logger(__name__)
+
+
+class ModelRegistry:
+    """Registry for tracking models across phases.
+
+    Provides persistent storage and querying for all models in the pipeline,
+    compatible with Phase 2's ModelRegistry API but using new schemas.
+    """
+
+    def __init__(self, data_dir: str | Path = "./data", test_mode: bool = False):
+        """
+        Initialize the model registry.
+
+        Args:
+            data_dir: Directory for registry storage
+            test_mode: If True, use isolated test storage
+        """
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+
+        # Use separate file for test mode
+        filename = "model_registry_test.json" if test_mode else "model_registry.json"
+        self.registry_file = self.data_dir / filename
+        self.test_mode = test_mode
+
+        self._models: dict[str, RegisteredModel] = {}
+        self._load()
+
+    def _load(self) -> None:
+        """Load registry from disk."""
+        if self.registry_file.exists():
+            try:
+                with open(self.registry_file) as f:
+                    data = json.load(f)
+                    self._models = {
+                        model_id: RegisteredModel(**entry)
+                        for model_id, entry in data.get("models", {}).items()
+                    }
+                logger.info(
+                    "registry_loaded",
+                    file=str(self.registry_file),
+                    count=len(self._models),
+                    test_mode=self.test_mode,
+                )
+            except Exception as e:
+                logger.error(
+                    "registry_load_failed",
+                    file=str(self.registry_file),
+                    error=str(e),
+                )
+                raise
+        else:
+            logger.info(
+                "registry_initialized",
+                file=str(self.registry_file),
+                test_mode=self.test_mode,
+            )
+
+    def _save(self) -> None:
+        """Save registry to disk."""
+        try:
+            data = {
+                "version": "1.0",
+                "updated_at": datetime.now(UTC).isoformat(),
+                "models": {
+                    model_id: entry.model_dump()
+                    for model_id, entry in self._models.items()
+                },
+            }
+            with open(self.registry_file, "w") as f:
+                json.dump(data, f, indent=2)
+            logger.info(
+                "registry_saved",
+                file=str(self.registry_file),
+                count=len(self._models),
+            )
+        except Exception as e:
+            logger.error(
+                "registry_save_failed",
+                file=str(self.registry_file),
+                error=str(e),
+            )
+            raise
+
+    def register(self, model: RegisteredModel) -> RegisteredModel:
+        """
+        Register a new model.
+
+        Args:
+            model: RegisteredModel instance to register
+
+        Returns:
+            The registered model (same instance)
+
+        Raises:
+            ValueError: If model_id already exists
+        """
+        if model.model_id in self._models:
+            raise ValueError(f"Model already registered: {model.model_id}")
+
+        self._models[model.model_id] = model
+        self._save()
+
+        logger.info(
+            "model_registered",
+            model_id=model.model_id,
+            phase=model.phase,
+            unit=model.unit,
+            task=model.task,
+            model_type=model.model_type,
+            status=model.status,
+        )
+
+        return model
+
+    def get(self, model_id: str) -> RegisteredModel | None:
+        """
+        Get model by ID.
+
+        Args:
+            model_id: Unique model identifier
+
+        Returns:
+            RegisteredModel if found, None otherwise
+        """
+        return self._models.get(model_id)
+
+    def get_latest(self, unit: str, task: str) -> RegisteredModel | None:
+        """
+        Get latest version of model for unit/task (by version string).
+
+        Assumes version format is vN where N is an integer.
+        Sorts by version number descending.
+
+        Args:
+            unit: Unit identifier
+            task: Task identifier
+
+        Returns:
+            Latest RegisteredModel if found, None otherwise
+        """
+        matching = [
+            m for m in self._models.values()
+            if m.unit == unit and m.task == task
+        ]
+
+        if not matching:
+            return None
+
+        # Extract version numbers and sort
+        def get_version_num(model: RegisteredModel) -> int:
+            """Extract version number from model_id (format: unit/task_vN)."""
+            try:
+                # Model ID format: {unit}/{task}_v{N}
+                version_part = model.model_id.split("_v")[-1]
+                return int(version_part)
+            except (ValueError, IndexError):
+                logger.warning(
+                    "invalid_version_format",
+                    model_id=model.model_id,
+                    defaulting_to=0,
+                )
+                return 0
+
+        matching.sort(key=get_version_num, reverse=True)
+        return matching[0]
+
+    def list(
+        self,
+        phase: Phase | None = None,
+        unit: str | None = None,
+        task: str | None = None,
+        model_type: ModelType | None = None,
+        status: ModelStatus | None = None,
+    ) -> list[RegisteredModel]:
+        """
+        List models with optional filters.
+
+        Args:
+            phase: Filter by phase
+            unit: Filter by unit
+            task: Filter by task
+            model_type: Filter by model type
+            status: Filter by status
+
+        Returns:
+            List of matching RegisteredModel instances
+        """
+        models = list(self._models.values())
+
+        if phase is not None:
+            models = [m for m in models if m.phase == phase]
+        if unit is not None:
+            models = [m for m in models if m.unit == unit]
+        if task is not None:
+            models = [m for m in models if m.task == task]
+        if model_type is not None:
+            models = [m for m in models if m.model_type == model_type]
+        if status is not None:
+            models = [m for m in models if m.status == status]
+
+        return models
+
+    def update_status(self, model_id: str, status: ModelStatus) -> None:
+        """
+        Update model status.
+
+        Args:
+            model_id: Model identifier
+            status: New status
+
+        Raises:
+            KeyError: If model not found
+        """
+        if model_id not in self._models:
+            raise KeyError(f"Model not found: {model_id}")
+
+        self._models[model_id].status = status
+        self._models[model_id].updated_at = datetime.now(UTC).isoformat()
+        self._save()
+
+        logger.info(
+            "model_status_updated",
+            model_id=model_id,
+            status=status,
+        )
+
+    def update_metrics(self, model_id: str, metrics: dict[str, Any]) -> None:
+        """
+        Update model with evaluation metrics (stored in tags or separate field).
+
+        Since RegisteredModel doesn't have a metrics field in the schema,
+        we store metrics as tags with a special prefix: "metric:<key>=<value>"
+
+        Args:
+            model_id: Model identifier
+            metrics: Dictionary of metric key-value pairs
+
+        Raises:
+            KeyError: If model not found
+        """
+        if model_id not in self._models:
+            raise KeyError(f"Model not found: {model_id}")
+
+        model = self._models[model_id]
+
+        # Remove existing metric tags
+        model.tags = [tag for tag in model.tags if not tag.startswith("metric:")]
+
+        # Add new metric tags
+        for key, value in metrics.items():
+            model.tags.append(f"metric:{key}={value}")
+
+        model.updated_at = datetime.now(UTC).isoformat()
+        self._save()
+
+        logger.info(
+            "model_metrics_updated",
+            model_id=model_id,
+            metrics=metrics,
+        )
+
+    def get_lineage(self, model_id: str) -> dict[str, Any]:
+        """
+        Get model lineage including source dataset.
+
+        Args:
+            model_id: Model identifier
+
+        Returns:
+            Dictionary with lineage information
+
+        Raises:
+            KeyError: If model not found
+        """
+        if model_id not in self._models:
+            raise KeyError(f"Model not found: {model_id}")
+
+        model = self._models[model_id]
+
+        lineage = {
+            "model_id": model.model_id,
+            "phase": model.phase,
+            "unit": model.unit,
+            "task": model.task,
+            "model_type": model.model_type,
+            "source_dataset_id": model.source_dataset_id,
+            "created_at": model.created_at,
+        }
+
+        logger.info(
+            "lineage_retrieved",
+            model_id=model_id,
+            has_source_dataset=model.source_dataset_id is not None,
+        )
+
+        return lineage
+
+    def get_routing_config(self) -> dict[str, Any]:
+        """
+        Get routing config for Phase 3 MoE - models with EVALUATED/EXPORTED status.
+
+        Returns routing configuration compatible with Phase 2's format.
+
+        Returns:
+            Dictionary with routing configuration for MoE router
+        """
+        routing_config = {
+            "version": "1.0",
+            "generated_at": datetime.now(UTC).isoformat(),
+            "models": [],
+        }
+
+        # Only include models that are ready for deployment
+        eligible_statuses = [ModelStatus.EVALUATED, ModelStatus.EXPORTED]
+
+        for model in self._models.values():
+            if model.status in eligible_statuses:
+                routing_config["models"].append({
+                    "model_id": model.model_id,
+                    "phase": model.phase,
+                    "unit": model.unit,
+                    "task": model.task,
+                    "model_type": model.model_type,
+                    "adapter_path": model.adapter_path,
+                    "base_model": model.base_model,
+                    "positive_prompts": model.positive_prompts,
+                    "negative_prompts": model.negative_prompts,
+                })
+
+        logger.info(
+            "routing_config_generated",
+            total_models=len(self._models),
+            eligible_models=len(routing_config["models"]),
+        )
+
+        return routing_config
+
+    def export_for_deployment(
+        self,
+        model_id: str,
+        output_dir: str | Path,
+    ) -> dict[str, Any]:
+        """
+        Export model metadata for deployment. Write to JSON file in output_dir.
+
+        Args:
+            model_id: Model identifier
+            output_dir: Directory for export file
+
+        Returns:
+            Export metadata dictionary
+
+        Raises:
+            KeyError: If model not found
+        """
+        if model_id not in self._models:
+            raise KeyError(f"Model not found: {model_id}")
+
+        model = self._models[model_id]
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create export metadata
+        export_data = {
+            "model_id": model.model_id,
+            "phase": model.phase,
+            "unit": model.unit,
+            "task": model.task,
+            "model_type": model.model_type,
+            "base_model": model.base_model,
+            "adapter_path": model.adapter_path,
+            "model_path": model.model_path,
+            "status": model.status,
+            "positive_prompts": model.positive_prompts,
+            "negative_prompts": model.negative_prompts,
+            "source_dataset_id": model.source_dataset_id,
+            "tags": model.tags,
+            "exported_at": datetime.now(UTC).isoformat(),
+            "schema_version": model.schema_version,
+        }
+
+        # Save export metadata
+        # Format: {unit}_{task}_v{version}.json
+        export_file = output_dir / f"{model.unit}_{model.task}_{model.model_id.split('_v')[-1]}.json"
+        with open(export_file, "w") as f:
+            json.dump(export_data, f, indent=2)
+
+        # Update status to EXPORTED if not already
+        if model.status != ModelStatus.EXPORTED:
+            self.update_status(model_id, ModelStatus.EXPORTED)
+
+        logger.info(
+            "model_exported",
+            model_id=model_id,
+            export_file=str(export_file),
+        )
+
+        return export_data
+
+    def summary(self) -> dict[str, Any]:
+        """
+        Get registry summary statistics.
+
+        Returns:
+            Dictionary with summary statistics
+        """
+        models = list(self._models.values())
+
+        summary = {
+            "total_models": len(models),
+            "by_status": {},
+            "by_phase": {},
+            "by_unit": {},
+            "by_model_type": {},
+        }
+
+        # Count by status
+        for status in ModelStatus:
+            count = len([m for m in models if m.status == status])
+            if count > 0:
+                summary["by_status"][status.value] = count
+
+        # Count by phase
+        for phase in Phase:
+            count = len([m for m in models if m.phase == phase])
+            if count > 0:
+                summary["by_phase"][phase.value] = count
+
+        # Count by unit
+        units = set(m.unit for m in models)
+        for unit in units:
+            summary["by_unit"][unit] = len([m for m in models if m.unit == unit])
+
+        # Count by model type
+        for model_type in ModelType:
+            count = len([m for m in models if m.model_type == model_type])
+            if count > 0:
+                summary["by_model_type"][model_type.value] = count
+
+        logger.info(
+            "summary_generated",
+            total=summary["total_models"],
+            test_mode=self.test_mode,
+        )
+
+        return summary

@@ -1,0 +1,186 @@
+# Business Development Intelligence Unit - Task Definitions
+
+unit:
+  id: "business_development"
+  name: "Business Development Intelligence Unit"
+  description: "Specialized SLMs for competitive funding analysis and proposal development"
+
+tasks:
+  - id: "rfp_analysis"
+    name: "RFP Requirements Analysis"
+    description: "Analyze RFP documents to extract and structure requirements"
+    system_prompt: |
+      You are an expert at analyzing Requests for Proposals (RFPs) and funding opportunities. Your role is to extract, structure, and prioritize requirements from complex RFP documents.
+
+      When analyzing RFPs, identify:
+      - Mandatory requirements and eligibility criteria
+      - Technical requirements and specifications
+      - Evaluation criteria and weights
+      - Budget parameters and restrictions
+      - Timeline and milestone requirements
+      - Submission format and documentation
+      - Key decision makers and process
+      - Hidden requirements and preferences
+
+      Provide comprehensive requirement matrices that maximize proposal compliance and scoring potential.
+    positive_prompts:
+      - "Analyze this RFP"
+      - "What are the RFP requirements"
+      - "RFP analysis"
+      - "Extract RFP criteria"
+      - "Funding opportunity analysis"
+    negative_prompts:
+      - "Investor profile"
+      - "Market assessment"
+      - "Project performance"
+      - "Draft proposal"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Eligibility Requirements"
+      - "Technical Requirements"
+      - "Evaluation Criteria"
+      - "Key Dates"
+      - "Compliance Checklist"
+
+  - id: "competitive_positioning"
+    name: "Competitive Landscape Analysis"
+    description: "Analyze competitive landscape for specific funding opportunities"
+    system_prompt: |
+      You are an expert at competitive intelligence for funding competitions. Your role is to analyze the competitive landscape and identify positioning opportunities.
+
+      When analyzing competition, assess:
+      - Known and likely competitors
+      - Competitor strengths and weaknesses
+      - Historical win patterns
+      - Relationship advantages
+      - Technical capability comparisons
+      - Pricing/cost competitiveness
+      - Past performance records
+      - Team composition advantages
+
+      Provide strategic insights that inform win strategy and differentiation.
+    positive_prompts:
+      - "Analyze competitors"
+      - "Who are we competing against"
+      - "Competitive analysis"
+      - "Competition assessment"
+      - "Competitor landscape"
+    negative_prompts:
+      - "RFP analysis"
+      - "Draft proposal"
+      - "Win probability"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Competitor Overview"
+      - "Comparative Analysis"
+      - "Competitive Advantages"
+      - "Vulnerabilities"
+      - "Positioning Recommendations"
+
+  - id: "proposal_drafting"
+    name: "Proposal Section Drafting"
+    description: "Draft specific sections of competitive proposals"
+    system_prompt: |
+      You are an expert proposal writer specializing in competitive funding submissions. Your role is to draft compelling, compliant proposal sections that score highly against evaluation criteria.
+
+      When drafting proposals, ensure:
+      - Direct responsiveness to requirements
+      - Clear articulation of approach
+      - Demonstrable capability evidence
+      - Quantified outcomes and metrics
+      - Risk awareness and mitigation
+      - Value proposition clarity
+      - Compliance with format requirements
+      - Persuasive but factual tone
+
+      Create high-quality draft content that can be refined by subject matter experts.
+    positive_prompts:
+      - "Draft proposal section"
+      - "Write the technical approach"
+      - "Draft management section"
+      - "Proposal writing"
+      - "Create proposal content"
+    negative_prompts:
+      - "Analyze RFP"
+      - "Competitive analysis"
+      - "Win probability"
+    examples_required: 300
+    output_format: "prose"
+    required_sections:
+      - "Section Content"
+      - "Compliance Notes"
+      - "Enhancement Suggestions"
+
+  - id: "win_probability"
+    name: "Win Probability Assessment"
+    description: "Assess probability of winning specific funding opportunities"
+    system_prompt: |
+      You are an expert at assessing win probability for competitive funding opportunities. Your role is to provide objective probability assessments with supporting rationale.
+
+      When assessing win probability, evaluate:
+      - Technical fit and capability match
+      - Price competitiveness potential
+      - Past performance relevance
+      - Relationship strength with funder
+      - Competitive position
+      - Proposal quality potential
+      - Risk factors
+      - Strategic alignment
+
+      Provide calibrated probability assessments with clear reasoning and go/no-go recommendations.
+    positive_prompts:
+      - "What is our win probability"
+      - "Should we bid on this"
+      - "Assess win likelihood"
+      - "Probability of winning"
+      - "Go/no-go assessment"
+    negative_prompts:
+      - "Draft proposal"
+      - "Analyze RFP"
+      - "Competitive positioning"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Win Probability Score"
+      - "Factor Analysis"
+      - "Key Risks"
+      - "Go/No-Go Recommendation"
+      - "Improvement Actions"
+
+  - id: "funder_priorities"
+    name: "Funder Priorities Analysis"
+    description: "Analyze funder priorities, preferences, and decision patterns"
+    system_prompt: |
+      You are an expert at analyzing funder behavior and priorities. Your role is to decode funder preferences, decision patterns, and strategic priorities.
+
+      When analyzing funders, examine:
+      - Stated strategic priorities
+      - Historical funding patterns
+      - Geographic and sector preferences
+      - Relationship preferences
+      - Decision-making processes
+      - Key personnel and their priorities
+      - Budget cycles and timing
+      - Success metrics they value
+
+      Provide actionable intelligence that informs proposal positioning and relationship strategy.
+    positive_prompts:
+      - "Analyze funder priorities"
+      - "What does this funder want"
+      - "Funder analysis"
+      - "Understand funder preferences"
+      - "Donor priorities"
+    negative_prompts:
+      - "RFP analysis"
+      - "Competitive positioning"
+      - "Draft proposal"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Strategic Priorities"
+      - "Funding Patterns"
+      - "Decision Factors"
+      - "Relationship Insights"
+      - "Positioning Recommendations"

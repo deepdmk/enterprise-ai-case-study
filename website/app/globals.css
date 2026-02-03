@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  /* AI Habitat Design System Colors */
+  --color-navy: #2C3E50;
+  --color-teal: #16A085;
+  --color-amber: #F39C12;
+  --color-magenta: #9B59B6;
+
+  /* Accessible dark teal */
+  --color-teal-dark: #138D75;
+
+  /* Navy-tinted Gray Scale */
+  --color-gray-50: #F7F9FA;
+  --color-gray-100: #E8ECEF;
+  --color-gray-200: #DCE1E5;
+  --color-gray-300: #CED4DA;
+  --color-gray-400: #A8B2BC;
+  --color-gray-500: #8A95A0;
+  --color-gray-600: #6A747F;
+  --color-gray-700: #495460;
+  --color-gray-800: #343A42;
+  --color-gray-900: #2A3138;
+
+  /* Background and foreground */
+  --color-background: #ffffff;
+  --color-foreground: #2C3E50;
+
+  /* Font families */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;
+
+  /* Custom widths */
+  --width-content: 1200px;
+  --width-reading: 800px;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Vertical text utility */
+.writing-mode-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* Darkened margins effect on large screens */
+@media (min-width: 1280px) {
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(
+      to right,
+      rgba(44, 62, 80, 0.15) 0%,
+      rgba(44, 62, 80, 0) 15%,
+      rgba(44, 62, 80, 0) 85%,
+      rgba(44, 62, 80, 0.15) 100%
+    );
+  }
+}

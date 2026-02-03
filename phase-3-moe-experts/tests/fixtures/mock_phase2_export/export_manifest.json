@@ -1,0 +1,74 @@
+{
+  "exported_at": "2024-01-15T10:00:00.000000",
+  "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+  "units": [
+    {
+      "unit_id": "fundraising",
+      "exported_at": "2024-01-15T10:00:00.000000",
+      "num_models": 2,
+      "models": [
+        {
+          "model_id": "fundraising_investor_profiling_v1",
+          "unit_id": "fundraising",
+          "task_id": "investor_profiling",
+          "version": "v1",
+          "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+          "merged": false,
+          "positive_prompts": [
+            "Profile this investor",
+            "Create investor profile",
+            "Analyze investor background"
+          ],
+          "negative_prompts": [
+            "Analyze RFP",
+            "Assess market conditions"
+          ],
+          "model_path": "fundraising/investor_profiling/v1/model"
+        },
+        {
+          "model_id": "fundraising_funding_opportunity_v1",
+          "unit_id": "fundraising",
+          "task_id": "funding_opportunity",
+          "version": "v1",
+          "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+          "merged": false,
+          "positive_prompts": [
+            "Evaluate funding opportunity",
+            "Assess investment potential"
+          ],
+          "negative_prompts": [
+            "Profile investor",
+            "Analyze competition"
+          ],
+          "model_path": "fundraising/funding_opportunity/v1/model"
+        }
+      ]
+    },
+    {
+      "unit_id": "business_development",
+      "exported_at": "2024-01-15T10:00:00.000000",
+      "num_models": 1,
+      "models": [
+        {
+          "model_id": "business_development_rfp_analysis_v1",
+          "unit_id": "business_development",
+          "task_id": "rfp_analysis",
+          "version": "v1",
+          "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+          "merged": false,
+          "positive_prompts": [
+            "Analyze this RFP",
+            "Review funding requirements",
+            "Assess proposal requirements"
+          ],
+          "negative_prompts": [
+            "Profile investor",
+            "Evaluate market"
+          ],
+          "model_path": "business_development/rfp_analysis/v1/model"
+        }
+      ]
+    }
+  ],
+  "moe_config_path": "moe_config.yaml"
+}

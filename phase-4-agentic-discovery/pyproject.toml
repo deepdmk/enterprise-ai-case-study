@@ -1,0 +1,167 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phase-4-agentic-discovery"
+version = "0.1.0"
+description = "Phase 4: Agentic Discovery with A2A Protocol and Adaptive Depth Optimization"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Your Organization"}
+]
+keywords = [
+    "agentic-ai",
+    "multi-agent-systems",
+    "a2a-protocol",
+    "adaptive-depth",
+    "mixture-of-experts",
+    "fine-tuning"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    # Core ML
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "accelerate>=0.28.0",
+    "trl>=0.8.0",
+    "datasets>=2.18.0",
+
+    # Embeddings (Phase 1 integration)
+    "sentence-transformers>=3.0.0",
+    "chromadb>=0.5.0",
+
+    # A2A Services
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "httpx>=0.26.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+
+    # Configuration & Utilities
+    "pyyaml>=6.0.1",
+    "structlog>=24.1.0",
+
+    # Data & Analysis
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.7.0",
+    "ruff>=0.0.287",
+    "mypy>=1.5.0",
+]
+
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.2.0",
+]
+
+all = [
+    "phase-4-agentic-discovery[dev,docs]",
+]
+
+[project.scripts]
+# Program 1: A2A Fine-Tuning
+phase4-a2a-finetune = "src.program1_a2a_finetuning.main:main"
+
+# Program 2: Agent Services
+phase4-agent-services = "src.program2_agent_services.main:main"
+
+# Program 3: Discovery Pipeline
+phase4-discovery = "src.program3_discovery_pipeline.main:main"
+
+# Program 4: Adaptive Analyzer
+phase4-analyze = "src.program4_adaptive_analyzer.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "config*"]
+exclude = ["tests*", "notebooks*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \.tox
+  | build
+  | dist
+  | notebooks
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+follow_imports = "normal"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "transformers.*",
+    "peft.*",
+    "trl.*",
+    "chromadb.*",
+    "sentence_transformers.*",
+]
+ignore_missing_imports = true

@@ -1,0 +1,178 @@
+# Fundraising Intelligence Unit - Task Definitions
+
+unit:
+  id: "fundraising"
+  name: "Fundraising Intelligence Unit"
+  description: "Specialized SLMs for analyzing and engaging with angel investors"
+
+tasks:
+  - id: "investor_profiling"
+    name: "Investor Profiling"
+    description: "Create comprehensive profiles of angel investors including investment history, preferences, and patterns"
+    system_prompt: |
+      You are an expert investment analyst specializing in angel investor profiling. Your role is to create comprehensive, actionable profiles of angel investors based on available data.
+
+      When creating investor profiles, include:
+      - Investment thesis and focus areas
+      - Historical investment patterns
+      - Typical investment size and stage preferences
+      - Industry sector preferences
+      - Geographic focus
+      - Co-investment patterns
+      - Portfolio company outcomes
+      - Known decision-making criteria
+
+      Provide structured, factual analysis that helps identify alignment with potential opportunities.
+    positive_prompts:
+      - "Profile this investor"
+      - "Create investor profile"
+      - "Analyze this angel investor"
+      - "What is this investor's background"
+      - "Investor due diligence"
+    negative_prompts:
+      - "Analyze RFP"
+      - "Assess market"
+      - "Draft proposal"
+      - "Forecast demand"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Investment Thesis"
+      - "Historical Patterns"
+      - "Preferences"
+      - "Key Insights"
+
+  - id: "fit_assessment"
+    name: "Investor-Opportunity Fit Assessment"
+    description: "Assess alignment between angel investors and specific investment opportunities"
+    system_prompt: |
+      You are an expert at assessing investor-opportunity fit. Your role is to analyze how well a specific investment opportunity aligns with an angel investor's profile, preferences, and investment thesis.
+
+      When assessing fit, evaluate:
+      - Thesis alignment (sector, stage, geography)
+      - Check size compatibility
+      - Value-add potential
+      - Portfolio synergies or conflicts
+      - Risk tolerance match
+      - Time horizon alignment
+
+      Provide a clear fit score with detailed reasoning for each dimension.
+    positive_prompts:
+      - "Assess investor fit"
+      - "Is this investor a good match"
+      - "Evaluate investor alignment"
+      - "Compare investor to opportunity"
+      - "Fit analysis"
+    negative_prompts:
+      - "Profile investor"
+      - "Competitive analysis"
+      - "Market assessment"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Fit Score"
+      - "Alignment Analysis"
+      - "Potential Concerns"
+      - "Recommendation"
+
+  - id: "capacity_analysis"
+    name: "Investment Capacity Analysis"
+    description: "Analyze an investor's current capacity and likelihood to invest"
+    system_prompt: |
+      You are an expert at analyzing angel investor capacity. Your role is to assess an investor's current ability and likelihood to make new investments based on available signals.
+
+      When analyzing capacity, consider:
+      - Recent investment activity
+      - Portfolio concentration
+      - Known liquidity events
+      - Time availability signals
+      - Current market sentiment
+      - Fund/allocation cycle status
+
+      Provide capacity assessment with confidence levels and supporting rationale.
+    positive_prompts:
+      - "Analyze investment capacity"
+      - "Can this investor invest now"
+      - "Assess investor availability"
+      - "Investment capacity check"
+      - "Liquidity analysis"
+    negative_prompts:
+      - "Create profile"
+      - "Draft engagement"
+      - "Portfolio analysis"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Capacity Assessment"
+      - "Supporting Signals"
+      - "Confidence Level"
+      - "Timing Recommendation"
+
+  - id: "engagement_strategy"
+    name: "Engagement Strategy Generation"
+    description: "Generate personalized engagement strategies for specific investors"
+    system_prompt: |
+      You are an expert at crafting angel investor engagement strategies. Your role is to develop personalized, effective approaches for engaging specific investors based on their profile and preferences.
+
+      When generating strategies, include:
+      - Recommended approach channel
+      - Key talking points aligned to investor interests
+      - Warm introduction paths
+      - Timing recommendations
+      - Content/materials suggestions
+      - Follow-up cadence
+      - Potential objections and responses
+
+      Create actionable, personalized engagement plans that maximize success probability.
+    positive_prompts:
+      - "How should we approach this investor"
+      - "Generate engagement strategy"
+      - "Best way to reach this investor"
+      - "Create outreach plan"
+      - "Engagement approach"
+    negative_prompts:
+      - "Analyze capacity"
+      - "Create profile"
+      - "Assess fit"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Approach Strategy"
+      - "Key Messages"
+      - "Timing"
+      - "Action Items"
+
+  - id: "portfolio_synthesis"
+    name: "Portfolio Pattern Synthesis"
+    description: "Identify patterns and insights across an investor's portfolio"
+    system_prompt: |
+      You are an expert at analyzing angel investor portfolios. Your role is to identify meaningful patterns, themes, and insights across an investor's portfolio companies.
+
+      When synthesizing portfolio patterns, analyze:
+      - Sector concentration and evolution
+      - Stage preferences over time
+      - Geographic patterns
+      - Founding team characteristics
+      - Business model preferences
+      - Exit patterns and outcomes
+      - Co-investor relationships
+      - Thesis evolution
+
+      Provide actionable insights that reveal the investor's true preferences and successful patterns.
+    positive_prompts:
+      - "Analyze portfolio patterns"
+      - "What themes emerge from this portfolio"
+      - "Portfolio synthesis"
+      - "Investment pattern analysis"
+      - "Portfolio company analysis"
+    negative_prompts:
+      - "Engagement strategy"
+      - "Fit assessment"
+      - "Capacity analysis"
+    examples_required: 300
+    output_format: "structured"
+    required_sections:
+      - "Key Patterns"
+      - "Theme Analysis"
+      - "Evolution Over Time"
+      - "Strategic Insights"

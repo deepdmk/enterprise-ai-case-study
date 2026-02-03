@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-01-17T23:29:38.575075",
+  "models": {
+    "3/fundraising/moe/v1": {
+      "model_id": "3/fundraising/moe/v1",
+      "phase": "3",
+      "unit": "fundraising",
+      "task": "moe",
+      "model_type": "moe",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "adapter_path": null,
+      "model_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/merged/fundraising_moe",
+      "status": "trained",
+      "created_at": "2026-01-17T23:29:38.571716",
+      "updated_at": "2026-01-17T23:29:38.571719",
+      "schema_version": "1.0",
+      "tags": [
+        "num_experts:2",
+        "architecture:mixtral",
+        "gate_mode:hidden",
+        "experts_per_token:2",
+        "dtype:float16",
+        "expert:model",
+        "expert:model"
+      ],
+      "source_dataset_id": null,
+      "positive_prompts": [],
+      "negative_prompts": []
+    },
+    "3/business_development/moe/v1": {
+      "model_id": "3/business_development/moe/v1",
+      "phase": "3",
+      "unit": "business_development",
+      "task": "moe",
+      "model_type": "moe",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "adapter_path": null,
+      "model_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/merged/business_development_moe",
+      "status": "trained",
+      "created_at": "2026-01-17T23:29:38.573518",
+      "updated_at": "2026-01-17T23:29:38.573520",
+      "schema_version": "1.0",
+      "tags": [
+        "num_experts:2",
+        "architecture:mixtral",
+        "gate_mode:hidden",
+        "experts_per_token:2",
+        "dtype:float16",
+        "expert:model",
+        "expert:model"
+      ],
+      "source_dataset_id": null,
+      "positive_prompts": [],
+      "negative_prompts": []
+    },
+    "3/field_operations/moe/v1": {
+      "model_id": "3/field_operations/moe/v1",
+      "phase": "3",
+      "unit": "field_operations",
+      "task": "moe",
+      "model_type": "moe",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "adapter_path": null,
+      "model_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/merged/field_operations_moe",
+      "status": "trained",
+      "created_at": "2026-01-17T23:29:38.575070",
+      "updated_at": "2026-01-17T23:29:38.575071",
+      "schema_version": "1.0",
+      "tags": [
+        "num_experts:2",
+        "architecture:mixtral",
+        "gate_mode:hidden",
+        "experts_per_token:2",
+        "dtype:float16",
+        "expert:model",
+        "expert:model"
+      ],
+      "source_dataset_id": null,
+      "positive_prompts": [],
+      "negative_prompts": []
+    }
+  }
+}

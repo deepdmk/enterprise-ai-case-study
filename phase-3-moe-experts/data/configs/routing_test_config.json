@@ -1,0 +1,35 @@
+{
+  "num_experts": 2,
+  "experts_per_token": 2,
+  "gate_mode": "hidden",
+  "experts": [
+    {
+      "expert_id": 0,
+      "model_id": "test_unit_1_mock_task_1_v1",
+      "unit_id": "test_unit_1",
+      "task_id": "mock_task_1",
+      "positive_prompts": [
+        "Analyze the investor profile",
+        "Create investor assessment"
+      ],
+      "negative_prompts": [
+        "Analyze market trends",
+        "Review competition"
+      ]
+    },
+    {
+      "expert_id": 1,
+      "model_id": "test_unit_2_mock_task_2_v1",
+      "unit_id": "test_unit_2",
+      "task_id": "mock_task_2",
+      "positive_prompts": [
+        "Evaluate the funding opportunity",
+        "Assess grant potential"
+      ],
+      "negative_prompts": [
+        "Profile the investor",
+        "Review performance"
+      ]
+    }
+  ]
+}

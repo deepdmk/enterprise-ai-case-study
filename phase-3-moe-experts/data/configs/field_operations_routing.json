@@ -1,0 +1,35 @@
+{
+  "num_experts": 2,
+  "experts_per_token": 2,
+  "gate_mode": "hidden",
+  "experts": [
+    {
+      "expert_id": 0,
+      "model_id": "field_operations_market_intelligence_v1",
+      "unit_id": "field_operations",
+      "task_id": "market_intelligence",
+      "positive_prompts": [
+        "Analyze market conditions",
+        "Assess local market"
+      ],
+      "negative_prompts": [
+        "Profile investor",
+        "Analyze RFP"
+      ]
+    },
+    {
+      "expert_id": 1,
+      "model_id": "field_operations_project_performance_v1",
+      "unit_id": "field_operations",
+      "task_id": "project_performance",
+      "positive_prompts": [
+        "Evaluate project performance",
+        "Assess project outcomes"
+      ],
+      "negative_prompts": [
+        "Analyze competition",
+        "Profile investor"
+      ]
+    }
+  ]
+}

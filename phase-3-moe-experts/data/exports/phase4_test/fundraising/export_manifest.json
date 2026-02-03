@@ -1,0 +1,17 @@
+{
+  "exported_at": "2026-01-17T20:03:16.534367",
+  "unit_id": "fundraising",
+  "model_source": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/merged/fundraising_moe",
+  "export_dir": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/exports/phase4_test/fundraising",
+  "components": {
+    "model": true,
+    "routing": true,
+    "agent_config": true
+  },
+  "num_experts": 2,
+  "tasks": [
+    "investor_profiling",
+    "funding_opportunity"
+  ],
+  "errors": []
+}

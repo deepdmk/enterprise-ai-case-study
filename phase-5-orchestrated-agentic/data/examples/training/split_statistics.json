@@ -1,0 +1,47 @@
+{
+  "counts": {
+    "train": 35,
+    "val": 7,
+    "test": 8,
+    "total": 50
+  },
+  "ratios": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "distribution_by_agent": {
+    "train": {
+      "business-development-agent": 14,
+      "fundraising-agent": 14,
+      "field-operations-agent": 7
+    },
+    "val": {
+      "business-development-agent": 3,
+      "field-operations-agent": 1,
+      "fundraising-agent": 3
+    },
+    "test": {
+      "field-operations-agent": 2,
+      "business-development-agent": 3,
+      "fundraising-agent": 3
+    }
+  },
+  "distribution_by_depth": {
+    "train": {
+      "2": 13,
+      "3": 15,
+      "1": 7
+    },
+    "val": {
+      "2": 4,
+      "3": 1,
+      "1": 2
+    },
+    "test": {
+      "3": 4,
+      "2": 3,
+      "1": 1
+    }
+  }
+}

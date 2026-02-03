@@ -1,0 +1,42 @@
+base_model: ./output_moe/llama3_expert_1
+
+architecture: mixtral
+
+gate_mode: random  # Random for training; lets router learn task-specific patterns
+
+dtype: float16
+
+experts_per_token: 2
+
+experts:
+  - source_model: ./output_moe/llama3_expert_1
+    positive_prompts:
+      - "What is machine learning and how does it work?"
+      - "Explain artificial intelligence in detail"
+    negative_prompts:
+      - "Write code in Python"
+      - "Tell me a fictional story"
+  
+  - source_model: ./output_moe/llama3_expert_2
+    positive_prompts:
+      - "Write a Python function to calculate fibonacci"
+      - "How do I debug this code error?"
+    negative_prompts:
+      - "Explain machine learning concepts"
+      - "Describe a narrative plot"
+  
+  - source_model: ./output_moe/llama3_expert_3
+    positive_prompts:
+      - "Explain quantum computing principles"
+      - "What is deep learning architecture?"
+    negative_prompts:
+      - "Write code"
+      - "Tell a story"
+  
+  - source_model: ./output_moe/llama3_expert_4
+    positive_prompts:
+      - "Tell me a story about adventure"
+      - "How should I approach this problem?"
+    negative_prompts:
+      - "Explain technical concepts"
+      - "Write computer code"

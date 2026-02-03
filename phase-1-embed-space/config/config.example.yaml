@@ -1,0 +1,49 @@
+# Phase 1: Unified Embedding Space - Example Configuration
+# =========================================================
+# Copy this file to config.yaml and update with your actual values.
+# Environment variables can be used with ${VAR_NAME:-default} syntax.
+
+app:
+  name: "enterprise-embedding-space"
+  version: "1.0.0"
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_dir: "data/logs"
+
+# Source Database Configurations
+# ------------------------------
+# Define your PostgreSQL databases here.
+# For each table, specify:
+#   - text_columns: columns containing text to embed
+#   - id_column: primary key column
+#   - timestamp_column: for incremental sync
+#   - additional_metadata: extra columns to store as metadata
+databases:
+  database_1:
+    host: "localhost"
+    port: "5432"
+    name: "your_database_name"
+    user: "your_username"
+    password: "your_password"  # Use env var: ${DB1_PASSWORD}
+    pool_size: 5
+    tables:
+      - name: "your_table_name"
+        text_columns: ["content_column", "title_column"]
+        id_column: "id"
+        timestamp_column: "updated_at"
+        additional_metadata: ["category", "author"]
+
+# ChromaDB Configuration
+chromadb:
+  host: "localhost"
+  port: "8000"
+  collection_name: "enterprise_embeddings"
+
+# Embedding Model Configuration
+embedding:
+  base_model: "sentence-transformers/all-MiniLM-L6-v2"
+  fine_tuned_model_path: "data/models/enterprise-embed-v1"
+  embedding_dimension: 384
+  batch_size: 32
+  device: "auto"
+
+# See config.yaml for full configuration options

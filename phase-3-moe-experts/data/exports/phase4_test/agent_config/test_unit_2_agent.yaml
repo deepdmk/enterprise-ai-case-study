@@ -1,0 +1,18 @@
+agent:
+  description: A2A agent for test_unit_2 tasks
+  id: test_unit_2_agent
+  name: Test Unit 2 Agent
+model:
+  experts:
+  - expert_id: 0
+    positive_prompts:
+    - Evaluate the funding opportunity
+    - Assess grant potential
+    task_id: mock_task_2
+  path: ./model
+  type: moe
+routing:
+  embedding_model: BAAI/bge-base-en-v1.5
+  method: semantic
+tasks:
+- mock_task_2

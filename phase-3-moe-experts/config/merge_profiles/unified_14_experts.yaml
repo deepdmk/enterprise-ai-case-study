@@ -1,0 +1,42 @@
+# Merge Profile: Unified 14-Expert MoE
+# This is the default profile for merging all 14 Task SLMs
+
+name: unified_14_experts
+description: "Merge all 14 Task SLMs into a single Mixtral-style MoE"
+
+# Architecture
+architecture: mixtral
+gate_mode: hidden
+dtype: float16
+experts_per_token: 2
+
+# Expert definitions by unit
+units:
+  fundraising:
+    tasks:
+      - investor_profiling
+      - funding_opportunity_analysis
+      - proposal_evaluation
+      - portfolio_matching
+      - engagement_recommendation
+
+  business_development:
+    tasks:
+      - rfp_analysis
+      - competitive_landscape
+      - proposal_scoring
+      - funding_trends
+
+  field_operations:
+    tasks:
+      - market_intelligence
+      - project_performance
+      - partner_assessment
+      - regulatory_compliance
+      - risk_assessment
+
+# Merge settings
+merge_settings:
+  lazy_unpickle: true
+  trust_remote_code: true
+  copy_tokenizer: true

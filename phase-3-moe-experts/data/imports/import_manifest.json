@@ -1,0 +1,132 @@
+{
+  "total_adapters": 6,
+  "base_model": "HuggingFaceTB/SmolLM-135M",
+  "units": [
+    "fundraising",
+    "business_development",
+    "field_operations"
+  ],
+  "adapters_per_unit": {
+    "fundraising": 2,
+    "business_development": 2,
+    "field_operations": 2
+  },
+  "adapters": [
+    {
+      "model_id": "fundraising_investor_profiling_v1",
+      "unit_id": "fundraising",
+      "task_id": "investor_profiling",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/fundraising/investor_profiling/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/fundraising/investor_profiling/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Profile this investor",
+        "Create investor profile",
+        "Analyze investor background"
+      ],
+      "negative_prompts": [
+        "Analyze RFP",
+        "Assess market conditions"
+      ],
+      "metrics": null,
+      "is_merged": false
+    },
+    {
+      "model_id": "fundraising_funding_opportunity_v1",
+      "unit_id": "fundraising",
+      "task_id": "funding_opportunity",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/fundraising/funding_opportunity/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/fundraising/funding_opportunity/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Evaluate funding opportunity",
+        "Assess investment potential"
+      ],
+      "negative_prompts": [
+        "Profile investor",
+        "Analyze competition"
+      ],
+      "metrics": null,
+      "is_merged": false
+    },
+    {
+      "model_id": "business_development_rfp_analysis_v1",
+      "unit_id": "business_development",
+      "task_id": "rfp_analysis",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/business_development/rfp_analysis/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/business_development/rfp_analysis/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Analyze this RFP",
+        "Review funding requirements"
+      ],
+      "negative_prompts": [
+        "Profile investor",
+        "Evaluate market"
+      ],
+      "metrics": null,
+      "is_merged": false
+    },
+    {
+      "model_id": "business_development_competitive_landscape_v1",
+      "unit_id": "business_development",
+      "task_id": "competitive_landscape",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/business_development/competitive_landscape/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/business_development/competitive_landscape/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Analyze competitive landscape",
+        "Review competitor activity"
+      ],
+      "negative_prompts": [
+        "Profile investor",
+        "Assess project performance"
+      ],
+      "metrics": null,
+      "is_merged": false
+    },
+    {
+      "model_id": "field_operations_market_intelligence_v1",
+      "unit_id": "field_operations",
+      "task_id": "market_intelligence",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/field_operations/market_intelligence/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/field_operations/market_intelligence/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Analyze market conditions",
+        "Assess local market"
+      ],
+      "negative_prompts": [
+        "Profile investor",
+        "Analyze RFP"
+      ],
+      "metrics": null,
+      "is_merged": false
+    },
+    {
+      "model_id": "field_operations_project_performance_v1",
+      "unit_id": "field_operations",
+      "task_id": "project_performance",
+      "version": "v1",
+      "source_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/field_operations/project_performance/v1/model",
+      "import_path": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/imports/field_operations/project_performance/v1/model",
+      "base_model": "HuggingFaceTB/SmolLM-135M",
+      "positive_prompts": [
+        "Evaluate project performance",
+        "Assess project outcomes"
+      ],
+      "negative_prompts": [
+        "Analyze competition",
+        "Profile investor"
+      ],
+      "metrics": null,
+      "is_merged": false
+    }
+  ],
+  "test_mode": true
+}

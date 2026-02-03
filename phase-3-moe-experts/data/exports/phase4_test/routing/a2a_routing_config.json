@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "model_type": "moe",
+  "routing": {
+    "method": "hidden",
+    "experts_per_token": 2,
+    "embedding_model": "BAAI/bge-base-en-v1.5"
+  },
+  "experts": {
+    "0": {
+      "unit": "test_unit_1",
+      "task": "mock_task_1",
+      "capabilities": [
+        "Analyze the investor profile",
+        "Create investor assessment"
+      ]
+    },
+    "1": {
+      "unit": "test_unit_2",
+      "task": "mock_task_2",
+      "capabilities": [
+        "Evaluate the funding opportunity",
+        "Assess grant potential"
+      ]
+    }
+  },
+  "unit_mapping": {
+    "test_unit_1": [
+      0
+    ],
+    "test_unit_2": [
+      1
+    ]
+  }
+}

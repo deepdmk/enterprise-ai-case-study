@@ -1,0 +1,17 @@
+{
+  "exported_at": "2026-01-17T20:03:16.536532",
+  "unit_id": "business_development",
+  "model_source": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/merged/business_development_moe",
+  "export_dir": "/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-3-moe-experts/data/exports/phase4_test/business_development",
+  "components": {
+    "model": true,
+    "routing": true,
+    "agent_config": true
+  },
+  "num_experts": 2,
+  "tasks": [
+    "rfp_analysis",
+    "competitive_landscape"
+  ],
+  "errors": []
+}

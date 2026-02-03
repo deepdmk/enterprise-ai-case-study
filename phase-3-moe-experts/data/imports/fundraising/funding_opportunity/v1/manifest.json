@@ -1,0 +1,15 @@
+{
+  "model_id": "fundraising_funding_opportunity_v1",
+  "unit_id": "fundraising",
+  "task_id": "funding_opportunity",
+  "version": "v1",
+  "base_model": "HuggingFaceTB/SmolLM-135M",
+  "positive_prompts": [
+    "Evaluate funding opportunity",
+    "Assess investment potential"
+  ],
+  "negative_prompts": [
+    "Profile investor",
+    "Analyze competition"
+  ]
+}
