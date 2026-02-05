@@ -66,7 +66,7 @@ export default function StrategyPage() {
       <section className="py-16 border-t-4 border-navy" style={{ backgroundColor: 'rgba(221, 214, 254, 0.6)' }}>
         <Container>
           <h2 className="text-5xl font-bold text-navy mb-4 flex items-center">
-            <span className="bg-teal text-white px-3 py-1 rounded mr-3 text-base">
+            <span className="bg-teal-dark text-white px-3 py-1 rounded mr-3 text-base">
               2
             </span>
             Strategy Development
@@ -98,7 +98,7 @@ export default function StrategyPage() {
           </p>
           <Link
             href="/transformation"
-            className="inline-flex items-center justify-center px-8 py-4 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors"
+            className="inline-flex items-center justify-center px-8 py-4 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors"
           >
             View Transformation Framework
             <svg

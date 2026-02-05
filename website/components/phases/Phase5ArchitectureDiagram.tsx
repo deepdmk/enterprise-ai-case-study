@@ -22,16 +22,6 @@ function BrainIcon({ className }: { className?: string }) {
   );
 }
 
-function ServerIcon({ className }: { className?: string }) {
-  return (
-    <svg className={cn("w-5 h-5", className)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="2" y="3" width="20" height="6" rx="1" />
-      <rect x="2" y="15" width="20" height="6" rx="1" />
-      <path d="M6 6h.01M6 18h.01" />
-    </svg>
-  );
-}
-
 function UserIcon({ className }: { className?: string }) {
   return (
     <svg className={cn("w-5 h-5", className)} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

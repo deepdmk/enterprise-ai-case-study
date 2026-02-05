@@ -24,7 +24,7 @@ export default function FourPathsGateway() {
                 <h3 className="text-lg font-bold text-slate-700">Case Summary</h3>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 text-base">See the Case at a Glance</p>
+                <p className="text-gray-700 text-base">See the Case at a Glance</p>
                 <svg className="w-5 h-5 flex-shrink-0 ml-2 text-slate-500 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                 </svg>
@@ -46,7 +46,7 @@ export default function FourPathsGateway() {
                 <h3 className="text-lg font-bold" style={{ color: '#1e3a5f' }}>Strategic Analysis</h3>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 text-base">See how we determined the Strategic Approach</p>
+                <p className="text-gray-700 text-base">See how we determined the Strategic Approach</p>
                 <svg className="w-5 h-5 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" style={{ color: '#1e3a5f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                 </svg>
@@ -61,15 +61,15 @@ export default function FourPathsGateway() {
             <div className="rounded-xl p-4 h-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 border-b-4" style={{ borderColor: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.15)' }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-md flex-shrink-0" style={{ backgroundColor: 'rgba(20, 184, 166, 0.2)' }}>
-                  <svg className="w-5 h-5" style={{ color: '#14b8a6' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" style={{ color: '#085C4F' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold" style={{ color: '#14b8a6' }}>Transformation Approach</h3>
+                <h3 className="text-lg font-bold" style={{ color: '#085C4F' }}>Transformation Approach</h3>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 text-base">Explore how we built the Transformation Path</p>
-                <svg className="w-5 h-5 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" style={{ color: '#14b8a6' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <p className="text-gray-700 text-base">Explore how we built the Transformation Path</p>
+                <svg className="w-5 h-5 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" style={{ color: '#085C4F' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                 </svg>
               </div>
@@ -83,15 +83,15 @@ export default function FourPathsGateway() {
             <div className="rounded-xl p-4 h-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 border-b-4" style={{ borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.15)' }}>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-md flex-shrink-0" style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)' }}>
-                  <svg className="w-5 h-5" style={{ color: '#f59e0b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" style={{ color: '#92400E' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold" style={{ color: '#f59e0b' }}>Technical Solution</h3>
+                <h3 className="text-lg font-bold" style={{ color: '#92400E' }}>Technical Solution</h3>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-gray-600 text-base">Deep dive into the Technical Solutions we developed</p>
-                <svg className="w-5 h-5 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" style={{ color: '#f59e0b' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <p className="text-gray-700 text-base">Deep dive into the Technical Solutions we developed</p>
+                <svg className="w-5 h-5 flex-shrink-0 ml-2 group-hover:translate-x-1 transition-transform" style={{ color: '#92400E' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                 </svg>
               </div>

@@ -74,7 +74,7 @@ function StakeholderAnalysis() {
 
       <Link
         href="/strategy/stakeholder-ctq"
-        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View Full Analysis &rarr;
       </Link>
@@ -152,7 +152,7 @@ function OrganizationalAnalysis() {
 
       <Link
         href="/strategy/mckinsey-7s"
-        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed 7S + SWOT analysis &rarr;
       </Link>
@@ -213,7 +213,7 @@ function CompetitiveAnalysis() {
 
       <Link
         href="/porters-five-forces"
-        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed 5 Forces analysis &rarr;
       </Link>
@@ -312,7 +312,7 @@ function OptionScoring() {
 
       <Link
         href="/strategy/pugh-matrix"
-        className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
       >
         View detailed Pugh Matrix analysis &rarr;
       </Link>
@@ -437,19 +437,19 @@ export function StrategyDevelopmentTabs() {
         <TabsList className="p-1 m-4 rounded-lg flex gap-2" style={{ backgroundColor: 'rgba(26, 188, 156, 0.1)' }}>
           <TabsTrigger
             value="options"
-            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal data-[state=active]:text-white data-[state=active]:shadow-sm text-teal hover:bg-teal/10"
+            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal-dark data-[state=active]:text-white data-[state=active]:shadow-sm text-teal-on-light hover:bg-teal/10"
           >
             Options Development
           </TabsTrigger>
           <TabsTrigger
             value="scoring"
-            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal data-[state=active]:text-white data-[state=active]:shadow-sm text-teal hover:bg-teal/10"
+            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal-dark data-[state=active]:text-white data-[state=active]:shadow-sm text-teal-on-light hover:bg-teal/10"
           >
             Option Scoring
           </TabsTrigger>
           <TabsTrigger
             value="selected"
-            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal data-[state=active]:text-white data-[state=active]:shadow-sm text-teal hover:bg-teal/10"
+            className="flex-1 py-3 px-4 text-lg font-medium rounded-md transition-all data-[state=active]:bg-teal-dark data-[state=active]:text-white data-[state=active]:shadow-sm text-teal-on-light hover:bg-teal/10"
           >
             Selected Strategy
           </TabsTrigger>

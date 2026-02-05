@@ -56,29 +56,6 @@ function ProgramBox({ number, title, subtitle }: { number: number; title: string
   );
 }
 
-function UnitBox({
-  title,
-  experts,
-  color
-}: {
-  title: string;
-  experts: number;
-  color: "fundraising" | "bizdev" | "fieldops";
-}) {
-  const colors = {
-    fundraising: "bg-teal/10 border-teal text-teal",
-    bizdev: "bg-amber/10 border-amber text-amber",
-    fieldops: "bg-navy/10 border-navy text-navy",
-  };
-
-  return (
-    <div className={cn("border rounded-lg p-2 text-center flex-1", colors[color])}>
-      <div className="font-bold text-xs">{title}</div>
-      <div className="text-[10px] opacity-80">{experts} experts</div>
-    </div>
-  );
-}
-
 export function Phase3ArchitectureDiagram() {
   return (
     <div className="w-full py-4 px-4">

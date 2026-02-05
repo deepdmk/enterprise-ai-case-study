@@ -57,7 +57,7 @@ export function CaseStudyTabs() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card className="p-6 bg-white rounded-xl shadow-md border border-teal/20 hover:border-teal/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
                 <div className="w-12 h-12 bg-teal/10 rounded-lg flex items-center justify-center mb-4">
-                  <TrendingUp className="w-6 h-6 text-teal" />
+                  <TrendingUp className="w-6 h-6 text-teal-on-light" />
                 </div>
                 <h4 className="text-lg font-bold text-navy mb-3">
                   Business Strategy &amp; Transformation
@@ -72,7 +72,7 @@ export function CaseStudyTabs() {
 
               <Card className="p-6 bg-white rounded-xl shadow-md border border-teal/20 hover:border-teal/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
                 <div className="w-12 h-12 bg-teal/10 rounded-lg flex items-center justify-center mb-4">
-                  <Sparkles className="w-6 h-6 text-teal" />
+                  <Sparkles className="w-6 h-6 text-teal-on-light" />
                 </div>
                 <h4 className="text-lg font-bold text-navy mb-3">
                   Organizational Change &amp; Discovery
@@ -88,7 +88,7 @@ export function CaseStudyTabs() {
 
               <Card className="p-6 bg-white rounded-xl shadow-md border border-teal/20 hover:border-teal/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
                 <div className="w-12 h-12 bg-teal/10 rounded-lg flex items-center justify-center mb-4">
-                  <Cpu className="w-6 h-6 text-teal" />
+                  <Cpu className="w-6 h-6 text-teal-on-light" />
                 </div>
                 <h4 className="text-lg font-bold text-navy mb-3">
                   AI Engineering &amp; Technical Implementation
@@ -105,7 +105,7 @@ export function CaseStudyTabs() {
 
               <Card className="p-6 bg-white rounded-xl shadow-md border border-teal/20 hover:border-teal/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
                 <div className="w-12 h-12 bg-teal/10 rounded-lg flex items-center justify-center mb-4">
-                  <Building2 className="w-6 h-6 text-teal" />
+                  <Building2 className="w-6 h-6 text-teal-on-light" />
                 </div>
                 <h4 className="text-lg font-bold text-navy mb-3">
                   Enterprise Architecture &amp; System Design

@@ -1,6 +1,6 @@
 export function CaseJourneyGraphic() {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto" tabIndex={0} role="region" aria-label="Case journey timeline graphic">
       <div className="min-w-[900px]">
         {/* Top Chevrons (pointing right) */}
         <div className="flex items-stretch mb-8">
@@ -17,11 +17,13 @@ export function CaseJourneyGraphic() {
           </div>
           <div className="flex-1 relative -ml-4">
             <div
-              className="bg-teal text-white px-8 py-3 text-center font-semibold text-base"
+              className="px-8 py-3 text-center font-semibold text-base"
               style={{
                 clipPath: "polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%)",
                 paddingLeft: "28px",
                 paddingRight: "24px",
+                backgroundColor: "#0D7D6C",
+                color: "white",
               }}
             >
               Transformation Framework
@@ -29,10 +31,12 @@ export function CaseJourneyGraphic() {
           </div>
           <div className="flex-1 relative -ml-4">
             <div
-              className="bg-amber text-white px-8 py-3 text-center font-semibold text-base"
+              className="px-8 py-3 text-center font-semibold text-base"
               style={{
                 clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%, 16px 50%)",
                 paddingLeft: "28px",
+                backgroundColor: "#B45309",
+                color: "white",
               }}
             >
               Scale Deployment &amp; Optionality
@@ -81,40 +85,40 @@ export function CaseJourneyGraphic() {
           {/* Center: Capability Progression - Horizontal Flow (Teal) */}
           <div className="flex-1 flex flex-col justify-center">
             <div className="text-center mb-4">
-              <h4 className="text-base font-bold text-teal uppercase tracking-wider">Enterprise AI Capability Progression</h4>
+              <h4 className="text-base font-bold text-teal-on-light uppercase tracking-wider">Enterprise AI Capability Progression</h4>
               <p className="text-sm text-gray-600 mt-1">Each phase builds on the last, from knowledge access to orchestrated intelligence in 18 months</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="bg-teal/10 border-2 border-teal/50 rounded-lg px-3 py-3 text-center shadow-sm min-w-[100px]">
-                <div className="text-sm font-semibold text-teal">Unified Knowledge Space</div>
+                <div className="text-sm font-semibold text-teal-on-light">Unified Knowledge Space</div>
                 <div className="text-xs text-gray-700 mt-1">Find relevant documents across any division</div>
               </div>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mx-1 flex-shrink-0">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <div className="bg-teal/10 border-2 border-teal/50 rounded-lg px-3 py-3 text-center shadow-sm min-w-[100px]">
-                <div className="text-sm font-semibold text-teal">Task AI Agents</div>
+                <div className="text-sm font-semibold text-teal-on-light">Task AI Agents</div>
                 <div className="text-xs text-gray-700 mt-1">Intelligent assistance for team-specific work</div>
               </div>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mx-1 flex-shrink-0">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <div className="bg-teal/10 border-2 border-teal/50 rounded-lg px-3 py-3 text-center shadow-sm min-w-[100px]">
-                <div className="text-sm font-semibold text-teal">Division Expert AI</div>
+                <div className="text-sm font-semibold text-teal-on-light">Division Expert AI</div>
                 <div className="text-xs text-gray-700 mt-1">One division expert agent handling many tasks</div>
               </div>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mx-1 flex-shrink-0">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <div className="bg-teal/10 border-2 border-teal/50 rounded-lg px-3 py-3 text-center shadow-sm min-w-[100px]">
-                <div className="text-sm font-semibold text-teal">Cross-Expert Discovery</div>
+                <div className="text-sm font-semibold text-teal-on-light">Cross-Expert Discovery</div>
                 <div className="text-xs text-gray-700 mt-1">Connecting agents across divisions</div>
               </div>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mx-1 flex-shrink-0">
                 <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <div className="bg-teal/10 border-2 border-teal/50 rounded-lg px-3 py-3 text-center shadow-sm min-w-[100px]">
-                <div className="text-sm font-semibold text-teal">Orchestrated Agentic AI System</div>
+                <div className="text-sm font-semibold text-teal-on-light">Orchestrated Agentic AI System</div>
                 <div className="text-xs text-gray-700 mt-1">Single AI window routing to the right experts</div>
               </div>
             </div>

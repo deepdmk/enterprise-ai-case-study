@@ -25,7 +25,7 @@ export function Navigation() {
         <div className="flex items-center justify-between h-24">
           <Link
             href="/"
-            className="text-lg font-bold text-white hover:text-teal transition-colors focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2 focus:ring-offset-navy rounded whitespace-nowrap"
+            className="text-lg font-bold text-white hover:text-teal-on-navy transition-colors focus:outline-none focus:ring-2 focus:ring-teal-on-navy focus:ring-offset-2 focus:ring-offset-navy rounded whitespace-nowrap"
           >
             Daniel Dimick | Emergent Enterprise AI
           </Link>
@@ -39,10 +39,10 @@ export function Navigation() {
               <Link
                 href={link.href}
                 className={cn(
-                  "text-base font-medium transition-colors hover:text-teal focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2 focus:ring-offset-navy rounded px-1",
+                  "text-base font-medium transition-colors hover:text-teal-on-navy focus:outline-none focus:ring-2 focus:ring-teal-on-navy focus:ring-offset-2 focus:ring-offset-navy rounded px-1",
                   pathname === link.href ||
                     (link.href !== "/" && pathname.startsWith(link.href))
-                    ? "text-teal"
+                    ? "text-teal-on-navy"
                     : "text-white/90"
                 )}
               >

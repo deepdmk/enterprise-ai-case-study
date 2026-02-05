@@ -54,21 +54,6 @@ function ProgramBox({ number, title, subtitle }: { number: number; title: string
   );
 }
 
-function TaskModelBox({ unit, count, color }: { unit: string; count: number; color: "teal" | "amber" | "navy" }) {
-  const colors = {
-    teal: "bg-teal/10 border-teal text-teal",
-    amber: "bg-amber/10 border-amber text-amber",
-    navy: "bg-navy/10 border-navy text-navy",
-  };
-
-  return (
-    <div className={cn("border rounded-lg p-2 text-center flex-1", colors[color])}>
-      <div className="font-bold text-xs">{unit}</div>
-      <div className="text-[10px] opacity-80">{count} SLMs</div>
-    </div>
-  );
-}
-
 export function Phase2ArchitectureDiagram() {
   return (
     <div className="w-full py-4 px-4">

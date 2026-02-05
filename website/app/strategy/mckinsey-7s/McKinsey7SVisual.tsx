@@ -85,7 +85,7 @@ const elements = {
 type ElementKey = keyof typeof elements;
 
 function ElementBox({
-  elementKey,
+  elementKey: _elementKey,
   element,
   isSelected,
   onClick,

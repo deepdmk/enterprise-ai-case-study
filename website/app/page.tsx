@@ -76,7 +76,7 @@ export default function HomePage() {
                   href="https://www.linkedin.com/in/dpdimick"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal transition-colors"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal-on-navy transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
                   <span className="text-base font-medium">LinkedIn</span>
@@ -85,14 +85,14 @@ export default function HomePage() {
                   href="https://github.com/deepdmk/enterprise-ai-case-study"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal transition-colors"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal-on-navy transition-colors"
                 >
                   <Github className="w-5 h-5" />
                   <span className="text-base font-medium">GitHub</span>
                 </a>
                 <a
                   href="mailto:d.dimick@eastsoutheast.international"
-                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal transition-colors"
+                  className="inline-flex items-center gap-2 text-white/80 hover:text-teal-on-navy transition-colors"
                 >
                   <Mail className="w-5 h-5" />
                   <span className="text-base font-medium">Email</span>
@@ -100,7 +100,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/about"
-                className="inline-flex items-center text-teal hover:text-teal/80 font-semibold transition-colors"
+                className="inline-flex items-center text-teal-on-navy hover:text-teal-on-navy/80 font-semibold transition-colors"
               >
                 View Full Profile
                 <ArrowRight className="w-4 h-4 ml-2" />

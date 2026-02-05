@@ -19,17 +19,17 @@ const colorMap = {
     solid: 'bg-navy',
   },
   teal: {
-    hex: '#1ABC9C',
+    hex: '#0A6B5C',  // Darker teal for 4.5:1 contrast on light backgrounds
     bg: 'rgba(26, 188, 156, 0.12)',
     solid: 'bg-teal',
   },
   amber: {
-    hex: '#F39C12',
+    hex: '#92400E',  // Darker amber for 4.5:1 contrast on light backgrounds
     bg: 'rgba(243, 156, 18, 0.12)',
     solid: 'bg-amber',
   },
   magenta: {
-    hex: '#9B59B6',
+    hex: '#7B3F96',  // Darker magenta for 4.5:1 contrast on light backgrounds
     bg: 'rgba(155, 89, 182, 0.12)',
     solid: 'bg-magenta',
   },
@@ -75,16 +75,16 @@ export default function PhasesPortal() {
                       {phase.number}
                     </div>
                     <div className="flex-1">
-                      <h3
+                      <h2
                         className="text-lg font-bold mb-1"
                         style={{ color: colorMap[phase.color].hex }}
                       >
                         {phase.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">{phase.subtitle}</p>
+                      </h2>
+                      <p className="text-sm text-gray-700">{phase.subtitle}</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-700 text-sm mb-4">
                     {phase.description}
                   </p>
                   <div
@@ -109,7 +109,7 @@ export default function PhasesPortal() {
                       ✓
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold mb-1">Scaling Production</h3>
+                      <h2 className="text-lg font-bold mb-1">Scaling Production</h2>
                       <p className="text-sm text-white/80">Enterprise deployment with AWS architecture</p>
                     </div>
                   </div>

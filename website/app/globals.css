@@ -7,8 +7,11 @@
   --color-amber: #F39C12;
   --color-magenta: #9B59B6;
 
-  /* Accessible dark teal */
-  --color-teal-dark: #138D75;
+  /* Accessible color variants for contrast compliance */
+  --color-teal-dark: #0E7A67;
+  --color-teal-on-navy: #5DCEBD;        /* Light teal for use on navy backgrounds (4.5:1 contrast) */
+  --color-teal-on-light: #085C4F;       /* Dark teal for use on light teal backgrounds (4.5:1+ contrast) */
+  --color-amber-on-light: #92400E;      /* Dark amber for use on light amber backgrounds (4.5:1+ contrast) */
 
   /* Navy-tinted Gray Scale */
   --color-gray-50: #F7F9FA;
@@ -18,6 +21,7 @@
   --color-gray-400: #A8B2BC;
   --color-gray-500: #8A95A0;
   --color-gray-600: #6A747F;
+  --color-gray-650: #545D67;            /* Darker gray for better contrast on colored backgrounds */
   --color-gray-700: #495460;
   --color-gray-800: #343A42;
   --color-gray-900: #2A3138;
