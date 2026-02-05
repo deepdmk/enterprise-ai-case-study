@@ -180,7 +180,7 @@ export default function SummaryPage() {
             <div className="mb-6">
               <h2 className="text-2xl font-bold mb-2 text-white">Strategic Analysis</h2>
               <p className="text-lg text-white">
-                Three independent analyses defined the situation: stakeholder consultations revealed needs, organizational assessment (7S + SWOT) exposed cultural, capability, and structural realities, and competitive analysis (Five Forces) identified market imperatives. Together, these produced 19 Critical to Quality requirements that any solution must satisfy.
+                We conducted three independent analyses to define the situation: stakeholder consultations to reveal needs, organizational assessment (7S + SWOT) to expose cultural and capability realities, and competitive analysis (Five Forces) to identify market imperatives. Together, these produced 19 Critical to Quality requirements that any solution must satisfy.
               </p>
             </div>
 
