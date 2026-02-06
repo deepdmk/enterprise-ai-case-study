@@ -24,7 +24,7 @@ export function SocialProofStrip() {
   ];
 
   return (
-    <div className="bg-gray-50 border-y border-gray-200 py-6">
+    <div className="bg-teal/10 border-y border-teal/30 py-6">
       <div className="max-w-6xl mx-auto px-4">
         {/* Technologies */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
