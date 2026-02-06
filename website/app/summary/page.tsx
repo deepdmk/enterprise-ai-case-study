@@ -325,19 +325,19 @@ export default function SummaryPage() {
             <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Enterprise AI doesn&apos;t require enterprise budgets</h4>
               <p className="text-sm text-gray-600">
-                A complete, production-ready system can be built for $163,100. The economics of fine-tuned small models make internal build viable.
+                A complete, production-ready system for $163,100 versus $2M-$7M for vendor platforms. Fine-tuned small models put enterprise AI within reach of mid-market organizations previously priced out.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
-              <h4 className="font-bold text-navy mb-2 text-center">Phased approaches reduce risk</h4>
+              <h4 className="font-bold text-navy mb-2 text-center">Bottom-up discovery builds stronger AI</h4>
               <p className="text-sm text-gray-600">
-                Progressive investment with decision points eliminates all-or-nothing risk. Optionality without sacrificing the end-state vision.
+                Starting with the people where value is created—letting them identify use cases and build out from there—produces AI capabilities shaped by immediate business value that can be leveraged into emergent capabilities for market differentiation and ultimately disruption.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Proprietary data becomes advantage</h4>
               <p className="text-sm text-gray-600">
-                Training on organizational knowledge creates AI capabilities competitors cannot replicate. Preserve and amplify institutional knowledge.
+                Training on organizational knowledge creates AI capabilities competitors cannot replicate, preserving and amplifying institutional knowledge rather than commoditizing it.
               </p>
             </div>
           </div>
