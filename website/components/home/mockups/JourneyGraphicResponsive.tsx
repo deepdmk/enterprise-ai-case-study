@@ -6,15 +6,14 @@ import {
   Workflow,
   ChevronRight,
   ChevronUp,
-  ArrowUp,
 } from "lucide-react";
 
 /**
  * Responsive Journey Graphic
  *
- * Cascading upward layout:
- * - Phases build from bottom to top
- * - Shows progression as growth
+ * Clean vertical layout:
+ * - Phases displayed top to bottom (5 to 1)
+ * - Arrows between phases showing upward progression
  * - Strategic Priorities on left, Deployment Options on right
  */
 export function JourneyGraphicResponsive() {
@@ -66,9 +65,6 @@ export function JourneyGraphicResponsive() {
     "Standalone or integrated",
   ];
 
-  // Reverse phases for bottom-to-top display
-  const phasesReversed = [...phases].reverse();
-
   return (
     <div className="w-full">
       {/* Top Chevron Bar */}
@@ -105,49 +101,33 @@ export function JourneyGraphicResponsive() {
           </div>
         </div>
 
-        {/* Phase Timeline - stair-step climbing left to right */}
+        {/* Phase Timeline - clean vertical layout */}
         <div>
           <h4 className="text-sm font-bold text-teal-on-light uppercase tracking-wider mb-3 text-center">
             18-Month Capability Progression
           </h4>
-          <div className="relative w-full">
-            {/* Render phases as stairs: bottom-right to top-left */}
-            {[...phases].reverse().map((phase, reverseIndex) => {
-              const index = phases.length - 1 - reverseIndex; // 0 at bottom, 4 at top
-              // Bottom on left, top on right - stairs climb left to right
-              const rightPercent = (phases.length - 1 - index) * 12; // 48%, 36%, 24%, 12%, 0%
-              return (
-                <div key={phase.number} className="relative h-[52px] mb-1">
-                  {/* Phase box - positioned from right */}
-                  <div
-                    className="absolute flex items-center gap-2 bg-teal/10 border-2 border-teal/50 rounded-lg p-2 w-[200px]"
-                    style={{ right: `${rightPercent}%` }}
-                  >
-                    <div className="w-7 h-7 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <phase.icon className="w-3.5 h-3.5 text-teal-on-light" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold text-teal-on-light leading-tight">
-                        {phase.title}
-                      </div>
-                      <p className="text-[10px] text-gray-600 leading-tight">{phase.description}</p>
-                    </div>
+          <div className="flex flex-col items-center gap-2">
+            {/* Render phases from top (5) to bottom (1) */}
+            {[...phases].reverse().map((phase, reverseIndex) => (
+              <div key={phase.number} className="flex flex-col items-center w-full">
+                {/* Phase box */}
+                <div className="flex items-center gap-3 bg-teal/10 border-2 border-teal/50 rounded-lg p-3 w-full max-w-[280px]">
+                  <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <phase.icon className="w-4 h-4 text-teal-on-light" />
                   </div>
-                  {/* Arrow pointing up to next step (except for bottom phase) */}
-                  {reverseIndex < phases.length - 1 && (
-                    <div
-                      className="absolute"
-                      style={{
-                        right: `calc(${rightPercent}% + 85px)`,
-                        bottom: '-12px'
-                      }}
-                    >
-                      <ChevronUp className="w-5 h-5 text-teal" />
+                  <div>
+                    <div className="text-sm font-semibold text-teal-on-light leading-tight">
+                      {phase.title}
                     </div>
-                  )}
+                    <p className="text-xs text-gray-600 leading-tight">{phase.description}</p>
+                  </div>
                 </div>
-              );
-            })}
+                {/* Arrow pointing up (except after bottom phase) */}
+                {reverseIndex < phases.length - 1 && (
+                  <ChevronUp className="w-5 h-5 text-teal my-1" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
