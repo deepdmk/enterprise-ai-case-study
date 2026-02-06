@@ -121,7 +121,7 @@ export default function SummaryPage() {
 
           <div className="space-y-6 mb-10">
             {/* Strategic Analysis */}
-            <div className="bg-teal/5 border-t-4 border-teal rounded-lg p-6">
+            <div className="bg-teal/5 border border-gray-200 border-t-4 border-t-teal rounded-lg p-6">
               <h3 className="text-lg font-bold text-navy mb-3">Strategic Analysis</h3>
               <p className="text-gray-700 mb-3">
                 Three independent analyses defined the situation: stakeholder consultations to reveal needs, organizational assessment (7S + SWOT) to expose cultural and capability realities, and competitive analysis (Five Forces) to identify market imperatives. Together, these produced 19 Critical to Quality requirements that any solution must satisfy.
@@ -129,7 +129,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Strategy Selection */}
-            <div className="bg-teal/5 border-t-4 border-teal rounded-lg p-6">
+            <div className="bg-teal/5 border border-gray-200 border-t-4 border-t-teal rounded-lg p-6">
               <h3 className="text-lg font-bold text-navy mb-3">Strategy Selection</h3>
               <p className="text-gray-700 mb-3">
                 Strategic alternatives were evaluated against all 19 CTQs using Pugh Matrix analysis. The selected approach: <strong className="text-navy">Phased Internal Build</strong> — proprietary AI built internally with existing staff through progressive deployment and self-initiated adoption. This approach satisfies stakeholder, competitive, and organizational requirements simultaneously.
@@ -137,7 +137,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Transformation Planning */}
-            <div className="bg-teal/5 border-t-4 border-teal rounded-lg p-6">
+            <div className="bg-teal/5 border border-gray-200 border-t-4 border-t-teal rounded-lg p-6">
               <h3 className="text-lg font-bold text-navy mb-3">Transformation Planning</h3>
               <p className="text-gray-700 mb-3">
                 The strategic approach alone couldn&apos;t satisfy all 19 CTQs. Many depended on how the transformation was timed and implemented. Three Horizons provided staging with decision points, Roadmap integrated technical and change management workstreams, and Balanced Scorecard enabled data-driven decisions at each phase boundary.
@@ -194,7 +194,7 @@ export default function SummaryPage() {
           <h3 className="text-xl font-bold text-navy mb-4">Six-Phase Implementation</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             {/* Phase 0 */}
-            <div className="bg-white border-t-4 border-gray-400 rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-gray-400 rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phase 0</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Infrastructure Foundation</h4>
               <p className="text-sm text-gray-600 mb-2">Data pipeline and staging infrastructure</p>
@@ -204,7 +204,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Phase 1 */}
-            <div className="bg-white border-t-4 border-teal rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-teal uppercase tracking-wide">Phase 1</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Unified Embedding Space</h4>
               <p className="text-sm text-gray-600 mb-2">Shared semantic infrastructure</p>
@@ -214,7 +214,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Phase 2 */}
-            <div className="bg-white border-t-4 border-amber rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-amber uppercase tracking-wide">Phase 2</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Task-Specific SLMs</h4>
               <p className="text-sm text-gray-600 mb-2">Fine-tuned small language models</p>
@@ -224,7 +224,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Phase 3 */}
-            <div className="bg-white border-t-4 border-magenta rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-magenta rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-magenta uppercase tracking-wide">Phase 3</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">MoE Division Agents</h4>
               <p className="text-sm text-gray-600 mb-2">Mixture-of-Experts models</p>
@@ -234,7 +234,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Phase 4 */}
-            <div className="bg-white border-t-4 border-teal rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-teal uppercase tracking-wide">Phase 4</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Agentic Discovery</h4>
               <p className="text-sm text-gray-600 mb-2">A2A protocol for collaboration</p>
@@ -244,7 +244,7 @@ export default function SummaryPage() {
             </div>
 
             {/* Phase 5 */}
-            <div className="bg-white border-t-4 border-navy rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
               <span className="text-xs font-semibold text-navy uppercase tracking-wide">Phase 5</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Orchestrated System</h4>
               <p className="text-sm text-gray-600 mb-2">SLM orchestrator</p>
@@ -273,12 +273,12 @@ export default function SummaryPage() {
 
           {/* Investment Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-navy mb-1">$11,100</div>
               <div className="text-sm font-semibold text-gray-700">Infrastructure</div>
               <p className="text-xs text-gray-500 mt-1">GPU compute, storage, vector DB, monitoring</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6 text-center">
+            <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-navy mb-1">$152,000</div>
               <div className="text-sm font-semibold text-gray-700">Training Programs</div>
               <p className="text-xs text-gray-500 mt-1">User training, change management for 8,000 staff</p>
@@ -293,25 +293,25 @@ export default function SummaryPage() {
           {/* Strategic Value */}
           <h3 className="text-xl font-bold text-navy mb-4">Strategic Value Delivered</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-            <div className="bg-white border-t-4 border-teal rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Optionality at Every Phase</h4>
               <p className="text-sm text-gray-600">
                 Each phase delivers standalone value and ROI. Stop at Phase 1 ($62,400), Phase 2 ($106,000), or Phase 3 ($137,200) with working AI capabilities. No all-or-nothing commitment.
               </p>
             </div>
-            <div className="bg-white border-t-4 border-navy rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Bounded Risk Per Phase</h4>
               <p className="text-sm text-gray-600">
                 Maximum exposure at any decision point is the cost of the current phase. Largest single phase requires $62,400.
               </p>
             </div>
-            <div className="bg-white border-t-4 border-amber rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Competitive Moat</h4>
               <p className="text-sm text-gray-600">
                 Models trained on organizational data create capabilities competitors cannot purchase. Proprietary knowledge becomes proprietary AI.
               </p>
             </div>
-            <div className="bg-white border-t-4 border-magenta rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-magenta rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Deployment Flexibility</h4>
               <p className="text-sm text-gray-600">
                 Deploys to any environment: local infrastructure, AWS/Azure cloud, or hybrid. No vendor lock-in.
@@ -322,19 +322,19 @@ export default function SummaryPage() {
           {/* What This Proves */}
           <h3 className="text-xl font-bold text-navy mb-4">What This Proves</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white border-t-4 border-teal rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Enterprise AI doesn&apos;t require enterprise budgets</h4>
               <p className="text-sm text-gray-600">
                 A complete, production-ready system can be built for $163,100. The economics of fine-tuned small models make internal build viable.
               </p>
             </div>
-            <div className="bg-white border-t-4 border-navy rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Phased approaches reduce risk</h4>
               <p className="text-sm text-gray-600">
                 Progressive investment with decision points eliminates all-or-nothing risk. Optionality without sacrificing the end-state vision.
               </p>
             </div>
-            <div className="bg-white border-t-4 border-amber rounded-lg shadow-md p-5">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Proprietary data becomes advantage</h4>
               <p className="text-sm text-gray-600">
                 Training on organizational knowledge creates AI capabilities competitors cannot replicate. Preserve and amplify institutional knowledge.

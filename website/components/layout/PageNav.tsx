@@ -23,7 +23,7 @@ export function PageNav({ current }: PageNavProps) {
   const next = currentIndex < pages.length - 1 ? pages[currentIndex + 1] : null;
 
   return (
-    <div className="border-b border-gray-200 py-2">
+    <div className="bg-slate-200 border-b border-gray-200 py-2">
       <Container>
         <div className="flex items-center justify-between">
           <div className="flex-1">
@@ -40,7 +40,7 @@ export function PageNav({ current }: PageNavProps) {
 
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:border-teal hover:text-teal transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-1 border border-gray-400 rounded-md text-sm font-semibold text-gray-700 hover:border-teal hover:text-teal transition-colors"
           >
             <Home className="w-4 h-4" />
             <span>Home</span>
