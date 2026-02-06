@@ -41,44 +41,94 @@ export default function StrategyPage() {
       {/* ==================== SECTION 1: STRATEGIC ANALYSIS ==================== */}
       <section className="py-16 bg-navy/10 border-t-4 border-teal">
         <Container>
-          <h2 className="text-5xl font-bold text-navy mb-4 flex items-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
             <span className="bg-navy text-white px-3 py-1 rounded mr-3 text-base">
               1
             </span>
             Strategic Analysis
           </h2>
 
-          <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-10">
+          {/* Key Finding Callout */}
+          <div className="bg-amber/20 border-l-4 border-amber rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-amber-dark">Key Finding</h3>
+            <p className="text-lg text-gray-700">
+              19 CTQs across stakeholder, competitive, and organizational dimensions that any solution must satisfy simultaneously — constraints that eliminated 2 of 3 strategic alternatives before detailed evaluation.
+            </p>
+          </div>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
             We conducted three independent analyses to map the landscape and build a complete
             picture of the context, stakeholders, and organizational dynamics. First, we consulted
             stakeholders to understand their needs. Then, we analyzed the competitive landscape (Five Forces)
             to identify market imperatives. Finally, we assessed the organization (7S + SWOT) to expose
-            cultural, capability, and structural realities. Brought together, these produced 19 Critical
-            to Quality requirements that established the starting point for viable strategies and
-            transformation pathways.
+            cultural, capability, and structural realities.
           </p>
+
+          {/* Analysis Preview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg p-5">
+              <div className="text-2xl font-bold text-navy mb-1">8</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Stakeholder CTQs</div>
+              <p className="text-base text-gray-600">Board, C-Suite, Culture & People, Customer requirements</p>
+            </div>
+            <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg p-5">
+              <div className="text-2xl font-bold text-teal mb-1">7</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Organizational CTQs</div>
+              <p className="text-base text-gray-600">Budget, culture, adoption, language, and structural constraints</p>
+            </div>
+            <div className="bg-white border border-gray-200 border-t-4 border-t-magenta rounded-lg p-5">
+              <div className="text-2xl font-bold text-magenta mb-1">4</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Competitive CTQs</div>
+              <p className="text-base text-gray-600">Proprietary capabilities, efficiency, defensibility, staffing</p>
+            </div>
+          </div>
 
           <StrategicAnalysisTabs />
         </Container>
       </section>
 
       {/* ==================== SECTION 2: STRATEGY DEVELOPMENT ==================== */}
-      <section className="py-16 border-t-4 border-navy" style={{ backgroundColor: 'rgba(221, 214, 254, 0.6)' }}>
+      <section className="py-16 bg-white border-t-4 border-navy">
         <Container>
-          <h2 className="text-5xl font-bold text-navy mb-4 flex items-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
             <span className="bg-teal-dark text-white px-3 py-1 rounded mr-3 text-base">
               2
             </span>
             Strategy Development
           </h2>
 
-          <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mb-10">
+          {/* Key Finding Callout */}
+          <div className="bg-teal/10 border-l-4 border-teal rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-teal-dark">Key Finding</h3>
+            <p className="text-lg text-gray-700">
+              Phased Internal Build scored +38 on Pugh Matrix analysis while alternatives failed with -29 and -23. Only one approach could satisfy stakeholder, competitive, and organizational requirements simultaneously.
+            </p>
+          </div>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
             We evaluated strategic alternatives against all 19 CTQs using Pugh Matrix analysis. The result:
             Phased Internal Build, an approach that builds proprietary AI internally with existing staff
-            through progressive deployment and self-initiated adoption. This approach satisfies stakeholder,
-            competitive, and organizational requirements simultaneously, providing the foundation for
-            transformation planning.
+            through progressive deployment and self-initiated adoption.
           </p>
+
+          {/* Options Preview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="bg-red-50 border border-red-200 border-t-4 border-t-red-400 rounded-lg p-5">
+              <div className="text-2xl font-bold text-red-600 mb-1">-29</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Vendor Platform</div>
+              <p className="text-base text-gray-600">Commoditizes advantage, exceeds budget 20-50x</p>
+            </div>
+            <div className="bg-red-50 border border-red-200 border-t-4 border-t-red-400 rounded-lg p-5">
+              <div className="text-2xl font-bold text-red-600 mb-1">-23</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Custom Big Bang</div>
+              <p className="text-base text-gray-600">Requires $1.5-3.75M, inaccessible AI talent</p>
+            </div>
+            <div className="bg-teal/10 border-2 border-teal rounded-lg p-5">
+              <div className="text-2xl font-bold text-teal mb-1">+38</div>
+              <div className="text-sm font-semibold text-gray-700 mb-2">Phased Internal Build</div>
+              <p className="text-base text-gray-600">Satisfies all 19 CTQs with bounded risk</p>
+            </div>
+          </div>
 
           <StrategyDevelopmentTabs />
         </Container>

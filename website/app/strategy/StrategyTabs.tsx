@@ -12,61 +12,79 @@ function StakeholderAnalysis() {
         Stakeholder CTQ Analysis
       </h3>
 
-      <p className="text-lg text-gray-700 mb-6">
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="bg-navy/10 px-4 py-2 rounded-lg">
+          <span className="text-sm text-gray-600">Approach:</span>
+          <span className="ml-2 font-semibold text-navy">One-on-one interviews and focus groups</span>
+        </div>
+      </div>
+
+      <p className="text-base text-gray-700 mb-6">
         Before evaluating strategic approaches, we analyzed stakeholder needs to
         derive Critical to Quality requirements that any solution must satisfy.
       </p>
 
-      <div className="overflow-x-auto mb-6">
-        <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm">
-          <thead>
-            <tr className="bg-navy text-white">
-              <th className="border border-navy/70 p-3 text-left font-semibold">
-                Stakeholder
-              </th>
-              <th className="border border-navy/70 p-3 text-left font-semibold">
-                Core Need
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-white">
-              <td className="border border-gray-200 p-3 font-semibold text-navy">
-                Board
-              </td>
-              <td className="border border-gray-200 p-3 text-gray-700">
-                Quarterly visible progress + fast ROI
-              </td>
-            </tr>
-            <tr className="bg-gray-50">
-              <td className="border border-gray-200 p-3 font-semibold text-navy">
-                C-Suite
-              </td>
-              <td className="border border-gray-200 p-3 text-gray-700">
-                Exit optionality + bounded risk
-              </td>
-            </tr>
-            <tr className="bg-white">
-              <td className="border border-gray-200 p-3 font-semibold text-navy">
-                Culture &amp; People
-              </td>
-              <td className="border border-gray-200 p-3 text-gray-700">
-                Immediate local value + no mandates
-              </td>
-            </tr>
-            <tr className="bg-gray-50">
-              <td className="border border-gray-200 p-3 font-semibold text-navy">
-                Customers
-              </td>
-              <td className="border border-gray-200 p-3 text-gray-700">
-                Quality improvement + compliance + no imposed changes
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      {/* Stakeholder CTQ Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S1</span>
+            <span className="font-semibold text-navy">Board: Visible Progress</span>
+          </div>
+          <p className="text-base text-gray-600">Quarterly visible progress demonstrating momentum</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S2</span>
+            <span className="font-semibold text-navy">Board: Fast ROI</span>
+          </div>
+          <p className="text-base text-gray-600">Rapid return on investment, not deferred payback</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S3</span>
+            <span className="font-semibold text-navy">C-Suite: Exit Optionality</span>
+          </div>
+          <p className="text-base text-gray-600">Ability to stop at any point without sunk cost</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S4</span>
+            <span className="font-semibold text-navy">C-Suite: Bounded Risk</span>
+          </div>
+          <p className="text-base text-gray-600">Limited exposure at any decision point</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S5</span>
+            <span className="font-semibold text-navy">Staff: Immediate Value</span>
+          </div>
+          <p className="text-base text-gray-600">Quick wins that solve real problems from day one</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S6</span>
+            <span className="font-semibold text-navy">Staff: No Mandates</span>
+          </div>
+          <p className="text-base text-gray-600">Self-initiated adoption, not top-down requirements</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S7</span>
+            <span className="font-semibold text-navy">Customer: Quality</span>
+          </div>
+          <p className="text-base text-gray-600">Improved service quality and compliance</p>
+        </div>
+        <div className="bg-navy/5 border-l-4 border-navy rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-navy text-white text-xs font-bold px-2 py-1 rounded">S8</span>
+            <span className="font-semibold text-navy">Customer: No Disruption</span>
+          </div>
+          <p className="text-base text-gray-600">No imposed changes to existing relationships</p>
+        </div>
       </div>
 
-      <p className="text-lg text-gray-700 mb-4">
+      <p className="text-base text-gray-700 mb-4">
         Four CTQ categories emerged: Cultural, Financial, Competitive, and
         Operational constraints that traditional AI approaches could not satisfy
         simultaneously.
@@ -74,7 +92,7 @@ function StakeholderAnalysis() {
 
       <Link
         href="/strategy/stakeholder-ctq"
-        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors"
       >
         View Full Analysis &rarr;
       </Link>
@@ -89,70 +107,82 @@ function OrganizationalAnalysis() {
         Understanding Organizational Reality
       </h3>
 
-      <p className="text-gray-700 mb-2">
-        <strong>Key Finding:</strong> Decentralized culture structured for
-        relationship-building makes top-down mandates organizationally impossible
-      </p>
-
-      <p className="text-gray-700 mb-4">
-        <strong>Approach:</strong> McKinsey 7S + SWOT organizational assessment
-      </p>
-
-      <div className="mb-4">
-        <p className="text-lg text-gray-700 font-semibold mb-2">
-          Constraints Identified (O1-O7):
-        </p>
-        <ul className="list-disc pl-6 text-lg text-gray-700 space-y-1">
-          <li>
-            <strong>O1:</strong> Total investment &lt;$1M (severe budget
-            constraints)
-          </li>
-          <li>
-            <strong>O2:</strong> Decentralized self-initiated adoption (mandates
-            organizationally impossible)
-          </li>
-          <li>
-            <strong>O3:</strong> Quick value with zero training prerequisites
-            (change-fatigued workforce)
-          </li>
-          <li>
-            <strong>O4:</strong> Four-language support from day one (90%
-            non-English workforce)
-          </li>
-          <li>
-            <strong>O5:</strong> Leverage peer networks and mission framing
-            (relational culture)
-          </li>
-          <li>
-            <strong>O6:</strong> Passive knowledge capture (experts won&apos;t
-            document, disruption creates resistance)
-          </li>
-          <li>
-            <strong>O7:</strong> Respect strongly aligned cultural elements
-            (Style-Staff-Structure-Values cannot change on transformation
-            timeline)
-          </li>
-        </ul>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="bg-teal/10 px-4 py-2 rounded-lg">
+          <span className="text-sm text-gray-600">Approach:</span>
+          <span className="ml-2 font-semibold text-teal-dark">McKinsey 7S + SWOT</span>
+        </div>
       </div>
 
-      <div className="bg-navy/5 border-l-4 border-navy p-5 rounded mb-4">
-        <p className="text-lg text-gray-700">
-          <strong>Strategic Implication:</strong> The strongly aligned
-          Style-Staff-Structure-Values elements create an organizational system
-          optimized for decentralized relationship-building, not centralized
-          efficiency. Top-down mandates violate both structure (decentralized
-          authority) and culture (consensus-driven,
-          relationship-centric). The 18-month transformation timeline makes
-          organizational change impossible. Must design solution that works
-          with this reality rather than requiring its transformation. Failed past
-          initiatives created change fatigue and trust deficit that only value
-          demonstration can overcome.
+      <p className="text-base text-gray-700 mb-6">
+        Decentralized culture structured for relationship-building makes top-down mandates organizationally impossible.
+      </p>
+
+      {/* Constraints Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O1</span>
+            <span className="font-semibold text-navy">Budget Constraint</span>
+          </div>
+          <p className="text-base text-gray-600">Total investment &lt;$1M</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O2</span>
+            <span className="font-semibold text-navy">Adoption Model</span>
+          </div>
+          <p className="text-base text-gray-600">Decentralized self-initiated adoption required</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O3</span>
+            <span className="font-semibold text-navy">Change Fatigue</span>
+          </div>
+          <p className="text-base text-gray-600">Quick value with zero training prerequisites</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O4</span>
+            <span className="font-semibold text-navy">Language Support</span>
+          </div>
+          <p className="text-base text-gray-600">Four languages from day one (90% non-English)</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O5</span>
+            <span className="font-semibold text-navy">Relational Culture</span>
+          </div>
+          <p className="text-base text-gray-600">Leverage peer networks and mission framing</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O6</span>
+            <span className="font-semibold text-navy">Knowledge Capture</span>
+          </div>
+          <p className="text-base text-gray-600">Passive capture only — experts won&apos;t document</p>
+        </div>
+        <div className="bg-teal/5 border-l-4 border-teal rounded-r-lg p-4 md:col-span-2">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-teal text-white text-xs font-bold px-2 py-1 rounded">O7</span>
+            <span className="font-semibold text-navy">Cultural Alignment</span>
+          </div>
+          <p className="text-base text-gray-600">Style-Staff-Structure-Values cannot change on transformation timeline</p>
+        </div>
+      </div>
+
+      <div className="bg-amber/10 border-l-4 border-amber p-5 rounded-r-lg mb-6">
+        <h4 className="font-semibold text-amber-dark mb-2">Strategic Implication</h4>
+        <p className="text-base text-gray-700">
+          The strongly aligned Style-Staff-Structure-Values elements create an organizational system
+          optimized for decentralized relationship-building, not centralized efficiency. Must design
+          solution that works with this reality rather than requiring its transformation.
         </p>
       </div>
 
       <Link
         href="/strategy/mckinsey-7s"
-        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors"
       >
         View detailed 7S + SWOT analysis &rarr;
       </Link>
@@ -167,53 +197,62 @@ function CompetitiveAnalysis() {
         Understanding Competitive Imperatives
       </h3>
 
-      <p className="text-lg text-gray-700 mb-2">
-        <strong>Key Finding:</strong> Institutional knowledge provides strong,
-        defensible competitive position for established player in commoditizing
-        AI market
-      </p>
-
-      <p className="text-lg text-gray-700 mb-4">
-        <strong>Approach:</strong> 5 Forces competitive analysis
-      </p>
-
-      <div className="mb-4">
-        <p className="text-lg text-gray-700 font-semibold mb-2">
-          Requirements Extracted (C1-C4):
-        </p>
-        <ul className="list-disc pl-6 text-lg text-gray-700 space-y-1">
-          <li>
-            <strong>C1:</strong> Proprietary capabilities (non-commoditizable)
-          </li>
-          <li>
-            <strong>C2:</strong> Dramatic efficiency gains (outperform lean
-            competitors)
-          </li>
-          <li>
-            <strong>C3:</strong> Defensible differentiation (non-substitutable)
-          </li>
-          <li>
-            <strong>C4:</strong> Build with existing staff (not external AI
-            talent)
-          </li>
-        </ul>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="bg-magenta/10 px-4 py-2 rounded-lg">
+          <span className="text-sm text-gray-600">Approach:</span>
+          <span className="ml-2 font-semibold text-magenta">Porter&apos;s 5 Forces</span>
+        </div>
       </div>
 
-      <div className="bg-navy/5 border-l-4 border-navy p-5 rounded mb-4">
-        <p className="text-lg text-gray-700">
-          <strong>Strategic Implication:</strong> The organization cannot compete
-          on speed or cost against new market entrants. Commercial AI platforms
-          commoditize capabilities that competitors can equally access,
-          destroying a key advantage: institutional knowledge. Vendor platforms would convert strategic asset into
-          commodity capability. The best defensible position requires building
-          proprietary AI internally on unique institutional knowledge that
-          competitors cannot purchase or replicate. This is competitive survival.
+      <p className="text-base text-gray-700 mb-6">
+        Institutional knowledge provides a strong, defensible competitive position for an established player in a commoditizing AI market.
+      </p>
+
+      {/* Competitive Requirements Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+        <div className="bg-magenta/5 border-l-4 border-magenta rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-magenta text-white text-xs font-bold px-2 py-1 rounded">C1</span>
+            <span className="font-semibold text-navy">Proprietary Capabilities</span>
+          </div>
+          <p className="text-base text-gray-600">Non-commoditizable AI that competitors cannot purchase</p>
+        </div>
+        <div className="bg-magenta/5 border-l-4 border-magenta rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-magenta text-white text-xs font-bold px-2 py-1 rounded">C2</span>
+            <span className="font-semibold text-navy">Efficiency Gains</span>
+          </div>
+          <p className="text-base text-gray-600">Dramatic improvements to outperform lean competitors</p>
+        </div>
+        <div className="bg-magenta/5 border-l-4 border-magenta rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-magenta text-white text-xs font-bold px-2 py-1 rounded">C3</span>
+            <span className="font-semibold text-navy">Defensible Differentiation</span>
+          </div>
+          <p className="text-base text-gray-600">Non-substitutable capabilities based on unique knowledge</p>
+        </div>
+        <div className="bg-magenta/5 border-l-4 border-magenta rounded-r-lg p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="bg-magenta text-white text-xs font-bold px-2 py-1 rounded">C4</span>
+            <span className="font-semibold text-navy">Existing Staff</span>
+          </div>
+          <p className="text-base text-gray-600">Build with current team, not external AI talent</p>
+        </div>
+      </div>
+
+      <div className="bg-amber/10 border-l-4 border-amber p-5 rounded-r-lg mb-6">
+        <h4 className="font-semibold text-amber-dark mb-2">Strategic Implication</h4>
+        <p className="text-base text-gray-700">
+          The organization cannot compete on speed or cost against new market entrants. Commercial AI platforms
+          commoditize capabilities that competitors can equally access, destroying the institutional knowledge advantage.
+          The best defensible position requires building proprietary AI internally on unique knowledge that
+          competitors cannot purchase or replicate.
         </p>
       </div>
 
       <Link
         href="/porters-five-forces"
-        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors"
       >
         View detailed 5 Forces analysis &rarr;
       </Link>
@@ -230,32 +269,58 @@ function OptionsDevelopment() {
         Evaluating Solution Options
       </h3>
 
-      <p className="text-gray-700 mb-4">
+      <p className="text-base text-gray-700 mb-6">
         Three strategic alternatives were developed from the CTQ requirements
         and evaluated against the full set of 19 stakeholder, competitive, and
         organizational constraints.
       </p>
 
-      <div className="mb-4">
-        <p className="text-lg text-gray-700 font-semibold mb-2">
-          Alternatives Evaluated:
-        </p>
-        <ul className="list-disc pl-6 text-lg text-gray-700 space-y-2">
-          <li>
-            <strong>Vendor Platform:</strong> Purchase commercial AI platform
-            (e.g., Microsoft Copilot, Salesforce Einstein) and configure for
-            organizational needs
-          </li>
-          <li>
-            <strong>Custom Big Bang:</strong> Build custom AI system from scratch
-            with full-scope deployment across the organization simultaneously
-          </li>
-          <li>
-            <strong>Phased Internal Build:</strong> Build proprietary AI
-            internally with existing staff, deploy progressively with
-            self-initiated adoption
-          </li>
-        </ul>
+      {/* Options Cards */}
+      <div className="space-y-4">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="bg-gray-400 text-white text-xs font-bold px-3 py-1 rounded">Option 1</span>
+            <h4 className="font-semibold text-navy text-lg">Vendor Platform</h4>
+          </div>
+          <p className="text-base text-gray-700">
+            Purchase commercial AI platform (e.g., Microsoft Copilot, Salesforce Einstein) and configure for organizational needs.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">$2-7M investment</span>
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">3-4 year ROI</span>
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">Vendor lock-in</span>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="bg-gray-400 text-white text-xs font-bold px-3 py-1 rounded">Option 2</span>
+            <h4 className="font-semibold text-navy text-lg">Custom Big Bang</h4>
+          </div>
+          <p className="text-base text-gray-700">
+            Build custom AI system from scratch with full-scope deployment across the organization simultaneously.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">$1.5-3.75M</span>
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">Requires AI talent</span>
+            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">All-or-nothing</span>
+          </div>
+        </div>
+
+        <div className="bg-teal/5 border-2 border-teal rounded-lg p-5">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="bg-teal text-white text-xs font-bold px-3 py-1 rounded">Option 3</span>
+            <h4 className="font-semibold text-navy text-lg">Phased Internal Build</h4>
+          </div>
+          <p className="text-base text-gray-700">
+            Build proprietary AI internally with existing staff, deploy progressively with self-initiated adoption.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="text-xs bg-teal/20 text-teal-dark px-2 py-1 rounded">$163K investment</span>
+            <span className="text-xs bg-teal/20 text-teal-dark px-2 py-1 rounded">Quarterly ROI</span>
+            <span className="text-xs bg-teal/20 text-teal-dark px-2 py-1 rounded">Exit optionality</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -268,51 +333,52 @@ function OptionScoring() {
         Option Scoring: Pugh Matrix
       </h3>
 
-      <p className="text-gray-700 mb-2">
-        <strong>Key Finding:</strong> Phased Internal Build scored +38;
-        alternatives failed with -29 and -23
-      </p>
-
-      <p className="text-gray-700 mb-4">
-        <strong>Approach:</strong> Pugh Matrix evaluation against 19 CTQs (8
-        stakeholder + 4 competitive + 7 organizational)
-      </p>
-
-      <div className="mb-4">
-        <p className="text-lg text-gray-700 font-semibold mb-2">Results:</p>
-        <ul className="list-disc pl-6 text-lg text-gray-700 space-y-2">
-          <li>
-            <strong>Vendor Platform:</strong> -29 (REJECTED) - Violates 6 of 8
-            stakeholder requirements, commoditizes competitive advantage, exceeds
-            budget 20-50x
-          </li>
-          <li>
-            <strong>Custom Big Bang:</strong> -23 (REJECTED) - Violates 6 of 8
-            stakeholder requirements, requires $1.5-3.75M for inaccessible AI
-            talent, culturally impossible
-          </li>
-          <li>
-            <strong>Phased Internal Build:</strong> +38 (SELECTED) - Only option
-            satisfying all stakeholder requirements while passing competitive and
-            organizational validation
-          </li>
-        </ul>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="bg-navy/10 px-4 py-2 rounded-lg">
+          <span className="text-sm text-gray-600">Method:</span>
+          <span className="ml-2 font-semibold text-navy">Pugh Matrix</span>
+        </div>
+        <div className="bg-navy/10 px-4 py-2 rounded-lg">
+          <span className="text-sm text-gray-600">Criteria:</span>
+          <span className="ml-2 font-semibold text-navy">19 CTQs (8 + 7 + 4)</span>
+        </div>
       </div>
 
-      <div className="bg-teal/5 border-l-4 border-teal p-5 rounded mb-4">
-        <p className="text-lg text-gray-700">
-          <strong>Strategic Implication:</strong> Phased Internal Build was the viable option given the constraints. Both alternatives
-          failed stakeholder requirements fundamentally: vendor platforms destroy
-          competitive advantage through commoditization, custom big bang requires
-          organizational capabilities (centralized coordination, mandate
-          authority, AI talent access) that don&apos;t exist and cannot be
-          created on transformation timeline.
+      {/* Scoring Results Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-5 text-center">
+          <div className="text-4xl font-bold text-red-600 mb-2">-29</div>
+          <div className="font-semibold text-gray-800 mb-2">Vendor Platform</div>
+          <span className="inline-block bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">REJECTED</span>
+          <p className="text-sm text-gray-600 mt-3">Violates 6 of 8 stakeholder requirements, exceeds budget 20-50x</p>
+        </div>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-5 text-center">
+          <div className="text-4xl font-bold text-red-600 mb-2">-23</div>
+          <div className="font-semibold text-gray-800 mb-2">Custom Big Bang</div>
+          <span className="inline-block bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">REJECTED</span>
+          <p className="text-sm text-gray-600 mt-3">Requires $1.5-3.75M and inaccessible AI talent</p>
+        </div>
+        <div className="bg-teal/10 border-2 border-teal rounded-lg p-5 text-center">
+          <div className="text-4xl font-bold text-teal mb-2">+38</div>
+          <div className="font-semibold text-gray-800 mb-2">Phased Internal Build</div>
+          <span className="inline-block bg-teal/20 text-teal-dark text-xs font-semibold px-3 py-1 rounded-full">SELECTED</span>
+          <p className="text-sm text-gray-600 mt-3">Satisfies all 19 CTQs with bounded risk</p>
+        </div>
+      </div>
+
+      <div className="bg-teal/10 border-l-4 border-teal p-5 rounded-r-lg mb-6">
+        <h4 className="font-semibold text-teal-dark mb-2">Strategic Implication</h4>
+        <p className="text-base text-gray-700">
+          Phased Internal Build was the only viable option given the constraints. Both alternatives
+          failed stakeholder requirements fundamentally: vendor platforms destroy competitive advantage
+          through commoditization, custom big bang requires organizational capabilities that don&apos;t
+          exist and cannot be created on the transformation timeline.
         </p>
       </div>
 
       <Link
         href="/strategy/pugh-matrix"
-        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors text-lg"
+        className="inline-flex items-center px-6 py-3 bg-teal-dark hover:bg-navy text-white font-semibold rounded-lg transition-colors"
       >
         View detailed Pugh Matrix analysis &rarr;
       </Link>
@@ -327,61 +393,50 @@ function SelectedStrategy() {
         Solution Strategy Selected: Phased Internal Build
       </h3>
 
-      <p className="text-gray-700 mb-6">
-        <strong>Phased Internal Build</strong> is the strategic approach: build
-        proprietary AI internally with existing staff, deploy progressively with
-        self-initiated adoption. The transformation builds through progressive
-        capability stages, where each phase delivers immediate ROI and creates
-        standalone value. The phased approach enables stopping at any point with
-        a functioning AI capability that has positive ROI, rather than requiring
-        all-or-nothing investment.
+      <p className="text-base text-gray-700 mb-6">
+        Build proprietary AI internally with existing staff, deploy progressively with
+        self-initiated adoption. Each phase delivers immediate ROI and creates standalone value,
+        enabling exit at any point with a functioning AI capability.
       </p>
 
-      <div className="bg-teal/5 border-l-4 border-teal p-5 rounded mb-6">
-        <p className="text-lg text-gray-700 font-semibold mb-2">
-          Core Investment:
-        </p>
-        <ul className="list-disc pl-6 text-lg text-gray-700 space-y-1">
-          <li>
-            <strong>Direct Investment:</strong> $163.1K ($11.1K infrastructure +
-            $152K training programs)
-          </li>
-          <li>
-            <strong>Estimated Labor Allocation:</strong> $1,110K (5 FTE over 18
-            months)
-          </li>
-          <li>
-            <strong>Cost Reduction:</strong> 92-98% vs $2-7M traditional
-            alternatives
-          </li>
-        </ul>
+      {/* Investment Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-navy/5 border border-gray-200 rounded-lg p-5 text-center">
+          <div className="text-3xl font-bold text-navy mb-1">$163.1K</div>
+          <div className="text-sm font-semibold text-gray-700">Direct Investment</div>
+          <p className="text-xs text-gray-500 mt-1">$11.1K infrastructure + $152K training</p>
+        </div>
+        <div className="bg-navy/5 border border-gray-200 rounded-lg p-5 text-center">
+          <div className="text-3xl font-bold text-navy mb-1">$1,110K</div>
+          <div className="text-sm font-semibold text-gray-700">Labor Allocation</div>
+          <p className="text-xs text-gray-500 mt-1">5 FTE over 18 months</p>
+        </div>
+        <div className="bg-teal/10 border-2 border-teal rounded-lg p-5 text-center">
+          <div className="text-3xl font-bold text-teal mb-1">92-98%</div>
+          <div className="text-sm font-semibold text-gray-700">Cost Reduction</div>
+          <p className="text-xs text-gray-500 mt-1">vs $2-7M alternatives</p>
+        </div>
       </div>
 
-      <p className="text-lg text-gray-700 font-semibold mb-3">
-        Strategic Outcomes Achieved:
-      </p>
-
-      <div className="space-y-3">
-        <p className="text-lg text-gray-700">
-          <strong>Competitive Advantage:</strong> Proprietary AI built on
-          institutional knowledge competitors cannot purchase or replicate
-        </p>
-        <p className="text-lg text-gray-700">
-          <strong>Financial Performance:</strong> $163.1K Direct Investment vs
-          $2-7M alternatives (92-98% reduction), quarterly value from Month 1
-        </p>
-        <p className="text-lg text-gray-700">
-          <strong>Organizational Success:</strong> Self-initiated adoption in
-          change-fatigued, decentralized organization across 4 languages
-        </p>
-        <p className="text-lg text-gray-700">
-          <strong>Risk Management:</strong> Progressive investment with decision
-          points at horizon boundaries vs. all-or-nothing $2-7M bets
-        </p>
-        <p className="text-lg text-gray-700">
-          <strong>Strategic Optionality:</strong> Guaranteed AI transformation
-          while preserving optionality for workflow and organizational changes
-        </p>
+      {/* Strategic Outcomes */}
+      <h4 className="text-lg font-semibold text-navy mb-4">Strategic Outcomes Achieved</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg p-4">
+          <h5 className="font-semibold text-navy mb-2">Competitive Advantage</h5>
+          <p className="text-base text-gray-600">Proprietary AI built on institutional knowledge competitors cannot purchase or replicate</p>
+        </div>
+        <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg p-4">
+          <h5 className="font-semibold text-navy mb-2">Financial Performance</h5>
+          <p className="text-base text-gray-600">$163.1K Direct Investment vs $2-7M alternatives, quarterly value from Month 1</p>
+        </div>
+        <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg p-4">
+          <h5 className="font-semibold text-navy mb-2">Organizational Success</h5>
+          <p className="text-base text-gray-600">Self-initiated adoption in change-fatigued, decentralized organization across 4 languages</p>
+        </div>
+        <div className="bg-white border border-gray-200 border-t-4 border-t-magenta rounded-lg p-4">
+          <h5 className="font-semibold text-navy mb-2">Risk Management</h5>
+          <p className="text-base text-gray-600">Progressive investment with decision points vs. all-or-nothing $2-7M bets</p>
+        </div>
       </div>
     </div>
   );
