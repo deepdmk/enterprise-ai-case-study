@@ -37,7 +37,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Section 5: Social Proof Strip */}
+      {/* Section 5: Built With Strip */}
       <SocialProofStrip />
 
       {/* Section 6: About the Architect */}

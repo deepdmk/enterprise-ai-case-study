@@ -249,7 +249,7 @@ export default function SummaryPage() {
                 We inverted the traditional enterprise AI playbook. Rather than mandating a platform from headquarters and asking staff to trust that value would come in 3-4 years, we started where the burden was worst: overwhelmed teams struggling to find institutional knowledge trapped in silos across four languages. We built immediate relief for those teams first, then let demonstrated value drive organic adoption across the organization. Each phase built on proven success, not projected ROI. This meant the organization could stop at any point, keep everything already built, and face no sunk cost.
               </p>
               <p>
-                The technical architecture reinforced this approach. While infrastructure investment was required, the system did not require large proprietary platforms or cloud infrastructure to start, though both remained options for scaling. Each phase brought increasing sophistication and strategic capabilities, from basic search to intelligent agents to autonomous collaboration. The deployment remained non-proprietary throughout, built to integrate easily with proprietary systems when scaling demanded it.
+                The technical architecture reinforced this approach. While infrastructure investment was required, the system did not require large proprietary platforms or cloud infrastructure to start, though both remained options for scaling. Each phase brought increasing sophistication and strategic capabilities, from basic search to intelligent agents to autonomous collaboration. The deployment remains non-proprietary throughout, built to integrate easily with proprietary systems when scaling demands it.
               </p>
             </div>
           </Card>
@@ -348,7 +348,7 @@ export default function SummaryPage() {
             <div className="mb-8">
               <h3 className="text-2xl font-bold mb-3 text-white">Investment Analysis</h3>
               <p className="text-lg text-white mb-4">
-                The complete system was built for $163,100 in direct investment: $11,100 infrastructure (GPU compute, storage, vector database, inference, monitoring) plus $152,000 training programs (user training, change management, multi-language materials for 8,000 staff). This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
+                The complete system can be built for $163,100 in direct investment: $11,100 infrastructure (GPU compute, storage, vector database, inference, monitoring) plus $152,000 training programs (user training, change management, multi-language materials for 8,000 staff). This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card className="p-4 bg-white border-white shadow-lg text-center">

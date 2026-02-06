@@ -79,7 +79,7 @@ export default function Phase2() {
                   </p>
 
                   <p className="text-gray-700 leading-relaxed mb-6">
-                    The organization provided decentralized AI expertise and support to enable teams rather than centralizing model development. This built organizational capability while keeping decision-making where expertise lived.
+                    The organization provided decentralized AI expertise and support to enable teams rather than centralizing model development. This builds organizational capability while keeping decision-making where expertise lives.
                   </p>
 
                   {/* Subsection 2.2: Task-Specific Fine-Tuning Strategy */}
@@ -105,7 +105,7 @@ export default function Phase2() {
                   <h3 className="text-2xl font-bold text-navy mb-4 mt-8">Foundation for Phase 3 Division-Level Agents</h3>
 
                   <p className="text-gray-700 leading-relaxed mb-6">
-                    Phase 2 task models were designed as building blocks for Phase 3&apos;s Mixture-of-Experts (MoE) architecture rather than standalone endpoints. Each task SLM became a specialized expert that a division-level router could orchestrate.
+                    Phase 2 task models are designed as building blocks for Phase 3&apos;s Mixture-of-Experts (MoE) architecture rather than standalone endpoints. Each task SLM became a specialized expert that a division-level router could orchestrate.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed mb-6">
@@ -124,7 +124,7 @@ export default function Phase2() {
                   <h3 className="text-2xl font-bold text-navy mb-4 mt-8">Phase 0 Registry Integration</h3>
 
                   <p className="text-gray-700 leading-relaxed mb-6">
-                    Phase 2 integrated with Phase 0&apos;s ModelRegistry and ExperimentTracker to enable systematic learning across 14 models and multiple teams. ModelRegistry tracked each task model&apos;s metadata, performance metrics, training cost, and deployment endpoint. This created visibility into which models delivered the most value and which training approaches worked best.
+                    Phase 2 integrated with Phase 0&apos;s ModelRegistry and ExperimentTracker to enable systematic learning across 14 models and multiple teams. ModelRegistry tracked each task model&apos;s metadata, performance metrics, training cost, and deployment endpoint. This creates visibility into which models deliver the most value and which training approaches worked best.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed mb-6">

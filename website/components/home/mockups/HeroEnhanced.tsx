@@ -45,8 +45,8 @@ export function HeroEnhanced() {
 
           {/* Value proposition line */}
           <p className="text-lg text-white/70 max-w-2xl mx-auto mb-8">
-            See how a $1.3B international enterprise built proprietary AI capabilities
-            without vendor lock-in
+            See how a $1.3B international enterprise can build proprietary AI
+            capabilities without vendor lock-in
           </p>
 
           {/* Scroll CTA */}

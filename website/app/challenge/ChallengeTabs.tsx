@@ -283,7 +283,7 @@ function CompetitiveSurvival() {
           ground.
         </p>
         <p>
-          This created a critical constraint for AI deployment. Any AI approach
+          This creates a critical constraint for AI deployment. Any AI approach
           that commoditized institutional knowledge into generic processes
           purchasable by competitors would eliminate the organization&apos;s
           differentiation. Vendor platforms, in particular, posed this risk.

@@ -79,7 +79,7 @@ export default function Phase3() {
                   <h3 className="text-2xl font-bold text-navy mb-4">Consolidating Fourteen Models Into Three Division Agents</h3>
 
                   <p className="text-gray-700 leading-relaxed mb-4">
-                    Phase 2 delivered immediate value: fourteen working task models with a combined Phase 2 Direct Investment of $43,600. Teams had AI capabilities they owned and controlled. But this created both operational and architectural complexity that would compound in later phases.
+                    Phase 2 delivers immediate value: fourteen working task models with a combined Phase 2 Direct Investment of $43,600. Teams have AI capabilities they own and control. But this also creates both operational and architectural complexity that would compound in later phases.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed mb-4">

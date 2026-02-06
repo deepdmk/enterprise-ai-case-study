@@ -124,7 +124,7 @@ export default function ResultsPage() {
         <Container>
           <h2 className="text-3xl font-bold text-navy mb-4">Investment Analysis</h2>
           <p className="text-lg text-gray-700 mb-10 max-w-4xl">
-            The complete system was built for $163.1K in direct investment — infrastructure and training programs required regardless of technical approach. This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
+            The complete system can be built for $163.1K in direct investment — infrastructure and training programs required regardless of technical approach. This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -223,7 +223,7 @@ export default function ResultsPage() {
               href="/solution"
               className="inline-flex items-center justify-center px-8 py-4 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors"
             >
-              See How It Was Built
+              See the Technical Solution
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
