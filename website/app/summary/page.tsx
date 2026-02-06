@@ -209,7 +209,7 @@ export default function SummaryPage() {
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Unified Embedding Space</h4>
               <p className="text-sm text-gray-600 mb-2">Shared semantic infrastructure</p>
               <p className="text-sm text-gray-500">
-                Search all organizational data with AI embeddings across any division, country, or language.
+                Employees find relevant documents across any division, country, or language through AI-powered semantic search.
               </p>
             </div>
 
@@ -219,7 +219,7 @@ export default function SummaryPage() {
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Task-Specific SLMs</h4>
               <p className="text-sm text-gray-600 mb-2">Fine-tuned small language models</p>
               <p className="text-sm text-gray-500">
-                15 specialized models trained on the organization&apos;s workflows for team-specific tasks.
+                Employees get intelligent assistance for the work they prioritize, from 15 models trained on the organization&apos;s workflows.
               </p>
             </div>
 
@@ -229,7 +229,7 @@ export default function SummaryPage() {
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">MoE Division Agents</h4>
               <p className="text-sm text-gray-600 mb-2">Mixture-of-Experts models</p>
               <p className="text-sm text-gray-500">
-                Each division gets an expert AI combining specialized assistants into one capable agent.
+                Each division gets expert AI that handles many tasks to the organization&apos;s standards, combining specialized assistants into one agent.
               </p>
             </div>
 
@@ -249,7 +249,7 @@ export default function SummaryPage() {
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Orchestrated System</h4>
               <p className="text-sm text-gray-600 mb-2">SLM orchestrator</p>
               <p className="text-sm text-gray-500">
-                A single AI window leveraging data and capabilities across the entire enterprise.
+                Employees engage through a single AI window that leverages data and capabilities across the enterprise, tailored to the organization&apos;s knowledge.
               </p>
             </div>
           </div>
