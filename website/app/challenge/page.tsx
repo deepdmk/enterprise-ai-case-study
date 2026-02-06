@@ -26,7 +26,7 @@ export default function ChallengePage() {
           <div className="text-center">
             <h2 className="text-5xl font-bold text-white mb-4">The Question</h2>
             <p className="text-2xl md:text-3xl text-gray-300 leading-relaxed italic">
-              How could an organization deploy enterprise AI to leverage its institutional knowledge advantage, deliver immediate ROI, and rebuild trust with change-fatigued international teams, without top-down mandates, multi-million dollar investments, or degrading its competitive advantage?
+              How can an organization deploy enterprise AI to leverage its institutional knowledge advantage, deliver immediate ROI, and rebuild trust with change-fatigued international teams, without top-down mandates, multi-million dollar investments, or degrading its competitive advantage?
             </p>
           </div>
         </Container>
