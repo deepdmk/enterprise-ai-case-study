@@ -106,12 +106,12 @@ export function JourneyGraphicResponsive() {
           <h4 className="text-sm font-bold text-teal-on-light uppercase tracking-wider mb-3 text-center">
             18-Month Capability Progression
           </h4>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-1">
             {/* Render phases from top (5) to bottom (1) */}
             {[...phases].reverse().map((phase, reverseIndex) => (
               <div key={phase.number} className="flex flex-col items-center w-full">
-                {/* Phase box */}
-                <div className="flex items-center gap-3 bg-teal/10 border-2 border-teal/50 rounded-lg p-3 w-full max-w-[280px]">
+                {/* Phase item */}
+                <div className="flex items-center gap-3 py-2 w-full max-w-[280px]">
                   <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
                     <phase.icon className="w-4 h-4 text-teal-on-light" />
                   </div>
@@ -124,7 +124,7 @@ export function JourneyGraphicResponsive() {
                 </div>
                 {/* Arrow pointing up (except after bottom phase) */}
                 {reverseIndex < phases.length - 1 && (
-                  <ChevronUp className="w-5 h-5 text-teal my-1" />
+                  <ChevronUp className="w-5 h-5 text-teal" />
                 )}
               </div>
             ))}
