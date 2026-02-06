@@ -183,7 +183,7 @@ export default function SummaryPage() {
           <div className="bg-white border-l-4 border-navy rounded-r-lg shadow-md p-6 mb-10">
             <h3 className="text-lg font-bold text-navy mb-3">Core Strategy: Invert the Playbook</h3>
             <p className="text-gray-700 mb-3">
-              Rather than mandating a platform from headquarters, we start where the burden is worst: overwhelmed teams struggling to find institutional knowledge trapped in silos across four languages. Build immediate relief first, then let demonstrated value drive organic adoption.
+              Rather than mandating a platform from headquarters, we start where the burden is worst: overwhelmed teams struggling to find institutional knowledge trapped in silos across regions and divisions. Build immediate relief first, then let demonstrated value drive organic adoption.
             </p>
             <p className="text-gray-600 text-sm">
               Each phase builds on proven success, not projected ROI. The organization can stop at any point, keep everything already built, and face no sunk cost.
