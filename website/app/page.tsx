@@ -1,6 +1,9 @@
 import { Container } from "@/components/layout/Container";
-import { CaseStudyTabs } from "@/components/home/CaseStudyTabs";
-import FourPathsGateway from "@/components/home/FourPathsGateway";
+import { HeroEnhanced } from "@/components/home/mockups/HeroEnhanced";
+import { ElevatorPitchScannable } from "@/components/home/mockups/ElevatorPitchScannable";
+import { FourPathsWithGuidance } from "@/components/home/mockups/FourPathsWithGuidance";
+import { CaseStudyTabsUpdated } from "@/components/home/mockups/CaseStudyTabsUpdated";
+import { SocialProofStrip } from "@/components/home/mockups/SocialProofStrip";
 import Link from "next/link";
 import {
   Linkedin,
@@ -18,45 +21,24 @@ export const metadata = {
 export default function HomePage() {
   return (
     <div className="relative">
-      {/* Section 1: Hero (compact) */}
-      <section className="bg-gradient-to-br from-navy to-teal-dark py-16">
-        <Container>
-          <div className="max-w-6xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3">
-              Case Study in Emergent Enterprise AI
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90">
-              From Strategy Through Implementation
-            </p>
-          </div>
-        </Container>
-      </section>
+      {/* Section 1: Enhanced Hero */}
+      <HeroEnhanced />
 
-      {/* Sections 2-4: Connected Unit (Elevator Pitch + Pick Your Path + Graphic) */}
+      {/* Section 2: Scannable Elevator Pitch */}
+      <ElevatorPitchScannable />
+
+      {/* Section 3: Pick Your Path with Guidance */}
+      <FourPathsWithGuidance />
+
+      {/* Section 4: Tabbed Interface (Journey + Demonstrates) */}
       <section className="py-3 bg-gray-50">
         <Container>
-          {/* Section 2: Elevator Pitch - top of connected unit */}
-          <div className="bg-navy p-10 rounded-t-lg">
-            <p className="text-xl md:text-2xl font-bold italic text-white leading-relaxed text-center max-w-5xl mx-auto">
-              Enterprise AI doesn&apos;t require massive investments in
-              proprietary LLM platforms. This case study follows a $1.3B
-              international enterprise through a complete AI transformation
-              — showing how mid-to-large enterprises can build their own AI
-              capabilities, tailored to their context, discoverable through
-              use, and strategically differentiating. It demonstrates
-              what&apos;s realistically achievable when strategy,
-              transformation expertise, and technical implementation come
-              together.
-            </p>
-          </div>
-
-          {/* Section 3: Pick Your Path - middle of connected unit */}
-          <FourPathsGateway />
-
-          {/* Sections 4-5: Tabbed Interface - bottom of connected unit */}
-          <CaseStudyTabs />
+          <CaseStudyTabsUpdated />
         </Container>
       </section>
+
+      {/* Section 5: Social Proof Strip */}
+      <SocialProofStrip />
 
       {/* Section 6: About the Architect */}
       <section className="py-3 bg-white">
@@ -68,7 +50,7 @@ export default function HomePage() {
               </h2>
               <p className="text-lg text-white/90 mb-6">
                 Built by an enterprise transformation consultant and AI engineer
-                who operates across the complete value chain — from strategy
+                who operates across the complete value chain, from strategy
                 through implementation.
               </p>
               <div className="flex flex-wrap justify-center gap-6 mb-6">
