@@ -59,10 +59,9 @@ export function JourneyGraphicResponsive() {
   ];
 
   const deploymentOptions = [
-    "Local infrastructure",
-    "AWS Bedrock & SageMaker",
-    "Azure AI services",
-    "Standalone or integrated",
+    "AWS Bedrock + SageMaker",
+    "Azure AI Services",
+    "Self-Hosted",
   ];
 
   return (

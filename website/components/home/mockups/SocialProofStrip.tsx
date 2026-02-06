@@ -17,8 +17,7 @@ export function SocialProofStrip() {
   ];
 
   const platforms = [
-    { name: "AWS Bedrock", available: true },
-    { name: "AWS SageMaker", available: true },
+    { name: "AWS Bedrock + SageMaker", available: true },
     { name: "Azure AI", available: true },
     { name: "Self-Hosted", available: true },
   ];
