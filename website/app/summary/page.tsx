@@ -75,19 +75,19 @@ export default function SummaryPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white/10 rounded-lg p-5">
                 <h4 className="font-semibold text-amber mb-2">Competitive Survival</h4>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-base">
                   Unable to compete on price or speed, the organization had to leverage its core strengths: institutional knowledge, client relationships, and contextual expertise built over decades. But this knowledge was fragmented across regions and divisions — locked away while competitors gained ground.
                 </p>
               </div>
               <div className="bg-white/10 rounded-lg p-5">
                 <h4 className="font-semibold text-amber mb-2">Financial &amp; Timing Mismatch</h4>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-base">
                   Traditional AI platforms require 3-4 years to deliver ROI. But with 50% revenue decline projected over two years, the organization was fighting for survival. By the time a vendor platform delivered value, the market might have consolidated. The C-suite couldn&apos;t approve $2M+ upfront bets; the board demanded proof of prudent spending, not multi-year gambles.
                 </p>
               </div>
               <div className="bg-white/10 rounded-lg p-5">
                 <h4 className="font-semibold text-amber mb-2">Change Fatigue</h4>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/80 text-base">
                   A failed top-down transformation had damaged trust. Staff felt it added burden rather than relief, and layoffs left remaining employees overwhelmed. In a decentralized, relational culture, you cannot mandate adoption. Any solution requiring &ldquo;trust us, this will help&rdquo; would fail.
                 </p>
               </div>
@@ -198,7 +198,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Phase 0</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Infrastructure Foundation</h4>
               <p className="text-sm text-gray-600 mb-2">Data pipeline and staging infrastructure</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Foundational registries that track models, datasets, and experiments enabling systematic learning across all phases.
               </p>
             </div>
@@ -208,7 +208,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-teal uppercase tracking-wide">Phase 1</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Unified Embedding Space</h4>
               <p className="text-sm text-gray-600 mb-2">Shared semantic infrastructure</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Employees find relevant documents across any division, country, or language through AI-powered semantic search.
               </p>
             </div>
@@ -218,7 +218,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-amber uppercase tracking-wide">Phase 2</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Task-Specific SLMs</h4>
               <p className="text-sm text-gray-600 mb-2">Fine-tuned small language models</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Employees get intelligent assistance for the work they prioritize, from 15 models trained on the organization&apos;s workflows.
               </p>
             </div>
@@ -228,7 +228,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-magenta uppercase tracking-wide">Phase 3</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">MoE Division Agents</h4>
               <p className="text-sm text-gray-600 mb-2">Mixture-of-Experts models</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Each division gets expert AI that handles many tasks to the organization&apos;s standards, combining specialized assistants into one agent.
               </p>
             </div>
@@ -238,7 +238,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-teal uppercase tracking-wide">Phase 4</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Agentic Discovery</h4>
               <p className="text-sm text-gray-600 mb-2">A2A protocol for collaboration</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Agents learn to use information across divisions, sharing capabilities to enhance each other&apos;s work.
               </p>
             </div>
@@ -248,7 +248,7 @@ export default function SummaryPage() {
               <span className="text-xs font-semibold text-navy uppercase tracking-wide">Phase 5</span>
               <h4 className="text-lg font-bold text-navy mt-1 mb-2">Orchestrated System</h4>
               <p className="text-sm text-gray-600 mb-2">SLM orchestrator</p>
-              <p className="text-sm text-gray-500">
+              <p className="text-base text-gray-500">
                 Employees engage through a single AI window that leverages data and capabilities across the enterprise, tailored to the organization&apos;s knowledge.
               </p>
             </div>
@@ -276,17 +276,17 @@ export default function SummaryPage() {
             <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-navy mb-1">$11,100</div>
               <div className="text-sm font-semibold text-gray-700">Infrastructure</div>
-              <p className="text-xs text-gray-500 mt-1">GPU compute, storage, vector DB, monitoring</p>
+              <p className="text-sm text-gray-500 mt-1">GPU compute, storage, vector DB, monitoring</p>
             </div>
             <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-navy mb-1">$152,000</div>
               <div className="text-sm font-semibold text-gray-700">Training Programs</div>
-              <p className="text-xs text-gray-500 mt-1">User training, change management for 8,000 staff</p>
+              <p className="text-sm text-gray-500 mt-1">User training, change management for 8,000 staff</p>
             </div>
             <div className="bg-teal/10 border-2 border-teal rounded-lg shadow-md p-6 text-center">
               <div className="text-3xl font-bold text-teal mb-1">$163,100</div>
               <div className="text-sm font-semibold text-gray-700">Total Direct Investment</div>
-              <p className="text-xs text-gray-500 mt-1">vs. $2M–$7M for vendor platforms</p>
+              <p className="text-sm text-gray-500 mt-1">vs. $2M–$7M for vendor platforms</p>
             </div>
           </div>
 
@@ -295,25 +295,25 @@ export default function SummaryPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Optionality at Every Phase</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Each phase delivers standalone value and ROI. Stop at Phase 1 ($62,400), Phase 2 ($106,000), or Phase 3 ($137,200) with working AI capabilities. No all-or-nothing commitment.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Bounded Risk Per Phase</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Maximum exposure at any decision point is the cost of the current phase. Largest single phase requires $62,400.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Competitive Moat</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Models trained on organizational data create capabilities competitors cannot purchase. Proprietary knowledge becomes proprietary AI.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-magenta rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2">Deployment Flexibility</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Deploys to any environment: local infrastructure, AWS/Azure cloud, or hybrid. No vendor lock-in.
               </p>
             </div>
@@ -324,19 +324,19 @@ export default function SummaryPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white border border-gray-200 border-t-4 border-t-teal rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Enterprise AI doesn&apos;t require enterprise budgets</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 A complete, production-ready system for $163,100 versus $2M-$7M for vendor platforms. Fine-tuned small models put enterprise AI within reach of mid-market organizations previously priced out.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-navy rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Bottom-up discovery builds stronger AI</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Starting with the people where value is created—letting them identify use cases and build out from there—produces AI capabilities shaped by immediate business value that can be leveraged into emergent capabilities for market differentiation and ultimately disruption.
               </p>
             </div>
             <div className="bg-white border border-gray-200 border-t-4 border-t-amber rounded-lg shadow-md p-5">
               <h4 className="font-bold text-navy mb-2 text-center">Proprietary data becomes advantage</h4>
-              <p className="text-sm text-gray-600">
+              <p className="text-base text-gray-600">
                 Training on organizational knowledge creates AI capabilities competitors cannot replicate, preserving and amplifying institutional knowledge rather than commoditizing it.
               </p>
             </div>
