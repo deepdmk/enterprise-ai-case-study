@@ -55,8 +55,7 @@ function CrisisConditions() {
           <div className="space-y-4 text-lg text-gray-800">
             <p>
               Revenue pressure from sector upheaval meant the organization could
-              not afford traditional AI investment timelines. The board and
-              funders demanded visible AI progress and fast ROI, but traditional
+              not afford traditional AI investment timelines. The board demanded visible AI progress and fast ROI, but traditional
               AI deployments require 3-4 years to show returns: 18-24 months to
               deploy vendor platforms plus another 12-24 months to realize
               business value.
@@ -219,7 +218,7 @@ function FinancialAndTiming() {
         </p>
         <p>
           The C-suite could not approve $2M-$5M upfront bets on vendor
-          platforms. Investors and funders, already nervous after staff
+          platforms. The board, already nervous after staff
           reductions and revenue decline, demanded proof of prudent spending
           rather than multi-year gambles. Any investment needed to spread risk
           incrementally, with the ability to stop at any point without losing
@@ -241,7 +240,7 @@ function FinancialAndTiming() {
           the organization was responding to competitive threats, but traditional
           approaches could not deliver that timeline. The organization needed
           visible progress at each stage to justify continued investment to
-          nervous funders, not promises of returns three to four years in the
+          a nervous board, not promises of returns three to four years in the
           future.
         </p>
       </div>
