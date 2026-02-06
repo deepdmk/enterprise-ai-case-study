@@ -18,7 +18,7 @@ export function HeroEnhanced() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-navy to-teal-dark py-20 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-navy to-teal-dark pt-20 pb-6 overflow-hidden">
       {/* Subtle decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-[10%] w-64 h-64 bg-teal/10 rounded-full blur-3xl" />

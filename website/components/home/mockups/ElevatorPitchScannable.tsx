@@ -42,7 +42,7 @@ export function ElevatorPitchScannable() {
   ];
 
   return (
-    <div className="bg-gray-100 py-12 px-6">
+    <div className="bg-gray-100 pt-8 pb-12 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Section headline */}
         <div className="text-center mb-10">
