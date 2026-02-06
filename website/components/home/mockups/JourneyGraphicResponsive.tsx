@@ -118,7 +118,7 @@ export function JourneyGraphicResponsive() {
                     <div className="text-sm font-semibold text-teal-on-light leading-tight">
                       {phase.title}
                     </div>
-                    <p className="text-xs text-gray-600 leading-tight">{phase.description}</p>
+                    <p className="text-sm text-gray-600 leading-tight">{phase.description}</p>
                   </div>
                 </div>
                 {/* Arrow pointing up (except after bottom phase) */}

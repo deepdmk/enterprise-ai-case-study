@@ -67,7 +67,7 @@ export function DemonstratesSectionBalanced() {
                 <h4 className="text-base font-bold text-navy mb-2">
                   {cap.title}
                 </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-base text-gray-600 leading-relaxed">
                   {cap.description}
                 </p>
               </div>
@@ -137,7 +137,7 @@ export function DemonstratesSectionCompact() {
                 <h4 className="text-base font-bold text-navy mb-1">
                   {cap.title}
                 </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-base text-gray-600 leading-relaxed">
                   {cap.description}
                 </p>
               </div>

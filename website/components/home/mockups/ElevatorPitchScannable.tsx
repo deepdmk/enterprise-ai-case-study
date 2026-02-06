@@ -78,7 +78,7 @@ export function ElevatorPitchScannable() {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-base leading-relaxed">
                 {point.description}
               </p>
             </div>

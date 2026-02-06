@@ -133,7 +133,7 @@ export function FourPathsWithGuidance() {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-700 text-sm mb-4">{path.description}</p>
+                <p className="text-gray-700 text-base mb-4">{path.description}</p>
 
                 {/* Metadata row */}
                 <div className="flex items-center justify-between text-xs pt-3 border-t border-gray-300/50">
