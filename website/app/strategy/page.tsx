@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { PageHeader } from "@/components/layout";
 import { PageNav } from "@/components/layout/PageNav";
 import { Container } from "@/components/layout/Container";
@@ -8,7 +7,7 @@ import {
   StrategicAnalysisTabs,
   StrategyDevelopmentTabs,
 } from "./StrategyTabs";
-import { getAssetPath } from "@/lib/assets";
+import { StrategyFlowGraphic } from "@/components/strategy/StrategyFlowGraphic";
 
 export const metadata: Metadata = {
   title: "Strategy",
@@ -25,16 +24,7 @@ export default function StrategyPage() {
       {/* Strategy Flow Diagram */}
       <section className="py-12 bg-slate-100 border-t-4 border-teal">
         <Container>
-          <div className="flex justify-center">
-            <Image
-              src={getAssetPath("/strategy-flow.png")}
-              alt="Strategy Flow: Strategic Analysis (Stakeholder Consultations, 7S + SWOT Analysis, 5 Forces) feeds into CTQs (Stakeholder, Organizational, Competitive), which flow through Solution Options Development and Option Scoring to Solution Strategy Selected, leading to Transformation Framework (3 Horizons, Roadmap, Balanced Scorecard)"
-              width={1200}
-              height={392}
-              className="w-full max-w-[1200px] h-auto"
-              priority
-            />
-          </div>
+          <StrategyFlowGraphic />
         </Container>
       </section>
 
@@ -52,7 +42,7 @@ export default function StrategyPage() {
           <div className="bg-amber/20 border-l-4 border-amber rounded-r-lg p-6 mb-8">
             <h3 className="text-lg font-semibold mb-2 text-amber-dark">Key Finding</h3>
             <p className="text-lg text-gray-700">
-              19 CTQs across stakeholder, competitive, and organizational dimensions that any solution must satisfy simultaneously — constraints that eliminated 2 of 3 strategic alternatives before detailed evaluation.
+              Three independent analyses converged on a core insight: the organization&apos;s decentralized, relationship-centric culture and competitive position require AI capabilities that cannot be purchased — they must be built from proprietary institutional knowledge.
             </p>
           </div>
 
@@ -101,32 +91,30 @@ export default function StrategyPage() {
           <div className="bg-teal/10 border-l-4 border-teal rounded-r-lg p-6 mb-8">
             <h3 className="text-lg font-semibold mb-2 text-teal-dark">Key Finding</h3>
             <p className="text-lg text-gray-700">
-              Phased Internal Build scored +38 on Pugh Matrix analysis while alternatives failed with -29 and -23. Only one approach could satisfy stakeholder, competitive, and organizational requirements simultaneously.
+              Traditional enterprise AI approaches — vendor platforms and big-bang custom builds — systematically violate the CTQs discovered in strategic analysis, requiring evaluation of a fundamentally different approach.
             </p>
           </div>
 
           <p className="text-lg text-gray-700 leading-relaxed mb-8">
-            We evaluated strategic alternatives against all 19 CTQs using Pugh Matrix analysis. The result:
-            Phased Internal Build, an approach that builds proprietary AI internally with existing staff
-            through progressive deployment and self-initiated adoption.
+            With 19 CTQs established, we developed three strategic alternatives and evaluated each using Pugh Matrix analysis. The alternatives ranged from vendor platform purchase to custom full-scope deployment to a fundamentally different phased approach designed specifically for organizational constraints.
           </p>
 
           {/* Options Preview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-red-50 border border-red-200 border-t-4 border-t-red-400 rounded-lg p-5">
-              <div className="text-2xl font-bold text-red-600 mb-1">-29</div>
+            <div className="bg-white border border-gray-200 border-t-4 border-t-gray-400 rounded-lg p-5">
+              <div className="text-2xl font-bold text-gray-600 mb-1">Option 1</div>
               <div className="text-sm font-semibold text-gray-700 mb-2">Vendor Platform</div>
-              <p className="text-base text-gray-600">Commoditizes advantage, exceeds budget 20-50x</p>
+              <p className="text-base text-gray-600">Purchase commercial AI platform and configure for organizational needs</p>
             </div>
-            <div className="bg-red-50 border border-red-200 border-t-4 border-t-red-400 rounded-lg p-5">
-              <div className="text-2xl font-bold text-red-600 mb-1">-23</div>
+            <div className="bg-white border border-gray-200 border-t-4 border-t-gray-400 rounded-lg p-5">
+              <div className="text-2xl font-bold text-gray-600 mb-1">Option 2</div>
               <div className="text-sm font-semibold text-gray-700 mb-2">Custom Big Bang</div>
-              <p className="text-base text-gray-600">Requires $1.5-3.75M, inaccessible AI talent</p>
+              <p className="text-base text-gray-600">Build custom AI system from scratch with full-scope deployment</p>
             </div>
-            <div className="bg-teal/10 border-2 border-teal rounded-lg p-5">
-              <div className="text-2xl font-bold text-teal mb-1">+38</div>
+            <div className="bg-white border border-gray-200 border-t-4 border-t-gray-400 rounded-lg p-5">
+              <div className="text-2xl font-bold text-gray-600 mb-1">Option 3</div>
               <div className="text-sm font-semibold text-gray-700 mb-2">Phased Internal Build</div>
-              <p className="text-base text-gray-600">Satisfies all 19 CTQs with bounded risk</p>
+              <p className="text-base text-gray-600">Build proprietary AI internally with progressive deployment</p>
             </div>
           </div>
 
@@ -165,6 +153,27 @@ export default function StrategyPage() {
               />
             </svg>
           </Link>
+        </Container>
+      </section>
+
+      {/* ==================== TRANSPARENCY NOTE ==================== */}
+      <section className="py-2 bg-gray-100">
+        <Container>
+          <p className="text-base text-gray-500 text-center">
+            This is a portfolio demonstration project showcasing the complete design and implementation of an enterprise AI system. The technical implementation is actual and deployment-ready. Business context (the $1.3B international organization) provides realistic constraints and requirements. Direct investment figures are based on actual infrastructure costs and industry-standard training program estimates.
+          </p>
+          <p className="text-base text-gray-400 text-center mt-4">
+            &copy; 2025 Daniel Dimick. Licensed under{' '}
+            <a
+              href="https://creativecommons.org/licenses/by-nc/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-600"
+            >
+              CC BY-NC 4.0
+            </a>{' '}
+            for educational use.
+          </p>
         </Container>
       </section>
 

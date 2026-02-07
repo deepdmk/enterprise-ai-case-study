@@ -20,8 +20,7 @@ function StakeholderAnalysis() {
       </div>
 
       <p className="text-base text-gray-700 mb-6">
-        Before evaluating strategic approaches, we analyzed stakeholder needs to
-        derive Critical to Quality requirements that any solution must satisfy.
+        Before evaluating strategic approaches, we analyzed stakeholder needs to derive Critical to Quality requirements that any solution must satisfy. Interviews and focus groups with Board members, C-Suite executives, staff representatives, and customer-facing teams revealed eight distinct requirements spanning financial expectations, risk tolerance, adoption preferences, and service quality standards.
       </p>
 
       {/* Stakeholder CTQ Cards */}
@@ -115,7 +114,7 @@ function OrganizationalAnalysis() {
       </div>
 
       <p className="text-base text-gray-700 mb-6">
-        Decentralized culture structured for relationship-building makes top-down mandates organizationally impossible.
+        Using McKinsey 7S framework combined with SWOT analysis, we mapped the organizational reality that any AI transformation must navigate. The analysis revealed a decentralized culture structured for relationship-building where top-down mandates are organizationally impossible. Seven constraints emerged spanning budget, adoption model, change fatigue, language requirements, and cultural alignment.
       </p>
 
       {/* Constraints Cards */}
@@ -175,8 +174,11 @@ function OrganizationalAnalysis() {
         <h4 className="font-semibold text-amber-dark mb-2">Strategic Implication</h4>
         <p className="text-base text-gray-700">
           The strongly aligned Style-Staff-Structure-Values elements create an organizational system
-          optimized for decentralized relationship-building, not centralized efficiency. Must design
-          solution that works with this reality rather than requiring its transformation.
+          optimized for decentralized relationship-building, not centralized efficiency. Top-down mandates
+          violate both structure (decentralized authority) and culture (consensus-driven, relationship-centric).
+          The 18-month transformation timeline makes organizational change impossible. Must design solution
+          that works with this reality rather than requiring its transformation. Failed past initiatives
+          created change fatigue and trust deficit that only value demonstration can overcome.
         </p>
       </div>
 
@@ -205,7 +207,7 @@ function CompetitiveAnalysis() {
       </div>
 
       <p className="text-base text-gray-700 mb-6">
-        Institutional knowledge provides a strong, defensible competitive position for an established player in a commoditizing AI market.
+        Porter&apos;s Five Forces analysis examined the competitive landscape to identify what AI capabilities the organization must develop to maintain market position. The analysis revealed that institutional knowledge — accumulated over decades of operations — provides a strong, defensible competitive position that commercial AI platforms would commoditize. Four competitive imperatives emerged that any solution must address.
       </p>
 
       {/* Competitive Requirements Cards */}
@@ -244,9 +246,10 @@ function CompetitiveAnalysis() {
         <h4 className="font-semibold text-amber-dark mb-2">Strategic Implication</h4>
         <p className="text-base text-gray-700">
           The organization cannot compete on speed or cost against new market entrants. Commercial AI platforms
-          commoditize capabilities that competitors can equally access, destroying the institutional knowledge advantage.
-          The best defensible position requires building proprietary AI internally on unique knowledge that
-          competitors cannot purchase or replicate.
+          commoditize capabilities that competitors can equally access, destroying a key advantage: institutional
+          knowledge. Vendor platforms would convert strategic asset into commodity capability. The best defensible
+          position requires building proprietary AI internally on unique institutional knowledge that competitors
+          cannot purchase or replicate. This is competitive survival.
         </p>
       </div>
 
@@ -270,9 +273,7 @@ function OptionsDevelopment() {
       </h3>
 
       <p className="text-base text-gray-700 mb-6">
-        Three strategic alternatives were developed from the CTQ requirements
-        and evaluated against the full set of 19 stakeholder, competitive, and
-        organizational constraints.
+        With 19 CTQs established across stakeholder, organizational, and competitive dimensions, we developed three distinct strategic alternatives representing fundamentally different approaches to enterprise AI. Each option varies in investment scale, implementation timeline, risk profile, and alignment with organizational constraints.
       </p>
 
       {/* Options Cards */}
@@ -394,9 +395,11 @@ function SelectedStrategy() {
       </h3>
 
       <p className="text-base text-gray-700 mb-6">
-        Build proprietary AI internally with existing staff, deploy progressively with
-        self-initiated adoption. Each phase delivers immediate ROI and creates standalone value,
-        enabling exit at any point with a functioning AI capability.
+        <strong>Phased Internal Build</strong> is the strategic approach: build proprietary AI internally
+        with existing staff, deploy progressively with self-initiated adoption. The transformation builds
+        through progressive capability stages, where each phase delivers immediate ROI and creates standalone
+        value. The phased approach enables stopping at any point with a functioning AI capability that has
+        positive ROI, rather than requiring all-or-nothing investment.
       </p>
 
       {/* Investment Summary Cards */}
