@@ -242,9 +242,9 @@ export default function ResultsPage() {
       </section>
 
       {/* ==================== SECTION 7: TRANSPARENCY NOTE ==================== */}
-      <section className="py-8 bg-gray-100">
+      <section className="py-2 bg-gray-100">
         <Container>
-          <p className="text-base text-gray-500 text-center max-w-4xl mx-auto">
+          <p className="text-base text-gray-500 text-center">
             This is a portfolio demonstration project showcasing the complete design and implementation of an enterprise AI system. The technical implementation is actual and deployment-ready. Business context (the $1.3B international organization) provides realistic constraints and requirements. Direct investment figures are based on actual infrastructure costs and industry-standard training program estimates.
           </p>
           <p className="text-base text-gray-400 text-center mt-4">

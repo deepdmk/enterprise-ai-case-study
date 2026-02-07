@@ -124,6 +124,56 @@ export default function PhasesPortal() {
         </Container>
       </section>
 
+      {/* ==================== CTA: RESULTS ==================== */}
+      <section className="py-16 bg-navy">
+        <Container>
+          <h2 className="text-3xl font-bold text-white mb-6">Next: Results</h2>
+          <p className="text-lg text-gray-300 mb-6">
+            See the complete investment analysis, strategic value delivered, and what this case study proves about enterprise AI deployment.
+          </p>
+          <Link
+            href="/results"
+            className="inline-flex items-center justify-center px-8 py-4 bg-teal hover:bg-teal-dark text-white font-semibold rounded-lg transition-colors"
+          >
+            View Results
+            <svg
+              className="w-5 h-5 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
+        </Container>
+      </section>
+
+      {/* ==================== TRANSPARENCY NOTE ==================== */}
+      <section className="py-2 bg-gray-100">
+        <Container>
+          <p className="text-base text-gray-500 text-center">
+            This is a portfolio demonstration project showcasing the complete design and implementation of an enterprise AI system. The technical implementation is actual and deployment-ready. Business context (the $1.3B international organization) provides realistic constraints and requirements. Direct investment figures are based on actual infrastructure costs and industry-standard training program estimates.
+          </p>
+          <p className="text-base text-gray-400 text-center mt-4">
+            &copy; 2025 Daniel Dimick. Licensed under{' '}
+            <a
+              href="https://creativecommons.org/licenses/by-nc/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-600"
+            >
+              CC BY-NC 4.0
+            </a>{' '}
+            for educational use.
+          </p>
+        </Container>
+      </section>
+
     </>
   );
 }

@@ -107,6 +107,27 @@ export default function ChallengePage() {
         </Container>
       </section>
 
+      {/* ==================== TRANSPARENCY NOTE ==================== */}
+      <section className="py-2 bg-gray-100">
+        <Container>
+          <p className="text-base text-gray-500 text-center">
+            This is a portfolio demonstration project showcasing the complete design and implementation of an enterprise AI system. The technical implementation is actual and deployment-ready. Business context (the $1.3B international organization) provides realistic constraints and requirements. Direct investment figures are based on actual infrastructure costs and industry-standard training program estimates.
+          </p>
+          <p className="text-base text-gray-400 text-center mt-4">
+            &copy; 2025 Daniel Dimick. Licensed under{' '}
+            <a
+              href="https://creativecommons.org/licenses/by-nc/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-600"
+            >
+              CC BY-NC 4.0
+            </a>{' '}
+            for educational use.
+          </p>
+        </Container>
+      </section>
+
     </>
   );
 }
