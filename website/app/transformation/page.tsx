@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/layout";
 import { PageNav } from "@/components/layout/PageNav";
 import { Container } from "@/components/layout/Container";
 import { TransformationFrameworkTabs } from "./TransformationTabs";
-import { getAssetPath } from "@/lib/assets";
+import { TransformationFlowGraphic } from "@/components/transformation/TransformationFlowGraphic";
 
 export const metadata: Metadata = {
   title: "Transformation Framework",
@@ -25,15 +24,7 @@ export default function TransformationPage() {
       {/* Strategy Flow Diagram */}
       <section className="py-12 bg-slate-100 border-t-4 border-teal">
         <Container>
-          <div className="flex justify-center">
-            <Image
-              src={getAssetPath("/transformation-flow.png")}
-              alt="Strategy Flow: Strategic Analysis → Strategy Development → Transformation Framework"
-              width={1200}
-              height={400}
-              className="w-full max-w-[1200px] h-auto"
-            />
-          </div>
+          <TransformationFlowGraphic />
         </Container>
       </section>
 
