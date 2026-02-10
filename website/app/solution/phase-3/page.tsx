@@ -211,9 +211,9 @@ export default function Phase3() {
                 <div className="mb-12">
                   <h3 className="text-2xl font-bold text-navy mb-4">Architecture Overview</h3>
 
-                  <h4 className="text-lg font-bold text-navy mb-3">Five-Program Pipeline</h4>
+                  <h4 className="text-lg font-bold text-navy mb-3">Six-Program Pipeline</h4>
                   <p className="text-gray-700 leading-relaxed mb-4">
-                    Phase 3 implements a five-program pipeline that transforms 14 task-specific models into 3 division-level MoE agents:
+                    Phase 3 implements a six-program pipeline that transforms 14 task-specific models into 3 division-level MoE agents with staff interaction capabilities:
                   </p>
 
                   <p className="text-gray-700 leading-relaxed mb-4">
@@ -232,8 +232,12 @@ export default function Phase3() {
                     <strong>Program 4: Optional Fine-tuning</strong> refines router behavior through LoRA adaptation on division-specific query patterns when needed.
                   </p>
 
-                  <p className="text-gray-700 leading-relaxed mb-6">
+                  <p className="text-gray-700 leading-relaxed mb-4">
                     <strong>Program 5: Export</strong> packages merged models for Phase 4 A2A agents, including routing embeddings and agent configurations.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed mb-6">
+                    <strong>Program 6: Staff Interface</strong> provides a Gradio web interface for staff to interact with MoE models, view expert activations, and submit feedback for RLHF.
                   </p>
 
                   <h4 className="text-lg font-bold text-navy mb-3 mt-6">Technology Stack</h4>
@@ -771,6 +775,153 @@ python -m src.program5_export.main --unit fundraising`}
 
                   <p className="text-gray-700 leading-relaxed mt-6">
                     This abstraction means downstream systems (Phase 4 discovery, Phase 5 orchestrator) interact with &quot;division agents&quot; without needing to understand internal MoE structure. The registry sees three intelligent agents with division-level capabilities, not fourteen underlying task experts. This design decision simplifies future orchestration—Phase 5&apos;s orchestrator learns to coordinate three agents rather than fourteen models, directly enabled by Phase 3&apos;s consolidation and registry abstraction strategy.
+                  </p>
+                </div>
+
+                {/* Part 8: Staff Interface for Model Interaction */}
+                <div className="mb-12">
+                  <h3 className="text-2xl font-bold text-navy mb-4">8. Staff Interface for Model Interaction</h3>
+
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    Program 6 provides a Gradio web interface enabling staff to interact directly with division MoE agents. This interface serves dual purposes: immediate utility for staff needing AI assistance, and feedback collection for continuous model improvement through RLHF (Reinforcement Learning from Human Feedback).
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    The interface architecture separates inference engines for test and production modes:
+                  </p>
+
+                  <CodeBlock
+                    code={`# phase-3-moe-experts/src/program6_interface/gradio_app.py:421-432
+# Initialize inference engine
+if test_mode:
+    inference_engine = MockMoEInference(
+        exports_dir=exports_dir,
+        experts_per_token=settings.moe.experts_per_token,
+    )
+else:
+    inference_engine = MoEModelLoader(
+        exports_dir=exports_dir,
+        device="auto",
+    )`}
+                    language="python"
+                  />
+
+                  <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                    Test mode uses mock inference with canned responses and simulated expert activations, enabling UI development and workflow testing without GPU requirements. Production mode loads actual MoE models and tracks real expert activations through forward hooks on the router layer.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    The interface displays which experts were activated for each query, providing transparency into model behavior:
+                  </p>
+
+                  <CodeBlock
+                    code={`# phase-3-moe-experts/src/program6_interface/model_loader.py:70-88
+def router_hook(self, module: Any, input: Any, output: Any) -> None:
+    """Hook function for router layer - captures expert selection weights."""
+    try:
+        if isinstance(output, tuple):
+            router_logits = output[0]
+        else:
+            router_logits = output
+
+        # Get top-k selections and their weights
+        router_probs = torch.softmax(router_logits, dim=-1)
+
+        # Aggregate across batch and sequence
+        mean_probs = router_probs.mean(dim=[0, 1])
+
+        # Update activation scores
+        for expert_id, score in enumerate(mean_probs.tolist()):
+            self.activations[expert_id] = self.activations.get(expert_id, 0) + score
+    except Exception as e:
+        logger.warning("router_hook_error", error=str(e))`}
+                    language="python"
+                  />
+
+                  <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                    Expert activation tracking enables teams to understand which task experts respond to which queries. This observability helps identify routing patterns, detect ambiguous queries where router confidence is low, and validate that expert selection aligns with query intent.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    The feedback collection system captures staff ratings for future RLHF training:
+                  </p>
+
+                  <CodeBlock
+                    code={`# phase-3-moe-experts/src/program6_interface/feedback.py:81-116
+def record_interaction(
+    self,
+    session_id: str,
+    unit_id: str,
+    prompt: str,
+    response: str,
+    activated_experts: list[dict],
+    generation_params: dict,
+) -> str:
+    """Record an interaction for potential feedback."""
+    feedback_id = str(uuid.uuid4())
+
+    self._active_interactions[feedback_id] = {
+        "session_id": session_id,
+        "unit_id": unit_id,
+        "prompt": prompt,
+        "response": response,
+        "activated_experts": activated_experts,
+        "generation_params": generation_params,
+        "timestamp": datetime.now(UTC).isoformat(),
+    }
+    return feedback_id`}
+                    language="python"
+                  />
+
+                  <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                    Each interaction records the complete context: which division agent was queried, what prompt was submitted, which experts activated, and the response generated. When staff provide feedback (thumbs up/down or detailed ratings), this context enables targeted model improvement—teams can identify which expert combinations produce unsatisfactory results and refine accordingly.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    Interface configuration integrates with the existing settings infrastructure:
+                  </p>
+
+                  <CodeBlock
+                    code={`# phase-3-moe-experts/config/config.yaml:97-110
+interface:
+  gradio:
+    host: "0.0.0.0"
+    port: 7861
+    share: false
+    title: "Phase 3 MoE Staff Interface"
+    description: "Interact with organizational unit MoE models"
+  generation:
+    max_new_tokens: 256
+    temperature: 0.7
+    top_p: 0.9
+  feedback:
+    enabled: true
+    feedback_dir: "data/feedback"`}
+                    language="yaml"
+                  />
+
+                  <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                    Launching the interface requires a single command:
+                  </p>
+
+                  <CodeBlock
+                    code={`# Test mode (no GPU required, mock responses)
+python -m src.program6_interface.main --test-mode
+
+# Production mode (requires GPU, real model inference)
+python -m src.program6_interface.main
+
+# Custom configuration
+python -m src.program6_interface.main --port 7862 --share`}
+                    language="bash"
+                  />
+
+                  <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                    The <code>--share</code> flag creates a public Gradio link, enabling remote staff access without VPN configuration. This simplifies pilot deployments where teams across locations need to evaluate division agents before full infrastructure deployment.
+                  </p>
+
+                  <p className="text-gray-700 leading-relaxed">
+                    Feedback data accumulates in monthly JSONL files, creating training datasets for future model refinement. This feedback loop closes the gap between deployment and improvement—staff interactions directly inform which experts need attention, which routing patterns cause confusion, and where division agents excel or struggle. The collected data becomes input for Phase 5&apos;s orchestrator training, capturing real-world usage patterns that synthetic data cannot replicate.
                   </p>
                 </div>
               </>

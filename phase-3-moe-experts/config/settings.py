@@ -112,6 +112,39 @@ class FineTuneConfig(BaseModel):
     max_samples: int = 1000
 
 
+class InterfaceGradioConfig(BaseModel):
+    """Gradio interface configuration."""
+
+    host: str = "0.0.0.0"
+    port: int = 7861
+    share: bool = False
+    title: str = "Phase 3 MoE Staff Interface"
+    description: str = "Interact with organizational unit MoE models"
+
+
+class GenerationConfig(BaseModel):
+    """Text generation configuration."""
+
+    max_new_tokens: int = 256
+    temperature: float = 0.7
+    top_p: float = 0.9
+
+
+class InterfaceFeedbackConfig(BaseModel):
+    """Interface feedback collection configuration."""
+
+    enabled: bool = True
+    feedback_dir: str = "data/feedback"
+
+
+class InterfaceConfig(BaseModel):
+    """Staff interface configuration."""
+
+    gradio: InterfaceGradioConfig = Field(default_factory=InterfaceGradioConfig)
+    generation: GenerationConfig = Field(default_factory=GenerationConfig)
+    feedback: InterfaceFeedbackConfig = Field(default_factory=InterfaceFeedbackConfig)
+
+
 class ExpertDefinition(BaseModel):
     """Definition of a single expert in a unit's MoE."""
 
@@ -150,6 +183,7 @@ class Settings(HabitatBaseSettings):
     test_mode_config: TestModeConfig = Field(default_factory=TestModeConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     finetune: FineTuneConfig = Field(default_factory=FineTuneConfig)
+    interface: InterfaceConfig = Field(default_factory=InterfaceConfig)
 
     @classmethod
     def from_yaml(cls, config_path: str | Path) -> "Settings":

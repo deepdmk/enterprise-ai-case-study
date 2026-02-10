@@ -92,3 +92,19 @@ finetune:
 logging:
   level: INFO
   format: json
+
+# Staff interface settings
+interface:
+  gradio:
+    host: "0.0.0.0"
+    port: 7861
+    share: false
+    title: "Phase 3 MoE Staff Interface"
+    description: "Interact with organizational unit MoE models"
+  generation:
+    max_new_tokens: 256
+    temperature: 0.7
+    top_p: 0.9
+  feedback:
+    enabled: true
+    feedback_dir: "data/feedback"

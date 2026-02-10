@@ -137,11 +137,15 @@ export function Phase3ArchitectureDiagram() {
 
           <div className="flex justify-center"><Arrow direction="down" /></div>
 
-          {/* Row 4: Export */}
+          {/* Row 4: Export & Interface */}
           <div className="bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex items-center gap-2">
               <div className="flex-1">
                 <ProgramBox number={5} title="Export" subtitle="3 packages for Phase 4" />
+              </div>
+              <Arrow direction="right" />
+              <div className="flex-1">
+                <ProgramBox number={6} title="Staff Interface" subtitle="Gradio + RLHF feedback" />
               </div>
             </div>
           </div>
@@ -150,7 +154,7 @@ export function Phase3ArchitectureDiagram() {
 
           {/* Row 5: Phase 4 Output */}
           <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Output to Phase 4</div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Outputs</div>
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-teal border border-teal rounded-lg p-2 text-center">
                 <AgentIcon className="mx-auto mb-1 text-white" />
@@ -167,9 +171,17 @@ export function Phase3ArchitectureDiagram() {
                 <div className="font-bold text-white text-xs">Field Ops</div>
                 <div className="text-[10px] text-white/70">A2A Agent</div>
               </div>
+              <div className="flex-1 bg-magenta/20 border border-magenta rounded-lg p-2 text-center">
+                <svg className="w-5 h-5 mx-auto mb-1 text-magenta" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <path d="M3 9h18M9 21V9" />
+                </svg>
+                <div className="font-bold text-magenta text-xs">Staff UI</div>
+                <div className="text-[10px] text-magenta/70">+ Feedback</div>
+              </div>
             </div>
             <div className="text-center mt-3">
-              <span className="text-xs text-gray-500">Phase 4 Agentic Network</span>
+              <span className="text-xs text-gray-500">Phase 4 Agents + Staff Interaction</span>
             </div>
           </div>
 
@@ -230,23 +242,30 @@ export function Phase3ArchitectureDiagram() {
 
         <div className="flex justify-center"><Arrow direction="down" /></div>
 
-        {/* Export */}
-        <ProgramBox number={5} title="Export" subtitle="3 packages for Phase 4" />
+        {/* Export & Interface */}
+        <div className="bg-white border border-gray-200 rounded-lg p-3 space-y-2">
+          <ProgramBox number={5} title="Export" subtitle="3 packages for Phase 4" />
+          <div className="flex justify-center"><Arrow direction="down" /></div>
+          <ProgramBox number={6} title="Staff Interface" subtitle="Gradio + RLHF" />
+        </div>
 
         <div className="flex justify-center"><Arrow direction="down" /></div>
 
-        {/* A2A Agents */}
+        {/* A2A Agents + Staff UI */}
         <div className="bg-white border border-gray-200 rounded-lg p-3">
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Phase 4 Agents</div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Outputs</div>
+          <div className="grid grid-cols-4 gap-2">
             <div className="bg-teal border border-teal rounded-lg p-2 text-center">
-              <div className="font-bold text-white text-[10px]">Fundraising</div>
+              <div className="font-bold text-white text-[10px]">FR</div>
             </div>
             <div className="bg-amber border border-amber rounded-lg p-2 text-center">
-              <div className="font-bold text-white text-[10px]">Biz Dev</div>
+              <div className="font-bold text-white text-[10px]">BD</div>
             </div>
             <div className="bg-navy border border-navy rounded-lg p-2 text-center">
-              <div className="font-bold text-white text-[10px]">Field Ops</div>
+              <div className="font-bold text-white text-[10px]">FO</div>
+            </div>
+            <div className="bg-magenta/20 border border-magenta rounded-lg p-2 text-center">
+              <div className="font-bold text-magenta text-[10px]">UI</div>
             </div>
           </div>
         </div>
@@ -264,7 +283,7 @@ export function Phase3ArchitectureDiagram() {
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2.5 h-2.5 rounded bg-magenta/20 border border-magenta"></div>
-          <span className="text-gray-600">MoE Models</span>
+          <span className="text-gray-600">MoE/Staff UI</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-2.5 h-2.5 rounded bg-teal border border-teal"></div>
