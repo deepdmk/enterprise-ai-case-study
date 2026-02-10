@@ -212,3 +212,6 @@ __marimo__/
 
 # Temporary files
 _ddtmp/
+
+# Phase 3 feedback data (generated during testing)
+phase-3-moe-experts/data/feedback/
