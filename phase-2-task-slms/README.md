@@ -339,6 +339,17 @@ data/evaluations/fundraising/investor_profiling_v1/
 data/registry/model_registry.json
 ```
 
+## Phase 0 Integration
+
+Phase 2 integrates with [Phase 0 Infrastructure](../phase-0-infrastructure) for:
+- **DataRegistry**: Track training datasets with full lineage
+- **ModelRegistry**: Version control for trained LoRA adapters
+- **ExperimentTracker**: Log fine-tuning experiments
+
+For migration details, see:
+- [PHASE0_MIGRATION.md](PHASE0_MIGRATION.md) - Migration guide from inline registries
+- [EVALUATION_SCHEMA_UPDATE.md](EVALUATION_SCHEMA_UPDATE.md) - Updated metrics schema
+
 ## License
 
 MIT

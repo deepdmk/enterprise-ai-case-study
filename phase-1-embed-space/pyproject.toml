@@ -1,7 +1,7 @@
 [project]
 name = "phase-1-embed-space"
 version = "1.0.0"
-description = "Phase 1: Unified Embedding Space for Enterprise AI Habitat"
+description = "Phase 1: Unified Embedding Space for Emergent Enterprise AI"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}

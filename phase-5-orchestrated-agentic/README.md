@@ -294,7 +294,7 @@ Phase 5 integrates with [Phase 0 Infrastructure](../phase-0-infrastructure) for:
 - **ModelRegistry**: Automatically registers fine-tuned orchestrator models
 - **ExperimentTracker**: Logs fine-tuning experiments with full metrics
 
-See [PHASE0_INTEGRATION.md](PHASE0_INTEGRATION.md) for complete details.
+Integration happens automatically when running the CLI commands.
 
 ### Automatic Tracking
 

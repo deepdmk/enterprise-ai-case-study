@@ -25,7 +25,7 @@ A research and development repository demonstrating how enterprise AI capabiliti
 
 ## Overview
 
-**Enterprise AI Habitat** is a framework for building enterprise AI systems that emphasizes:
+**Emergent Enterprise AI** is a framework for building enterprise AI systems that emphasizes:
 
 1. **Infrastructure over systems** - Build enabling capabilities, not rigid solutions
 2. **Bottom-up emergence** - Let intelligence emerge from unit-level experimentation
@@ -309,17 +309,17 @@ SLM orchestrator trained on Phase 4 discovery data:
 ```bash
 cd phase-5-orchestrated-agentic
 
-# Import Phase 4 discovery data
-python -m src.program1_import_discovery.main
+# Convert Phase 4 discovery data to training format
+python -m src.program1_data_conversion.main
 
-# Prepare orchestrator training data
-python -m src.program2_orchestrator_training.main
+# Fine-tune orchestrator SLM
+python -m src.program2_slm_finetuning.main
 
-# Fine-tune orchestrator
-python -m src.program3_finetune_orchestrator.main
+# Start inference server
+python -m src.program3_inference_server.main
 
-# Deploy orchestrated system
-python -m src.program4_deploy.main
+# Launch orchestrator service
+python -m src.program4_orchestrator_service.main
 ```
 
 [📄 Phase 5 Documentation](./phase-5-orchestrated-agentic/README.md)
@@ -375,8 +375,8 @@ phase4-analyze --full-pipeline
 
 # Phase 5: Orchestrator
 cd ../phase-5-orchestrated-agentic
-python -m src.program1_import_discovery.main --test-mode
-python -m src.program2_orchestrator_training.main --test-mode
+phase5-convert --full-pipeline --test-mode
+phase5-finetune --full-pipeline --test-mode
 ```
 
 ---
@@ -504,10 +504,10 @@ emergent-enterprise-ai/
 │
 └── phase-5-orchestrated-agentic/      # Orchestrator training
     ├── src/
-    │   ├── program1_import_discovery/
-    │   ├── program2_orchestrator_training/
-    │   ├── program3_finetune_orchestrator/
-    │   └── program4_deploy/
+    │   ├── program1_data_conversion/
+    │   ├── program2_slm_finetuning/
+    │   ├── program3_inference_server/
+    │   └── program4_orchestrator_service/
     └── README.md
 ```
 
@@ -573,8 +573,8 @@ We welcome contributions! This is a research framework, and we're interested in:
 If you use this framework in your research or projects, please cite:
 
 ```bibtex
-@software{enterprise_ai_habitat,
-  title = {Enterprise AI Habitat: Bottom-Up Emergence Framework},
+@software{emergent_enterprise_ai,
+  title = {Emergent Enterprise AI: Bottom-Up Emergence Framework},
   author = {[Your Name/Organization]},
   year = {2024},
   description = {A 5-phase framework for building enterprise AI systems through bottom-up emergence},
@@ -611,4 +611,4 @@ For questions, issues, or discussions:
 
 ---
 
-**Enterprise AI Habitat** | Version 1.0.0 | Building Intelligence from the Bottom Up
+**Emergent Enterprise AI** | Version 1.0.0 | Building Intelligence from the Bottom Up

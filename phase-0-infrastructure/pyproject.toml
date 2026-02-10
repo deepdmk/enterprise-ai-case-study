@@ -1,7 +1,7 @@
 [project]
 name = "phase-0-infrastructure"
 version = "0.1.0"
-description = "Foundational infrastructure for Enterprise AI Habitat phases 1-5"
+description = "Foundational infrastructure for Emergent Enterprise AI phases 1-5"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

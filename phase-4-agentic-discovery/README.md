@@ -105,7 +105,36 @@ Edit `config/config.yaml` to customize:
 - Agent service ports
 - Discovery pipeline parameters
 
+**Example config.yaml settings:**
+```yaml
+# A2A Protocol settings
+a2a:
+  max_depth: 4
+  timeout_seconds: 30
+  retry_attempts: 3
+
+# Agent services
+agents:
+  fundraising:
+    port: 8001
+  business_development:
+    port: 8002
+  field_operations:
+    port: 8003
+
+# Discovery pipeline
+discovery:
+  queries_per_day: 10
+  test_mode_days: 7
+```
+
 ## Usage
+
+**Important:** Before running CLI commands, install the package:
+
+```bash
+pip install -e .
+```
 
 ### Program 1: A2A Fine-Tuning
 

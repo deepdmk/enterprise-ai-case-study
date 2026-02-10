@@ -1,4 +1,4 @@
-"""Centralized logging infrastructure for Enterprise AI Habitat.
+"""Centralized logging infrastructure for Emergent Enterprise AI.
 
 This module provides structured logging capabilities using structlog,
 supporting both human-readable console output and machine-parseable JSON formatting.

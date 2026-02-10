@@ -1,10 +1,10 @@
 # Phase 0: Infrastructure
 
-Foundational infrastructure for Enterprise AI Habitat phases 1-5
+Foundational infrastructure for Emergent Enterprise AI phases 1-5
 
 ## Overview
 
-Phase 0 provides the core infrastructure that all downstream phases (1-5) depend on. It establishes a unified approach to data tracking, model versioning, experiment logging, and system configuration across the entire Enterprise AI Habitat ecosystem.
+Phase 0 provides the core infrastructure that all downstream phases (1-5) depend on. It establishes a unified approach to data tracking, model versioning, experiment logging, and system configuration across the entire Emergent Enterprise AI ecosystem.
 
 **Purpose**: This infrastructure layer centralizes critical capabilities:
 - **Registries**: Track datasets and models with full lineage across all phases
@@ -885,4 +885,4 @@ For issues, questions, or contributions:
 
 ---
 
-**Phase 0 Infrastructure** | Version 0.1.0 | Enterprise AI Habitat Framework
+**Phase 0 Infrastructure** | Version 0.1.0 | Emergent Enterprise AI Framework

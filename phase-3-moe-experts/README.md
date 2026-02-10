@@ -61,6 +61,9 @@ python -m src.program3_merge.main --test-mode
 
 # 4. Export 3 packages for Phase 4
 python -m src.program5_export.main --test-mode
+
+# 5. Launch staff interface (test mode with mock responses)
+python -m src.program6_interface.main --test-mode
 ```
 
 ### Production Mode (GPU Required)
@@ -111,7 +114,8 @@ phase-3-moe-experts/
 │   ├── program2_config_gen/           # Config generation (3 configs)
 │   ├── program3_merge/                # Merge execution (3 merges)
 │   ├── program4_finetune/             # Optional fine-tuning
-│   └── program5_export/               # Phase 4 export (3 packages)
+│   ├── program5_export/               # Phase 4 export (3 packages)
+│   └── program6_interface/            # Staff Gradio interface
 ├── data/
 │   ├── imports/                       # Imported adapters
 │   │   ├── import_manifest.json
@@ -229,6 +233,33 @@ data/exports/phase4/{unit_id}/
 │   └── {unit_id}_agent.yaml         # A2A agent configuration
 └── export_manifest.json
 ```
+
+### Program 6: Staff Interface
+
+Gradio-based web interface for staff to interact with MoE models and collect RLHF feedback.
+
+```bash
+# Launch in test mode (no GPU required, uses mock responses)
+python -m src.program6_interface.main --test-mode
+
+# Launch with production models
+python -m src.program6_interface.main
+
+# Custom host/port
+python -m src.program6_interface.main --host 0.0.0.0 --port 7861
+
+# Create public sharing link
+python -m src.program6_interface.main --share
+```
+
+**Features:**
+- Query MoE models with natural language
+- Select target unit (Fundraising, Business Development, Field Operations)
+- View expert routing decisions
+- Collect preference feedback for RLHF training
+- Response quality ratings
+
+**URL:** http://localhost:7861 (default)
 
 ## Configuration
 

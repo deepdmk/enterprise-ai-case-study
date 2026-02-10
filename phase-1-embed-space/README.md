@@ -1,6 +1,6 @@
 # Phase 1: Unified Embedding Space
 
-Part of the **Enterprise AI Habitat** framework - building the foundational infrastructure for semantic search across enterprise databases.
+Part of the **Emergent Enterprise AI** framework - building the foundational infrastructure for semantic search across enterprise databases.
 
 ## Table of Contents
 
@@ -807,9 +807,9 @@ If you see few training pairs, documents may be too short. The mock data generat
 
 ---
 
-## Alignment with Habitat Philosophy
+## Alignment with Emergent AI Philosophy
 
-This implementation follows the Enterprise AI Habitat principles:
+This implementation follows the Emergent Enterprise AI principles:
 
 | Principle | How We Implement It |
 |-----------|---------------------|
@@ -830,4 +830,4 @@ After completing Phase 1, proceed to:
 - **Phase 4**: Implement A2A protocol for agent collaboration
 - **Phase 5**: Train orchestrator SLM from discovery data
 
-See the parent `CLAUDE.md` for the full Enterprise AI Habitat framework.
+See the parent `CLAUDE.md` for the full Emergent Enterprise AI framework.

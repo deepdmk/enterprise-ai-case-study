@@ -9,7 +9,7 @@ description = "Phase 4: Agentic Discovery with A2A Protocol and Adaptive Depth O
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    {name = "Your Organization"}
+    {name = "Emergent Enterprise AI Project"}
 ]
 keywords = [
     "agentic-ai",

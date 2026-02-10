@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a research and development repository for **Enterprise AI Habitat** - a bottom-up approach to enterprise AI deployment. The core philosophy is that AI capabilities should emerge organically from unit-level experimentation rather than top-down system design.
+This is a research and development repository for **Emergent Enterprise AI** - a bottom-up approach to enterprise AI deployment. The core philosophy is that AI capabilities should emerge organically from unit-level experimentation rather than top-down system design.
 
 The project implements a 5-phase framework for enterprise AI transformation using a funder intelligence system as the case study (international development organizations optimizing funding strategy).
 
@@ -155,3 +155,26 @@ curl http://localhost:8001/stats
 **Discovery → Training Pipeline**: A2A call logs from the discovery phase are converted to fine-tuning data for the orchestrator SLM. The pipeline extracts workflow patterns, agent performance profiles, and error modes.
 
 **Orchestrator Training**: The final orchestrator is a fine-tuned SLM (recommended: Qwen2.5 7B or Phi-4) that learns routing decisions from discovery data rather than using hardcoded rules.
+
+### Phase 5: Orchestrated Agentic
+```bash
+cd phase-5-orchestrated-agentic
+
+# Install package
+pip install -e .
+
+# Test mode pipeline (no GPU required)
+phase5-convert --full-pipeline --test-mode      # Convert discovery data
+phase5-finetune --full-pipeline --test-mode     # Mock fine-tuning
+phase5-inference --start --test-mode            # Start mock inference server
+phase5-orchestrator --start --test-mode         # Start orchestrator service
+
+# Production mode (requires GPU + Phase 4 data)
+phase5-convert --full-pipeline                  # Convert Phase 4 data
+phase5-finetune --train --epochs 3              # Fine-tune orchestrator
+phase5-inference --start --server vllm          # Start vLLM inference server
+phase5-orchestrator --start                     # Start orchestrator service
+
+# Launch Gradio UI
+python -m src.program4_orchestrator_service.main --ui --test-mode
+```

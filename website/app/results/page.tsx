@@ -4,11 +4,12 @@ import { PageHeader } from "@/components/layout";
 import { PageNav } from "@/components/layout/PageNav";
 import Link from "next/link";
 import { InvestmentTabs, TechnicalTabs } from "./ResultsTabs";
+import { ResultsFlowGraphic } from "@/components/results/ResultsFlowGraphic";
 
 export const metadata: Metadata = {
   title: "Results",
   description:
-    "A complete enterprise AI system built for $163.1K direct investment — from unified knowledge access through orchestrated multi-agent intelligence.",
+    "A complete enterprise AI system built for $163.1K direct investment, from unified knowledge access through orchestrated multi-agent intelligence.",
 };
 
 export default function ResultsPage() {
@@ -16,23 +17,42 @@ export default function ResultsPage() {
     <>
       <PageHeader
         title="Results"
-        subtitle="A complete enterprise AI system built for $163.1K direct investment — from unified knowledge access through orchestrated multi-agent intelligence"
+        subtitle="A complete enterprise AI system built for $163.1K direct investment, from unified knowledge access through orchestrated multi-agent intelligence"
       />
       <PageNav current="/results" />
+
+      {/* Results Overview Flow Graphic */}
+      <section className="py-12 bg-slate-100 border-t-4 border-teal">
+        <Container>
+          <ResultsFlowGraphic />
+        </Container>
+      </section>
 
       {/* ==================== SECTION 1: CAPABILITIES DELIVERED ==================== */}
       <section className="py-16 bg-navy/10 border-t-4 border-teal">
         <Container>
-          <h2 className="text-3xl font-bold text-navy mb-4">Capabilities Delivered</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
+            <span className="bg-navy text-white px-3 py-1 rounded mr-3 text-base">1</span>
+            Capabilities Delivered
+          </h2>
+
+          {/* Key Finding Callout */}
+          <div className="bg-teal/20 border-l-4 border-teal rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-teal-dark">Key Result</h3>
+            <p className="text-lg text-gray-700">
+              From siloed data to enterprise-wide AI: unified knowledge access, 14 task-specific models, cross-division intelligence, and a single orchestrated entry point. Each capability delivers immediate value.
+            </p>
+          </div>
+
           <p className="text-lg text-gray-700 mb-10 max-w-4xl">
-            This case study produced a complete, deployment-ready enterprise AI system progressing from foundational knowledge access through orchestrated multi-agent intelligence. Each phase delivers standalone value — organizations can stop at any point with working AI capabilities.
+            This case study produced a complete, deployment-ready enterprise AI system with progressive capabilities. From foundational knowledge access through orchestrated multi-agent intelligence, organizations can deploy at any level with working AI capabilities.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white border-t-4 border-t-navy rounded-lg shadow-md p-6">
               <span className="text-base font-semibold text-navy/60 uppercase tracking-wide">Phase 0</span>
               <h3 className="text-xl font-bold text-navy mt-1 mb-2">MLOps Infrastructure</h3>
-              <p className="text-gray-600 text-base mb-4">Data registry, model registry, experiment tracking — the foundation for systematic AI development</p>
+              <p className="text-gray-600 text-base mb-4">Data registry, model registry, experiment tracking. The foundation for systematic AI development.</p>
               <div className="text-base font-semibold text-gray-500">$0</div>
             </div>
 
@@ -46,7 +66,7 @@ export default function ResultsPage() {
             <div className="bg-white border-t-4 border-t-amber rounded-lg shadow-md p-6">
               <span className="text-base font-semibold text-amber/60 uppercase tracking-wide">Phase 2</span>
               <h3 className="text-xl font-bold text-navy mt-1 mb-2">14 Task-Specific SLMs</h3>
-              <p className="text-gray-600 text-base mb-4">Fine-tuned models for specific workflows — portfolio analysis, RFP response, risk assessment, and more</p>
+              <p className="text-gray-600 text-base mb-4">Fine-tuned models for specific workflows: portfolio analysis, RFP response, risk assessment, and more</p>
               <div className="text-base font-semibold text-amber">$43,600</div>
             </div>
 
@@ -67,7 +87,7 @@ export default function ResultsPage() {
             <div className="bg-white border-t-4 border-t-navy rounded-lg shadow-md p-6">
               <span className="text-base font-semibold text-navy/60 uppercase tracking-wide">Phase 5</span>
               <h3 className="text-xl font-bold text-navy mt-1 mb-2">Learned Orchestrator</h3>
-              <p className="text-gray-600 text-base mb-4">Single entry point routing queries to the right experts — enterprise-wide AI through one interface</p>
+              <p className="text-gray-600 text-base mb-4">Single entry point routing queries to the right experts. Enterprise-wide AI through one interface.</p>
               <div className="text-base font-semibold text-navy">$10,400</div>
             </div>
           </div>
@@ -77,16 +97,28 @@ export default function ResultsPage() {
       {/* ==================== SECTION 2: STRATEGIC VALUE DELIVERED ==================== */}
       <section className="py-16 border-t-4 border-navy" style={{ backgroundColor: "rgba(253, 230, 138, 0.25)" }}>
         <Container>
-          <h2 className="text-3xl font-bold text-navy mb-4">Strategic Value Delivered</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
+            <span className="bg-amber text-white px-3 py-1 rounded mr-3 text-base">2</span>
+            Strategic Value Delivered
+          </h2>
+
+          {/* Key Finding Callout */}
+          <div className="bg-amber/20 border-l-4 border-amber rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-amber-dark">Key Result</h3>
+            <p className="text-lg text-gray-700">
+              AI built on your data creates capabilities competitors cannot buy. Models trained on proprietary knowledge, customers, and business processes become a sustainable competitive moat unique to your organization.
+            </p>
+          </div>
+
           <p className="text-lg text-gray-700 mb-10 max-w-4xl">
             Beyond the technical capabilities, this approach delivers strategic advantages that traditional enterprise AI deployments cannot match.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white border-t-4 border-t-teal rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-navy mb-3">Optionality at Every Phase</h3>
+              <h3 className="text-xl font-bold text-navy mb-3">Optionality with Bounded Risk</h3>
               <p className="text-gray-600 mb-4">
-                Each phase delivers standalone value. Organizations can stop at Phase 1 (knowledge access), Phase 2 (task automation), or Phase 3 (division intelligence) with working AI capabilities. No all-or-nothing commitment required.
+                Each phase delivers standalone value with maximum exposure limited to that phase. Organizations can stop at any milestone with working AI capabilities. No all-or-nothing commitment, no $2M+ upfront investment required.
               </p>
               <ul className="text-base text-gray-500 space-y-1">
                 <li>&bull; After Phase 1 ($62,400): Universal search working</li>
@@ -96,24 +128,39 @@ export default function ResultsPage() {
             </div>
 
             <div className="bg-white border-t-4 border-t-navy rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-navy mb-3">Bounded Risk Per Phase</h3>
-              <p className="text-gray-600">
-                Maximum exposure at any decision point is the cost of the current phase. The largest single phase (Phase 1) requires $62,400. Compare to vendor approaches requiring $2M+ commitment before seeing results.
+              <h3 className="text-xl font-bold text-navy mb-3">AI Tailored to Your Organization</h3>
+              <p className="text-gray-600 mb-4">
+                Not a generic platform adapted to fit, but AI built from the ground up around how your organization actually operates and serves its customers.
               </p>
-            </div>
-
-            <div className="bg-white border-t-4 border-t-amber rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-bold text-navy mb-3">Competitive Moat Through Proprietary Models</h3>
-              <p className="text-gray-600">
-                Models trained on organizational data create capabilities competitors cannot purchase. Unlike vendor platforms that commoditize institutional knowledge, this approach transforms proprietary knowledge into proprietary AI capabilities.
-              </p>
+              <ul className="text-base text-gray-500 space-y-1">
+                <li>&bull; Unified search trained on your terms and data structure</li>
+                <li>&bull; Task AI doing what is most valuable to your teams</li>
+                <li>&bull; Division agents matching your organizational structure</li>
+                <li>&bull; Orchestration reflecting how your people actually work</li>
+              </ul>
             </div>
 
             <div className="bg-white border-t-4 border-t-magenta rounded-lg shadow-md p-6">
               <h3 className="text-xl font-bold text-navy mb-3">Deployment Flexibility</h3>
-              <p className="text-gray-600">
-                The architecture deploys to any environment: local infrastructure for data sovereignty, AWS/Azure cloud for scalability, or hybrid configurations. No vendor lock-in, no forced migration paths.
+              <p className="text-gray-600 mb-4">
+                The architecture deploys to any environment: local infrastructure for data sovereignty, AWS/Azure cloud for scalability, or hybrid configurations.
               </p>
+              <ul className="text-base text-gray-500 space-y-1">
+                <li>&bull; No vendor lock-in</li>
+                <li>&bull; No forced migration paths</li>
+              </ul>
+            </div>
+
+            <div className="bg-white border-t-4 border-t-amber rounded-lg shadow-md p-6">
+              <h3 className="text-xl font-bold text-navy mb-3">Competitive Moat Through Proprietary Models</h3>
+              <p className="text-gray-600 mb-4">
+                Models trained on organizational data create capabilities competitors cannot purchase. Unlike vendor platforms that commoditize institutional knowledge, this approach transforms proprietary knowledge into proprietary AI capabilities.
+              </p>
+              <ul className="text-base text-gray-500 space-y-1">
+                <li>&bull; Your data becomes your differentiator, not a commodity</li>
+                <li>&bull; Your institutional knowledge encoded as AI advantage</li>
+                <li>&bull; AI that improves from your successes, not vendor release cycles</li>
+              </ul>
             </div>
           </div>
         </Container>
@@ -122,9 +169,21 @@ export default function ResultsPage() {
       {/* ==================== SECTION 3: INVESTMENT ANALYSIS ==================== */}
       <section className="py-16 bg-slate-200 border-t-4 border-teal">
         <Container>
-          <h2 className="text-3xl font-bold text-navy mb-4">Investment Analysis</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
+            <span className="bg-teal text-white px-3 py-1 rounded mr-3 text-base">3</span>
+            Investment Analysis
+          </h2>
+
+          {/* Key Finding Callout */}
+          <div className="bg-teal/20 border-l-4 border-teal rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-teal-dark">Key Result</h3>
+            <p className="text-lg text-gray-700">
+              90%+ cost reduction vs. vendor platforms. $163.1K total investment compared to $2M&ndash;$7M for typical enterprise AI deployments, with infrastructure costs of just $11.1K.
+            </p>
+          </div>
+
           <p className="text-lg text-gray-700 mb-10 max-w-4xl">
-            The complete system can be built for $163.1K in direct investment — infrastructure and training programs required regardless of technical approach. This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
+            The complete system can be built for $163.1K in direct investment: infrastructure and training programs required regardless of technical approach. This compares to $2M&ndash;$7M for typical enterprise AI platform deployments.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -156,9 +215,21 @@ export default function ResultsPage() {
       {/* ==================== SECTION 4: TECHNICAL IMPLEMENTATION ==================== */}
       <section className="py-16 border-t-4 border-navy" style={{ backgroundColor: "rgba(221, 214, 254, 0.6)" }}>
         <Container>
-          <h2 className="text-3xl font-bold text-navy mb-4">Technical Implementation</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
+            <span className="bg-magenta text-white px-3 py-1 rounded mr-3 text-base">4</span>
+            Technical Implementation
+          </h2>
+
+          {/* Key Finding Callout */}
+          <div className="bg-magenta/20 border-l-4 border-magenta rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-magenta-dark">Key Result</h3>
+            <p className="text-lg text-gray-700">
+              Production-ready architecture with no vendor lock-in. Deploy to AWS, Azure, on-premises, or hybrid environments. Model-agnostic design means components can be upgraded independently as technology evolves.
+            </p>
+          </div>
+
           <p className="text-lg text-gray-700 mb-10 max-w-4xl">
-            The case study demonstrates practical implementation across the full AI engineering stack — from fine-tuning techniques through production architecture.
+            The case study demonstrates practical implementation across the full AI engineering stack, from fine-tuning techniques through production architecture.
           </p>
 
           <div className="mb-8">
@@ -190,13 +261,24 @@ export default function ResultsPage() {
       {/* ==================== SECTION 5: WHAT THIS PROVES ==================== */}
       <section className="py-16 bg-teal/10 border-t-4 border-teal">
         <Container>
-          <h2 className="text-3xl font-bold text-navy mb-8">What This Case Study Proves</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 flex items-center">
+            <span className="bg-navy text-white px-3 py-1 rounded mr-3 text-base">5</span>
+            What This Case Study Proves
+          </h2>
+
+          {/* Key Finding Callout */}
+          <div className="bg-navy/10 border-l-4 border-navy rounded-r-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold mb-2 text-navy">Key Result</h3>
+            <p className="text-lg text-gray-700">
+              Enterprise AI is now accessible. The economics of fine-tuned small models and modern tooling make internal build viable for mid-market organizations, not just tech giants with unlimited budgets.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white border-t-4 border-t-teal rounded-lg shadow-md p-6">
               <h3 className="text-lg font-bold text-navy mb-3">Enterprise AI doesn&apos;t require enterprise budgets</h3>
               <p className="text-gray-600 text-base">
-                A complete, production-ready system — from embeddings through orchestrated multi-agent intelligence — can be built for $163.1K in direct investment. The economics of fine-tuned small models and modern tooling make internal build viable for mid-market organizations.
+                A complete, production-ready system can be built for $163.1K in direct investment: from embeddings through orchestrated multi-agent intelligence. The economics of fine-tuned small models and modern tooling make internal build viable for mid-market organizations.
               </p>
             </div>
             <div className="bg-white border-t-4 border-t-navy rounded-lg shadow-md p-6">
