@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PageNav } from "@/components/layout/PageNav";
+import { SolutionFlowGraphic } from "@/components/solution/SolutionFlowGraphic";
 import { PHASES } from "@/lib/constants";
 import { ArrowRight, Github } from "lucide-react";
 import type { Metadata } from "next";
@@ -54,7 +55,14 @@ export default function PhasesPortal() {
       </PageHeader>
       <PageNav current="/solution" />
 
-      <section className="py-20">
+      {/* Phase Journey Overview */}
+      <section className="pt-12 pb-2">
+        <Container>
+          <SolutionFlowGraphic />
+        </Container>
+      </section>
+
+      <section className="pt-4 pb-12">
         <Container>
           {/* Phase Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
