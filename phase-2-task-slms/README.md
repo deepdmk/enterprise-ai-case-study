@@ -1,4 +1,4 @@
-# Phase 2: Task SLMs
+# Phase 2: Task-Specific SLMs
 
 Fine-tune Llama 3.1 8B using Unsloth + LoRA for specific organizational tasks. Each of 3 units (Fundraising, Field Operations, Business Development) gets specialized Task SLMs that feed into Phase 3 MoE merging.
 

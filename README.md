@@ -43,7 +43,7 @@ Traditional top-down enterprise AI deployments fail because they:
 - Lock organizations into initial architectural decisions
 - Separate AI systems from actual work patterns
 
-The Habitat approach succeeds by:
+The Emergent approach succeeds by:
 - Enabling experimentation at the edges (teams, units, individuals)
 - Creating conditions for AI to work bottom-up
 - Capturing data naturally from work, not warehouses
@@ -58,9 +58,9 @@ The Habitat approach succeeds by:
 
 **"You can't scale top-down AI solutions without first building the conditions for AI to work bottom-up."**
 
-### Habitat vs Traditional
+### Emergent vs Traditional
 
-| Aspect | Traditional (Top-Down) | Habitat (Bottom-Up) |
+| Aspect | Traditional (Top-Down) | Emergent (Bottom-Up) |
 |--------|----------------------|-------------------|
 | **Design** | System designed first | Patterns emerge from use |
 | **Timeline** | Fixed (18-24 months) | Adaptive and incremental |
@@ -88,7 +88,7 @@ For a deep dive into the philosophy, see the [`enterprise_ai_habitat.ipynb`](./e
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                    ENTERPRISE AI HABITAT FRAMEWORK                        │
+│                   EMERGENT ENTERPRISE AI FRAMEWORK                        │
 │                         5-Phase Evolution                                 │
 └──────────────────────────────────────────────────────────────────────────┘
 
@@ -113,7 +113,7 @@ Phase 2: Task-Specific SLMs (per unit)
 └─ Unit autonomy in AI capabilities
           │
           ↓
-Phase 3: Mixture-of-Experts Models (per unit)
+Phase 3: MoE Division Agents (per unit)
 ├─ Merge unit's task SLMs into unified MoE agent
 ├─ 3 separate MoE models (one per unit)
 ├─ Mixtral-style architecture with hidden gate routing
@@ -127,7 +127,7 @@ Phase 4: Agentic Discovery (A2A Protocol)
 └─ Generate orchestrator training data
           │
           ↓
-Phase 5: Orchestrated Agentic System
+Phase 5: Orchestrated System
 ├─ SLM orchestrator (Qwen2.5 7B or Phi-4)
 ├─ Trained on Phase 4 discovery data
 ├─ Learned routing, not rule-based
@@ -208,7 +208,7 @@ Fine-tune small language models for unit-specific tasks:
 
 ---
 
-### Phase 3: Mixture-of-Experts Models
+### Phase 3: MoE Division Agents
 
 **Status**: ✅ Complete
 **Location**: [`phase-3-moe-experts/`](./phase-3-moe-experts/)
@@ -286,7 +286,7 @@ phase4-analyze --full-pipeline
 
 ---
 
-### Phase 5: Orchestrated Agentic System
+### Phase 5: Orchestrated System
 
 **Status**: ✅ Complete
 **Location**: [`phase-5-orchestrated-agentic/`](./phase-5-orchestrated-agentic/)
@@ -491,7 +491,9 @@ emergent-enterprise-ai/
 │   │   ├── program1_import/
 │   │   ├── program2_config_gen/
 │   │   ├── program3_merge/
-│   │   └── program5_export/
+│   │   ├── program4_finetune/
+│   │   ├── program5_export/
+│   │   └── program6_interface/
 │   └── README.md
 │
 ├── phase-4-agentic-discovery/         # A2A protocol & discovery
@@ -591,7 +593,7 @@ This framework builds on research in:
 - **Agent-to-Agent protocols** (Multi-agent systems research)
 - **Parameter-efficient fine-tuning** (LoRA, QLoRA)
 - **Embedding fine-tuning** (Sentence-Transformers)
-- **Enterprise AI transformation** (Habitat thinking, bottom-up emergence)
+- **Enterprise AI transformation** (bottom-up emergence principles)
 
 Special thanks to the open-source communities behind:
 - Hugging Face Transformers

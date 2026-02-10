@@ -1,4 +1,4 @@
-# Phase 3: MoE Experts
+# Phase 3: MoE Division Agents
 
 Merge Task SLMs (LoRA adapters) from Phase 2 into **3 separate Mixture-of-Experts models** using mergekit-moe - one MoE per organizational unit.
 
