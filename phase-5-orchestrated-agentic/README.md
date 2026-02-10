@@ -162,6 +162,18 @@ phase5-orchestrator --start --test-mode
 
 # Custom port
 phase5-orchestrator --start --port 8080
+
+# Launch Gradio UI (test mode - no services required)
+python -m src.program4_orchestrator_service.main --ui --test-mode
+
+# Launch Gradio UI (production mode - requires orchestrator service)
+python -m src.program4_orchestrator_service.main --ui
+
+# Gradio UI with custom port
+python -m src.program4_orchestrator_service.main --ui --ui-port 7863 --test-mode
+
+# Gradio UI with public link
+python -m src.program4_orchestrator_service.main --ui --share --test-mode
 ```
 
 ## API Endpoints
@@ -196,6 +208,32 @@ curl http://localhost:8000/stats
 
 - **Orchestrator API**: http://localhost:8000/docs
 - **Swagger UI**: http://localhost:8000/redoc
+
+### Gradio Interface (Port 7862)
+
+The orchestrator includes a Gradio web interface for interactive testing:
+
+```bash
+# Test mode (no services required - uses mock responses)
+python -m src.program4_orchestrator_service.main --ui --test-mode
+
+# Production mode (requires orchestrator service running on port 8000)
+python -m src.program4_orchestrator_service.main --ui
+```
+
+**Features:**
+- **Query Input**: Enter queries to test routing and orchestration
+- **Route Only**: View routing decision without executing agent calls
+- **Full Orchestration**: Execute complete flow with agent responses
+- **Agent Response Tabs**: View individual responses from Fundraising, Business Development, and Field Operations agents
+- **Performance Metrics**: Monitor latency and success rates
+
+**Test Mode Keywords:**
+- `investor`, `portfolio`, `Gates` → Routes to Fundraising agent
+- `rfp`, `proposal`, `competitive` → Routes to Business Development agent
+- `kenya`, `region`, `project` → Routes to Field Operations agent
+
+Open in browser: http://localhost:7862
 
 ## Configuration
 
@@ -355,6 +393,8 @@ phase-5-orchestrated-agentic/
 │   ├── program2_slm_finetuning/
 │   ├── program3_inference_server/
 │   └── program4_orchestrator_service/
+│       ├── gradio_app.py        # Gradio web interface
+│       └── mock_orchestrator.py # Mock client for test mode
 ├── tests/                   # Test suite
 ├── examples/                # Example scripts
 ├── notebooks/               # Jupyter notebooks
@@ -410,6 +450,7 @@ After completing Phase 5:
 - **Strategy Notebook**: `notebooks/slm_orchestrator_finetuning.ipynb`
 - **Configuration**: `config/config.yaml`
 - **API Docs**: http://localhost:8000/docs
+- **Gradio Interface**: http://localhost:7862 (when running with `--ui`)
 
 ## License
 

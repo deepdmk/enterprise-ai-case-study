@@ -71,6 +71,18 @@ class InferenceServerSettings(BaseModel):
     max_latency_ms: int = Field(default=200, description="Maximum acceptable latency")
 
 
+class GradioConfig(BaseModel):
+    """Gradio UI configuration for orchestrator service"""
+    host: str = Field(default="0.0.0.0", description="Gradio server host")
+    port: int = Field(default=7862, description="Gradio server port")
+    share: bool = Field(default=False, description="Create public Gradio link")
+    title: str = Field(default="Phase 5 Orchestrator Interface", description="UI title")
+    description: str = Field(
+        default="Test orchestration routing and agent coordination",
+        description="UI description"
+    )
+
+
 class OrchestratorServiceSettings(BaseModel):
     """Program 4: Orchestrator Service configuration"""
     host: str = Field(default="0.0.0.0", description="Host to bind to")
@@ -102,6 +114,9 @@ class OrchestratorServiceSettings(BaseModel):
         default=True,
         description="Enable multi-agent response synthesis"
     )
+
+    # Gradio UI configuration
+    gradio: GradioConfig = Field(default_factory=GradioConfig)
 
 
 class PathSettings(BaseModel):

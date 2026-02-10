@@ -1028,6 +1028,90 @@ assert predicted == expected
                       </p>
                     </div>
                   </div>
+
+                  {/* Part 8: Gradio Interface for Local Testing */}
+                  <div>
+                    <h3 className="text-2xl font-semibold mb-4">8. Gradio Interface for Local Testing</h3>
+                    <div className="prose prose-lg max-w-none">
+                      <p className="font-semibold">Interactive Testing Without Full Stack</p>
+                      <p>
+                        The orchestrator includes a Gradio web interface for local development and testing. This enables developers to test routing decisions and agent coordination without running the complete service stack:
+                      </p>
+                    </div>
+
+                    <CodeBlock language="bash" code={`# Test mode - no services required (uses mock responses)
+python -m src.program4_orchestrator_service.main --ui --test-mode
+
+# Production mode - connects to running orchestrator service
+python -m src.program4_orchestrator_service.main --ui
+
+# Custom port and public link
+python -m src.program4_orchestrator_service.main --ui --ui-port 7863 --share`} />
+
+                    <div className="prose prose-lg max-w-none mt-4">
+                      <p className="font-semibold">Interface Features</p>
+                      <p>
+                        The Gradio interface provides:
+                      </p>
+                      <ul>
+                        <li><strong>Query Input:</strong> Natural language queries for testing routing logic</li>
+                        <li><strong>Route Only:</strong> View routing decisions without executing agent calls</li>
+                        <li><strong>Full Orchestration:</strong> Execute complete flow with agent responses</li>
+                        <li><strong>Agent Response Tabs:</strong> Individual responses from Fundraising, Business Development, and Field Operations agents</li>
+                        <li><strong>Performance Metrics:</strong> Latency, success rates, and agent call statistics</li>
+                      </ul>
+
+                      <p className="font-semibold mt-6">Test Mode Keywords</p>
+                      <p>
+                        In test mode, the mock orchestrator routes based on keywords:
+                      </p>
+                      <ul>
+                        <li><code>investor</code>, <code>portfolio</code>, <code>Gates</code> → Fundraising agent</li>
+                        <li><code>rfp</code>, <code>proposal</code>, <code>competitive</code> → Business Development agent</li>
+                        <li><code>kenya</code>, <code>region</code>, <code>project</code> → Field Operations agent</li>
+                      </ul>
+
+                      <p className="font-semibold mt-6">Architecture</p>
+                    </div>
+
+                    <CodeBlock language="python" code={`# Mock orchestrator for test mode
+class MockOrchestratorClient:
+    """No service required - provides canned responses."""
+
+    def route(self, query: str) -> RoutingDecision:
+        # Keyword-based routing for testing
+        if "investor" in query.lower():
+            return RoutingDecision(
+                entry_agent=AgentType.FUNDRAISING,
+                optimal_depth=2,
+                reasoning="Query mentions investor analysis..."
+            )
+        # ...
+
+    def orchestrate(self, query: str) -> OrchestratedResponse:
+        # Returns mock agent responses with simulated latencies
+        routing = self.route(query)
+        return OrchestratedResponse(
+            routing_decision=routing,
+            agent_responses=[...],  # Canned responses
+            synthesized_response="...",
+            total_latency_ms=random.randint(100, 300)
+        )
+
+# HTTP client for production mode
+class OrchestratorHttpClient:
+    """Connects to running orchestrator service."""
+
+    def route(self, query: str) -> RoutingDecision:
+        response = httpx.post(f"{self.base_url}/route", json={"query": query})
+        return RoutingDecision(**response.json()["routing_decision"])`} />
+
+                    <div className="prose prose-lg max-w-none mt-4">
+                      <p>
+                        The interface uses the same data models as the production service, ensuring test behavior matches production. Developers can validate routing logic, test edge cases, and demonstrate capabilities without infrastructure dependencies.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </>
             }

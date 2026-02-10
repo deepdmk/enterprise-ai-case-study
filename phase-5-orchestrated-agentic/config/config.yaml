@@ -83,6 +83,14 @@ orchestrator_service:
   # Response synthesis
   enable_response_synthesis: true
 
+  # Gradio UI configuration
+  gradio:
+    host: "0.0.0.0"
+    port: 7862
+    share: false
+    title: "Phase 5 Orchestrator Interface"
+    description: "Test orchestration routing and agent coordination"
+
   # Agno Framework Integration (Agno 2.4.1)
   agno:
     enabled: false  # Set to true to use Agno Team mode

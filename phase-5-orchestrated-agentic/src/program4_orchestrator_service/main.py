@@ -2,6 +2,7 @@
 Program 4: Orchestrator Service - Main Entry Point
 
 FastAPI orchestrator service wrapping the SLM orchestrator.
+Supports both API server mode and Gradio UI mode.
 """
 
 import argparse
@@ -12,6 +13,8 @@ import structlog
 
 from config.settings import get_settings
 from .service import create_app
+from .gradio_app import create_orchestrator_interface
+from .mock_orchestrator import MockOrchestratorClient
 
 # Configure logging
 structlog.configure(
@@ -23,6 +26,50 @@ structlog.configure(
 )
 
 logger = structlog.get_logger()
+
+
+def start_ui(args, settings):
+    """Start Gradio UI interface"""
+    logger.info(
+        "starting_orchestrator_ui",
+        port=args.ui_port or settings.orchestrator_service.gradio.port,
+        test_mode=args.test_mode,
+    )
+
+    # Get Gradio config
+    gradio_config = settings.orchestrator_service.gradio
+
+    # Determine service URL for production mode
+    service_url = None
+    if not args.test_mode:
+        service_url = f"http://{settings.orchestrator_service.host}:{settings.orchestrator_service.port}"
+
+    # Create interface
+    interface = create_orchestrator_interface(
+        test_mode=args.test_mode,
+        service_url=service_url,
+        config=gradio_config,
+    )
+
+    # Determine host/port
+    host = gradio_config.host
+    port = args.ui_port or gradio_config.port
+    share = args.share or gradio_config.share
+
+    print("\n" + "=" * 80)
+    print("Phase 5 Orchestrator Interface")
+    print("=" * 80)
+    print(f"Host:        {host}")
+    print(f"Port:        {port}")
+    print(f"Mode:        {'Test (mock responses)' if args.test_mode else 'Production'}")
+    print(f"Share:       {share}")
+    if not args.test_mode:
+        print(f"Service URL: {service_url}")
+    print(f"\nOpen in browser: http://{host if host != '0.0.0.0' else 'localhost'}:{port}")
+    print("=" * 80 + "\n")
+
+    # Launch interface
+    interface.launch(host=host, port=port, share=share)
 
 
 def start_service(args, settings):
@@ -102,6 +149,11 @@ def main():
         action="store_true",
         help="Start orchestrator service"
     )
+    parser.add_argument(
+        "--ui",
+        action="store_true",
+        help="Launch Gradio interface instead of API server"
+    )
 
     # Configuration
     parser.add_argument(
@@ -131,6 +183,18 @@ def main():
         help="Use Agno framework instead of legacy routing engine"
     )
 
+    # UI-specific options
+    parser.add_argument(
+        "--ui-port",
+        type=int,
+        help="Gradio UI port (default: from config, typically 7862)"
+    )
+    parser.add_argument(
+        "--share",
+        action="store_true",
+        help="Create public Gradio link"
+    )
+
     args = parser.parse_args()
 
     # Load settings
@@ -142,12 +206,15 @@ def main():
         settings.test_mode = True
 
     # Check if any action was specified
-    if not args.start:
+    if not args.start and not args.ui:
         parser.print_help()
         sys.exit(1)
 
     try:
-        start_service(args, settings)
+        if args.ui:
+            start_ui(args, settings)
+        else:
+            start_service(args, settings)
 
     except KeyboardInterrupt:
         logger.info("service_stopped_by_user")
