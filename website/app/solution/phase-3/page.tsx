@@ -47,22 +47,22 @@ export default function Phase3() {
           <PhaseTabs
             vision={
               <>
-                <h3 className="text-xl text-gray-700 mb-6">Building non-replicable competitive advantage through division-level intelligence</h3>
-
+                {/* The Problem */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Phase 3 creates division-level intelligence with a Direct Investment of $31,200 ($1,200 infrastructure + $30,000 training programs). Fourteen task-specific models merge into three specialized division agents, each with emergent multi-step reasoning capabilities. This is where the system shifts from productivity gains to competitive differentiation—your divisions now operate with intelligence patterns no competitor can replicate.
+                  Task-based models add value, but only in the form of efficiencies. They make existing work faster, not fundamentally different. Isolated models cannot combine their intelligence to produce capabilities that none possess individually. Managing 14 separate task models also creates complexity: users must know which model to query, orchestrators must coordinate 14 APIs. Linking models together unlocks innovative and emergent capabilities that transform what becomes possible.
                 </p>
 
-                <h4 className="text-lg font-bold text-navy mb-3">Strategic Value:</h4>
-
+                {/* The Solution */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Solution</h3>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Three division agents, each trained on proprietary task patterns unique to your organization. The Fundraising agent knows relationship-building sequences your team has refined over years. The Business Development agent understands your bidding strategies and proposal patterns. The Field Operations agent captures local market intelligence and operational rhythms. These patterns exist nowhere else—not in commercial LLMs, not in competitor systems. Training on your data creates intelligence that compounds over time while remaining impossible for competitors to copy. Phase 3 Direct Investment of $31,200 covers infrastructure ($1,200) and training programs ($30,000) to accommodate multiple iterations and optional routing fine-tuning.
+                  Consolidate task models into 3 division-level MoE (Mixture-of-Experts) agents, where each task model becomes an expert within the agent. These agents are more sophisticated than individual small models: they can be trained to handle chain of thought reasoning, tool calls, and multi-step logical workflows. The Fundraising agent contains 5 task experts, Business Development contains 5 experts, Field Operations contains 4 experts. Users interact with one agent per division; the agent routes to its appropriate expert automatically.
                 </p>
 
-                <h4 className="text-lg font-bold text-navy mb-3">What&apos;s Delivered:</h4>
-
+                {/* The Value */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Value</h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Three production-ready division agents replacing fourteen separate task models: Fundraising Division Agent (merges 5 task experts), Business Development Division Agent (merges 5 task experts), Field Operations Division Agent (merges 4 task experts), and Phase 0 Registry Integration enabling cross-division orchestration in Phase 4. Users gain single access points per division capable of complex, multi-step workflows with accuracy trained on organizational knowledge. Optionality maintained: can stop here with three specialized agents delivering immediate differentiation value. Bounded risk: &lt;$5K total phase investment.
+                  Division-level intelligence with emergent multi-step capabilities. Intelligence patterns trained on proprietary data that competitors cannot replicate. The Fundraising agent knows relationship-building sequences your team has refined over years. The Business Development agent understands your bidding strategies. The Field Operations agent captures local market intelligence and operational rhythms. Three production-ready division agents replacing fourteen separate task models: users gain single access points per division capable of complex, multi-step workflows with accuracy trained on organizational knowledge. Full optionality maintained: can stop here with three specialized agents delivering immediate differentiation value, or continue to cross-division orchestration in Phase 4.
                 </p>
               </>
             }

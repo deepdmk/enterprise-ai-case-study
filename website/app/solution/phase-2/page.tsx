@@ -46,12 +46,22 @@ export default function Phase2() {
             vision={
               <>
                 <div className="mb-12">
+                  {/* The Problem */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                   <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                    Phase 2 built competitive advantage through AI capabilities no vendor could replicate. With a Phase 2 Direct Investment of $43,600 ($3,600 infrastructure + $40,000 training programs), teams fine-tuned 14 task-specific models on the organization&apos;s proprietary data: investment decisions, RFP win patterns, field operation standards. These weren&apos;t leased tools. They were owned models, learning patterns unique to the business, creating differentiation that deepened with use.
+                    Enterprise AI typically starts backwards: vendors push generic solutions onto teams, forcing adoption of tools not tuned to actual needs. It&apos;s a solution in search of a problem. Commercial AI tools can&apos;t learn organization-specific patterns. They don&apos;t understand your investment decisions, RFP win patterns, or field operation standards. The AI you pay for never becomes a competitive advantage because it wasn&apos;t built around where your teams actually need help.
                   </p>
 
+                  {/* The Solution */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Solution</h3>
+                  <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                    Invert the approach: let teams identify where AI would actually help, then fine-tune task-specific models for those exact needs. At ~$214 compute per model and ~1 hour to train, experimentation is cheap. Teams can try an AI application, test it for a week, and decide based on results. Models that save time get refined and deployed. Models that don&apos;t fit cost an afternoon to learn from. Value emerges from real workflows, not vendor assumptions.
+                  </p>
+
+                  {/* The Value */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Value</h3>
                   <p className="text-lg text-gray-700 leading-relaxed">
-                    The economics made experimentation practical. At ~$214 compute per model and ~1 hour to train, teams could try an AI application, test it for a week, and decide based on results. Models that saved time got refined and deployed. Models that didn&apos;t fit the workflow cost an afternoon to learn from. The organization wasn&apos;t just getting 14 working models: it was teaching itself how to build and own AI capabilities, creating institutional knowledge that compounded as teams learned what worked. Each proven task model became an expert component ready for Phase 3&apos;s division-level agents, but the immediate return was clear: Phase 2&apos;s $43,600 Direct Investment delivering proprietary intelligence creating a competitive moat, and full optionality to stop here with working AI or continue building.
+                    Teams discover where AI creates genuine value for their specific work, not where vendors claim it should. $214 per model creating competitive moat that deepens with use. The organization isn&apos;t just getting working models. It&apos;s learning which problems are actually worth solving with AI, creating institutional knowledge about where automation delivers return. Each proven task model becomes an expert component ready for Phase 3&apos;s division-level agents, but delivers immediate return regardless of whether you continue building.
                   </p>
                 </div>
               </>

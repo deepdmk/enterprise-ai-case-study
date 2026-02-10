@@ -58,23 +58,23 @@ export default function Phase5() {
           <PhaseTabs
             vision={
               <>
-                <p className="text-lg text-gray-700 mb-8">
-                  Company-wide AI intelligence accessible through a single interface—trained on discovered patterns, not predetermined rules.
-                </p>
-
                 <div className="prose prose-lg max-w-none">
+                  {/* The Problem */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                   <p>
-                    This Phase delivers the end state: one orchestrator that coordinates all AI capabilities across divisions. Unlike rule-based systems requiring constant manual updates, this orchestrator learns optimal routing patterns from Phase 4&apos;s 90-day discovery period. It understands when to use semantic search, which task models to engage, which division agents to coordinate, and how to combine capabilities for complex cross-divisional requests.
+                    Rule-based orchestration requires constant manual updates as workflows change. Hardcoded routing becomes a maintenance burden that drifts from actual organizational needs. &quot;If request contains X keyword, call Y agent&quot; fails when requests are ambiguous, when optimal paths require context, or when organizational needs shift. The brittleness increases exponentially with the number of agents and capabilities being coordinated.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">Strategic Value:</h3>
+                  {/* The Solution */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Solution</h3>
                   <p>
-                    The orchestrator trains for approximately $20-50 over 4-6 hours using a 7B parameter model (Qwen2.5-7B) on the organization&apos;s actual usage patterns. Routing decisions reflect real workflow needs discovered through experimentation, not assumptions made during initial design. As the system operates, it generates new interaction data—periodic retraining of just the orchestrator (not the underlying agents) continuously improves routing intelligence without rebuilding capabilities. Total Direct Investment across all six phases reaches $163.1K ($11,100 infrastructure + $152K training programs)—achieving orchestrated multi-agent AI at a fraction of the $2M-$7M traditional vendor platform cost while preserving competitive advantage through company-specific intelligence.
+                    Train a small orchestrator model (Qwen2.5-7B) on Phase 4&apos;s discovery data to route requests intelligently without predetermined rules. The orchestrator learns optimal routing patterns from 90 days of real usage: which agent sequences work for different request types, which information handoffs are necessary, which coordination patterns deliver value. Training costs $20-50 over 4-6 hours. This architecture creates a natural point for retraining and fine-tuning the network over time as the organization evolves. It also provides transparency into what the system is doing, making refinement and troubleshooting easier.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">What&apos;s Delivered:</h3>
+                  {/* The Value */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Value</h3>
                   <p>
-                    A production-ready orchestrated system built on the Agno framework provides single-window access to all AI capabilities. Users make requests without knowing which agents, models, or divisions are involved—the orchestrator handles coordination automatically. All agents query Phase 1&apos;s single unified embedding database for semantic search, ensuring consistent information retrieval across the system. The model-agnostic architecture eliminates vendor lock-in: the orchestrator and agents transfer freely between local deployment, AWS Bedrock, Databricks, Azure AI Foundry, or any model backend without rewriting coordination logic.
+                    Single-window access to all AI capabilities. Users make requests without knowing which agents, models, or divisions are involved. Learned routing that reflects real usage patterns and improves through retraining as the organization evolves. Built on the Agno framework for deployment flexibility: run entirely local, on cloud platforms like AWS Bedrock or Azure AI Foundry, or any model backend without rewriting coordination logic. Total Direct Investment across all phases reaches $163.1K, achieving orchestrated multi-agent AI at a fraction of the $2M-$7M traditional vendor platform cost while preserving competitive advantage through company-specific intelligence that compounds with use.
                   </p>
                 </div>
               </>
@@ -1034,26 +1034,21 @@ assert predicted == expected
           />
 
           {/* Next Steps CTA */}
-          <Card className="bg-gradient-to-br from-magenta/5 to-navy/5 border-magenta/20 p-12 mt-12">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold mb-4">Next: Scaling to Production</h2>
-              <p className="text-lg text-gray-700 mb-6">
-                With orchestrated intelligence in place, the next step is deploying this system to enterprise-grade infrastructure. The Scaling Production section covers how every phase&apos;s training output maps directly to AWS managed services—preserving your $163.1K investment while gaining enterprise scale, security, and operational simplicity.
-              </p>
-              <p className="text-gray-700 mb-6">
-                Your models, agents, and orchestrator transfer to SageMaker, Aurora PostgreSQL, and ECS without retraining or architectural changes. The modular design built across all phases ensures each component deploys independently—start with a pilot and scale to enterprise as adoption grows.
-              </p>
-              <Link
-                href="/solution/scaling-production"
-                className="inline-flex items-center px-6 py-3 bg-magenta hover:bg-magenta/90 text-white font-medium rounded-lg transition-colors"
-              >
-                Continue to Scaling Production
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </div>
-          </Card>
+          <div className="bg-navy text-white p-8 rounded-lg mt-12">
+            <h3 className="text-2xl font-bold mb-4">Next: Scaling to Production</h3>
+            <p className="text-white/90 mb-4">
+              With orchestrated intelligence in place, the next step is deploying this system to enterprise-grade infrastructure. The Scaling Production section covers how every phase&apos;s training output maps directly to AWS managed services, preserving your $163.1K investment while gaining enterprise scale, security, and operational simplicity.
+            </p>
+            <p className="text-white/90 mb-6">
+              Your models, agents, and orchestrator transfer to SageMaker, Aurora PostgreSQL, and ECS without retraining or architectural changes. The modular design built across all phases ensures each component deploys independently: start with a pilot and scale to enterprise as adoption grows.
+            </p>
+            <a
+              href="/solution/scaling-production"
+              className="inline-block px-6 py-3 bg-teal text-white font-medium rounded-md hover:bg-teal/90 transition-colors"
+            >
+              Continue to Scaling Production →
+            </a>
+          </div>
         </Container>
       </section>
 

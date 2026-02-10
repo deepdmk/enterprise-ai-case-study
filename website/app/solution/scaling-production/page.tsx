@@ -47,23 +47,23 @@ export default function ScalingProductionPage() {
           <PhaseTabs
             vision={
               <>
-                <p className="text-xl text-gray-600 mb-6">
-                  Transform your $163.1K Direct Investment ($11,100 infrastructure + $152K training programs) into production-ready enterprise AI using AWS managed services—no infrastructure management required
-                </p>
-
                 <div className="prose prose-lg max-w-none">
+                  {/* The Problem */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                   <p>
-                    The six-phase training process produces production-ready models that deploy directly to AWS managed services. Your embedding model, 14 task SLMs, 3 MoE agents, and orchestrator—all developed through $163.1K Direct Investment ($11,100 infrastructure)—become enterprise-grade AI infrastructure running on SageMaker, Bedrock, and Aurora PostgreSQL. No retraining, no architectural changes, no infrastructure management.
+                    Local deployment works for training and experimentation, but doesn&apos;t provide enterprise-grade scaling, redundancy, security, or operational simplicity. Managing infrastructure becomes a distraction from building AI capabilities. Organizations need production reliability without rebuilding what they&apos;ve already trained.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">Strategic Value</h3>
+                  {/* The Solution */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Solution</h3>
                   <p>
-                    Training investment is preserved and amplified through managed services. The file-based Phase 0 registries migrate to Aurora PostgreSQL with automatic backups and multi-AZ deployment. Phase 1 embeddings move from local ChromaDB to Aurora&apos;s pgvector extension—same database, zero additional infrastructure. Phase 2-5 models deploy to SageMaker endpoints with auto-scaling, or integrate with Bedrock for orchestration. Enterprise security, compliance, and operational excellence come built-in. Your team maintains velocity—building AI capabilities—while AWS handles infrastructure operations.
+                    Deploy the complete system to AWS managed services. Your embedding model, 14 task SLMs, 3 MoE agents, and orchestrator deploy directly to SageMaker, Bedrock, and Aurora PostgreSQL without retraining or architectural changes. File-based Phase 0 registries migrate to Aurora PostgreSQL with automatic backups. Phase 1 embeddings move from local ChromaDB to Aurora&apos;s pgvector extension. AWS handles infrastructure operations while your team maintains focus on AI capabilities.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">What&apos;s Delivered</h3>
+                  {/* The Value */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Value</h3>
                   <p>
-                    Complete AWS architecture mapping for all six phases. Aurora PostgreSQL hosting both operational data and vector embeddings in a single managed service. SageMaker endpoints serving your custom-trained models with enterprise-grade scaling. Bedrock integration options for orchestration and foundation model augmentation. Production cost models spanning pilot deployment ($800/month) through enterprise scale ($7,500/month). Migration playbook moving from training infrastructure to production in one week.
+                    Enterprise-grade AI infrastructure from your $163.1K investment. Production costs from $800/month (pilot) to $7,500/month (enterprise scale). Security, compliance, and operational excellence built-in. Training investment preserved and amplified through managed services. Migration from training infrastructure to production in one week.
                   </p>
                 </div>
               </>
@@ -71,60 +71,62 @@ export default function ScalingProductionPage() {
             approach={
               <>
                 <div className="mb-8">
-                  <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-navy">Component</th>
-                        <th className="px-4 py-3 text-left font-semibold text-navy">Local Deployment</th>
-                        <th className="px-4 py-3 text-left font-semibold text-navy">AWS Service</th>
-                        <th className="px-4 py-3 text-left font-semibold text-navy">Scaling Approach</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      <tr>
-                        <td className="px-4 py-3 font-medium">Embedding Model</td>
-                        <td className="px-4 py-3 text-gray-600">Sentence-Transformers</td>
-                        <td className="px-4 py-3 text-gray-600">SageMaker Endpoint</td>
-                        <td className="px-4 py-3 text-gray-600">Auto-scaling inference</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-3 font-medium">Vector Database</td>
-                        <td className="px-4 py-3 text-gray-600">ChromaDB</td>
-                        <td className="px-4 py-3 text-gray-600">Aurora PostgreSQL + pgvector</td>
-                        <td className="px-4 py-3 text-gray-600">Multi-AZ, read replicas</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 font-medium">Model Registry</td>
-                        <td className="px-4 py-3 text-gray-600">File-based</td>
-                        <td className="px-4 py-3 text-gray-600">Aurora PostgreSQL</td>
-                        <td className="px-4 py-3 text-gray-600">Managed with auto backups</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-3 font-medium">14 Task SLMs</td>
-                        <td className="px-4 py-3 text-gray-600">Llama 3.1 8B + LoRA</td>
-                        <td className="px-4 py-3 text-gray-600">SageMaker Multi-Model</td>
-                        <td className="px-4 py-3 text-gray-600">Models loaded from S3</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 font-medium">3 MoE Agents</td>
-                        <td className="px-4 py-3 text-gray-600">mergekit (32B each)</td>
-                        <td className="px-4 py-3 text-gray-600">SageMaker Endpoints</td>
-                        <td className="px-4 py-3 text-gray-600">Custom containers</td>
-                      </tr>
-                      <tr className="bg-gray-50">
-                        <td className="px-4 py-3 font-medium">Agent Protocol</td>
-                        <td className="px-4 py-3 text-gray-600">FastAPI A2A</td>
-                        <td className="px-4 py-3 text-gray-600">API Gateway + Lambda/ECS</td>
-                        <td className="px-4 py-3 text-gray-600">Serverless or container</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 font-medium">Orchestrator</td>
-                        <td className="px-4 py-3 text-gray-600">Agno Framework</td>
-                        <td className="px-4 py-3 text-gray-600">SageMaker or Bedrock Agents</td>
-                        <td className="px-4 py-3 text-gray-600">Managed orchestration</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div className="overflow-hidden rounded-xl shadow-lg border border-gray-200">
+                    <table className="w-full text-sm">
+                      <thead className="bg-navy text-white">
+                        <tr>
+                          <th className="px-5 py-4 text-left font-semibold">Component</th>
+                          <th className="px-5 py-4 text-left font-semibold">Local Deployment</th>
+                          <th className="px-5 py-4 text-left font-semibold">AWS Service</th>
+                          <th className="px-5 py-4 text-left font-semibold">Scaling Approach</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        <tr className="bg-white hover:bg-gray-50 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">Embedding Model</td>
+                          <td className="px-5 py-4 text-gray-700">Sentence-Transformers</td>
+                          <td className="px-5 py-4 text-gray-700">SageMaker Endpoint</td>
+                          <td className="px-5 py-4 text-gray-700">Auto-scaling inference</td>
+                        </tr>
+                        <tr className="bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">Vector Database</td>
+                          <td className="px-5 py-4 text-gray-700">ChromaDB</td>
+                          <td className="px-5 py-4 text-gray-700">Aurora PostgreSQL + pgvector</td>
+                          <td className="px-5 py-4 text-gray-700">Multi-AZ, read replicas</td>
+                        </tr>
+                        <tr className="bg-white hover:bg-gray-50 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">Model Registry</td>
+                          <td className="px-5 py-4 text-gray-700">File-based</td>
+                          <td className="px-5 py-4 text-gray-700">Aurora PostgreSQL</td>
+                          <td className="px-5 py-4 text-gray-700">Managed with auto backups</td>
+                        </tr>
+                        <tr className="bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">14 Task SLMs</td>
+                          <td className="px-5 py-4 text-gray-700">Llama 3.1 8B + LoRA</td>
+                          <td className="px-5 py-4 text-gray-700">SageMaker Multi-Model</td>
+                          <td className="px-5 py-4 text-gray-700">Models loaded from S3</td>
+                        </tr>
+                        <tr className="bg-white hover:bg-gray-50 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">3 MoE Agents</td>
+                          <td className="px-5 py-4 text-gray-700">mergekit (32B each)</td>
+                          <td className="px-5 py-4 text-gray-700">SageMaker Endpoints</td>
+                          <td className="px-5 py-4 text-gray-700">Custom containers</td>
+                        </tr>
+                        <tr className="bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">Agent Protocol</td>
+                          <td className="px-5 py-4 text-gray-700">FastAPI A2A</td>
+                          <td className="px-5 py-4 text-gray-700">API Gateway + Lambda/ECS</td>
+                          <td className="px-5 py-4 text-gray-700">Serverless or container</td>
+                        </tr>
+                        <tr className="bg-white hover:bg-gray-50 transition-colors">
+                          <td className="px-5 py-4 font-semibold text-navy">Orchestrator</td>
+                          <td className="px-5 py-4 text-gray-700">Agno Framework</td>
+                          <td className="px-5 py-4 text-gray-700">SageMaker or Bedrock Agents</td>
+                          <td className="px-5 py-4 text-gray-700">Managed orchestration</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                   <div className="bg-teal/10 px-6 py-4 rounded-lg mt-4">
                     <p className="text-base">
                       <span className="font-semibold text-navy">Estimated AWS Monthly Cost:</span>
@@ -187,9 +189,128 @@ export default function ScalingProductionPage() {
                 </p>
 
                 <div className="space-y-16">
-                  {/* Part 1: Aurora PostgreSQL + pgvector */}
+                  {/* Part 1: Cost Analysis */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">1. Aurora PostgreSQL + pgvector</h3>
+                    <h3 className="text-2xl font-semibold mb-4">1. Cost Analysis</h3>
+                    <p className="text-gray-700 mb-6">
+                      Monthly cost estimates for different deployment scales.
+                    </p>
+
+                    <div className="mb-6">
+                      <h4 className="font-semibold mb-3">Pilot Scale (10-50 users)</h4>
+                      <CodeBlock
+                        language="text"
+                        code={`Infrastructure:
+- SageMaker Endpoints:
+  * 1x ml.g5.xlarge (embedding): $1.41/hr × 730hr = $1,029/mo
+  * 1x ml.g5.2xlarge (MoE): $2.03/hr × 730hr = $1,482/mo
+- Aurora PostgreSQL:
+  * 1x db.r6g.large: $0.29/hr × 730hr = $212/mo
+  * Storage (100GB): $0.10/GB = $10/mo
+- ECS Fargate:
+  * 3 agent services (1vCPU, 2GB each): ~$50/mo
+- Data Transfer: ~$20/mo
+- CloudWatch Logs: ~$10/mo
+
+Total: ~$2,813/mo (~$800/mo with Reserved Instances and Savings Plans)`}
+                      />
+                    </div>
+
+                    <div className="mb-6">
+                      <h4 className="font-semibold mb-3">Growth Scale (50-200 users)</h4>
+                      <CodeBlock
+                        language="text"
+                        code={`Infrastructure:
+- SageMaker Endpoints:
+  * 1x ml.g5.xlarge (embedding): $1,029/mo
+  * 3x ml.g5.2xlarge (3 MoE agents): $4,446/mo
+- Aurora PostgreSQL:
+  * 2x db.r6g.xlarge (writer + reader): $0.58/hr × 730hr × 2 = $846/mo
+  * Storage (500GB): $50/mo
+- ECS Fargate:
+  * 3 agent services (2vCPU, 4GB each): ~$150/mo
+- Application Load Balancer: ~$25/mo
+- Data Transfer: ~$100/mo
+- CloudWatch: ~$50/mo
+
+Total: ~$6,696/mo (~$2,400/mo with 3-year Reserved Instances)`}
+                      />
+                    </div>
+
+                    <div className="mb-6">
+                      <h4 className="font-semibold mb-3">Enterprise Scale (200-1000 users)</h4>
+                      <CodeBlock
+                        language="text"
+                        code={`Infrastructure:
+- SageMaker Endpoints:
+  * 2x ml.g5.2xlarge (embedding): $2,964/mo
+  * 6x ml.g5.4xlarge (3 MoE agents, 2 instances each): $17,568/mo
+- Aurora PostgreSQL:
+  * 1x db.r6g.2xlarge (writer): $0.87/hr × 730hr = $635/mo
+  * 2x db.r6g.xlarge (readers): $846/mo
+  * Storage (2TB): $200/mo
+- ECS Fargate:
+  * 3 agent services (4vCPU, 8GB each, 3 replicas): ~$450/mo
+- Application Load Balancer: ~$50/mo
+- NAT Gateway: ~$45/mo
+- Data Transfer: ~$500/mo
+- CloudWatch + X-Ray: ~$200/mo
+
+Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimization)`}
+                      />
+                    </div>
+
+                    <div className="mt-8">
+                      <h4 className="font-semibold mb-3">Cost Comparison: AWS Managed vs Self-Managed</h4>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full border border-gray-300">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="border border-gray-300 px-4 py-2 text-left">Component</th>
+                              <th className="border border-gray-300 px-4 py-2 text-left">AWS Managed</th>
+                              <th className="border border-gray-300 px-4 py-2 text-left">Self-Managed (EC2)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="border border-gray-300 px-4 py-2">Model Hosting</td>
+                              <td className="border border-gray-300 px-4 py-2">SageMaker (higher cost, zero ops)</td>
+                              <td className="border border-gray-300 px-4 py-2">EC2 G5 instances (~30% cheaper)</td>
+                            </tr>
+                            <tr className="bg-gray-50">
+                              <td className="border border-gray-300 px-4 py-2">Database</td>
+                              <td className="border border-gray-300 px-4 py-2">Aurora (managed backups, HA)</td>
+                              <td className="border border-gray-300 px-4 py-2">PostgreSQL on EC2 (~40% cheaper)</td>
+                            </tr>
+                            <tr>
+                              <td className="border border-gray-300 px-4 py-2">Operational Overhead</td>
+                              <td className="border border-gray-300 px-4 py-2">Minimal (managed services)</td>
+                              <td className="border border-gray-300 px-4 py-2">Significant (requires DevOps team)</td>
+                            </tr>
+                            <tr className="bg-gray-50">
+                              <td className="border border-gray-300 px-4 py-2">Auto-scaling</td>
+                              <td className="border border-gray-300 px-4 py-2">Built-in (SageMaker + Aurora)</td>
+                              <td className="border border-gray-300 px-4 py-2">Custom implementation required</td>
+                            </tr>
+                            <tr>
+                              <td className="border border-gray-300 px-4 py-2">Backup/Recovery</td>
+                              <td className="border border-gray-300 px-4 py-2">Automated (AWS Backup)</td>
+                              <td className="border border-gray-300 px-4 py-2">Manual setup and monitoring</td>
+                            </tr>
+                            <tr className="bg-gray-50">
+                              <td className="border border-gray-300 px-4 py-2 font-semibold">Best For</td>
+                              <td className="border border-gray-300 px-4 py-2">Small teams, fast iteration</td>
+                              <td className="border border-gray-300 px-4 py-2">Large teams, cost optimization</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Part 2: Aurora PostgreSQL + pgvector */}
+                  <div>
+                    <h3 className="text-2xl font-semibold mb-4">2. Aurora PostgreSQL + pgvector</h3>
                     <p className="text-gray-700 mb-6">
                       Replace ChromaDB with Aurora PostgreSQL using the pgvector extension for vector similarity search. This consolidates operational data and embeddings in a single managed database.
                     </p>
@@ -273,9 +394,9 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
                     </div>
                   </div>
 
-                  {/* Part 2: SageMaker Multi-Model Deployment */}
+                  {/* Part 3: SageMaker Multi-Model Deployment */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">2. SageMaker Multi-Model Deployment</h3>
+                    <h3 className="text-2xl font-semibold mb-4">3. SageMaker Multi-Model Deployment</h3>
                     <p className="text-gray-700 mb-6">
                       Deploy the embedding model and three MoE agents to SageMaker for managed inference with auto-scaling.
                     </p>
@@ -373,9 +494,9 @@ client.put_scaling_policy(
                     </div>
                   </div>
 
-                  {/* Part 3: MoE Inference Handler */}
+                  {/* Part 4: MoE Inference Handler */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">3. MoE Inference Handler</h3>
+                    <h3 className="text-2xl font-semibold mb-4">4. MoE Inference Handler</h3>
                     <p className="text-gray-700 mb-6">
                       Custom inference script for MoE models deployed to SageMaker.
                     </p>
@@ -452,9 +573,9 @@ package_model("./fundraising-moe", "fundraising-moe.tar.gz")
                     </div>
                   </div>
 
-                  {/* Part 4: Agent Services on ECS */}
+                  {/* Part 5: Agent Services on ECS */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">4. Agent Services on ECS</h3>
+                    <h3 className="text-2xl font-semibold mb-4">5. Agent Services on ECS</h3>
                     <p className="text-gray-700 mb-6">
                       Deploy FastAPI agent services to ECS Fargate with Application Load Balancer.
                     </p>
@@ -585,9 +706,9 @@ resource "aws_apigatewayv2_integration" "fundraising" {
                     </div>
                   </div>
 
-                  {/* Part 5: Orchestrator Options */}
+                  {/* Part 6: Orchestrator Options */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">5. Orchestrator Options</h3>
+                    <h3 className="text-2xl font-semibold mb-4">6. Orchestrator Options</h3>
                     <p className="text-gray-700 mb-6">
                       Choose between deploying your custom-trained orchestrator or using Amazon Bedrock Agents.
                     </p>
@@ -681,9 +802,9 @@ for agent_name in ['fundraising', 'business-dev', 'field-ops']:
                     </div>
                   </div>
 
-                  {/* Part 6: Monitoring & Backup */}
+                  {/* Part 7: Monitoring & Backup */}
                   <div>
-                    <h3 className="text-2xl font-semibold mb-4">6. Monitoring & Backup</h3>
+                    <h3 className="text-2xl font-semibold mb-4">7. Monitoring & Backup</h3>
                     <p className="text-gray-700 mb-6">
                       Comprehensive monitoring with CloudWatch and automated backup strategies.
                     </p>
@@ -842,125 +963,6 @@ resource "aws_backup_selection" "aurora" {
                       />
                     </div>
                   </div>
-
-                  {/* Part 7: Cost Analysis */}
-                  <div>
-                    <h3 className="text-2xl font-semibold mb-4">7. Cost Analysis</h3>
-                    <p className="text-gray-700 mb-6">
-                      Monthly cost estimates for different deployment scales.
-                    </p>
-
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-3">Pilot Scale (10-50 users)</h4>
-                      <CodeBlock
-                        language="text"
-                        code={`Infrastructure:
-- SageMaker Endpoints:
-  * 1x ml.g5.xlarge (embedding): $1.41/hr × 730hr = $1,029/mo
-  * 1x ml.g5.2xlarge (MoE): $2.03/hr × 730hr = $1,482/mo
-- Aurora PostgreSQL:
-  * 1x db.r6g.large: $0.29/hr × 730hr = $212/mo
-  * Storage (100GB): $0.10/GB = $10/mo
-- ECS Fargate:
-  * 3 agent services (1vCPU, 2GB each): ~$50/mo
-- Data Transfer: ~$20/mo
-- CloudWatch Logs: ~$10/mo
-
-Total: ~$2,813/mo (~$800/mo with Reserved Instances and Savings Plans)`}
-                      />
-                    </div>
-
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-3">Growth Scale (50-200 users)</h4>
-                      <CodeBlock
-                        language="text"
-                        code={`Infrastructure:
-- SageMaker Endpoints:
-  * 1x ml.g5.xlarge (embedding): $1,029/mo
-  * 3x ml.g5.2xlarge (3 MoE agents): $4,446/mo
-- Aurora PostgreSQL:
-  * 2x db.r6g.xlarge (writer + reader): $0.58/hr × 730hr × 2 = $846/mo
-  * Storage (500GB): $50/mo
-- ECS Fargate:
-  * 3 agent services (2vCPU, 4GB each): ~$150/mo
-- Application Load Balancer: ~$25/mo
-- Data Transfer: ~$100/mo
-- CloudWatch: ~$50/mo
-
-Total: ~$6,696/mo (~$2,400/mo with 3-year Reserved Instances)`}
-                      />
-                    </div>
-
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-3">Enterprise Scale (200-1000 users)</h4>
-                      <CodeBlock
-                        language="text"
-                        code={`Infrastructure:
-- SageMaker Endpoints:
-  * 2x ml.g5.2xlarge (embedding): $2,964/mo
-  * 6x ml.g5.4xlarge (3 MoE agents, 2 instances each): $17,568/mo
-- Aurora PostgreSQL:
-  * 1x db.r6g.2xlarge (writer): $0.87/hr × 730hr = $635/mo
-  * 2x db.r6g.xlarge (readers): $846/mo
-  * Storage (2TB): $200/mo
-- ECS Fargate:
-  * 3 agent services (4vCPU, 8GB each, 3 replicas): ~$450/mo
-- Application Load Balancer: ~$50/mo
-- NAT Gateway: ~$45/mo
-- Data Transfer: ~$500/mo
-- CloudWatch + X-Ray: ~$200/mo
-
-Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimization)`}
-                      />
-                    </div>
-
-                    <div className="mt-8">
-                      <h4 className="font-semibold mb-3">Cost Comparison: AWS Managed vs Self-Managed</h4>
-                      <div className="overflow-x-auto">
-                        <table className="min-w-full border border-gray-300">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="border border-gray-300 px-4 py-2 text-left">Component</th>
-                              <th className="border border-gray-300 px-4 py-2 text-left">AWS Managed</th>
-                              <th className="border border-gray-300 px-4 py-2 text-left">Self-Managed (EC2)</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="border border-gray-300 px-4 py-2">Model Hosting</td>
-                              <td className="border border-gray-300 px-4 py-2">SageMaker (higher cost, zero ops)</td>
-                              <td className="border border-gray-300 px-4 py-2">EC2 G5 instances (~30% cheaper)</td>
-                            </tr>
-                            <tr className="bg-gray-50">
-                              <td className="border border-gray-300 px-4 py-2">Database</td>
-                              <td className="border border-gray-300 px-4 py-2">Aurora (managed backups, HA)</td>
-                              <td className="border border-gray-300 px-4 py-2">PostgreSQL on EC2 (~40% cheaper)</td>
-                            </tr>
-                            <tr>
-                              <td className="border border-gray-300 px-4 py-2">Operational Overhead</td>
-                              <td className="border border-gray-300 px-4 py-2">Minimal (managed services)</td>
-                              <td className="border border-gray-300 px-4 py-2">Significant (requires DevOps team)</td>
-                            </tr>
-                            <tr className="bg-gray-50">
-                              <td className="border border-gray-300 px-4 py-2">Auto-scaling</td>
-                              <td className="border border-gray-300 px-4 py-2">Built-in (SageMaker + Aurora)</td>
-                              <td className="border border-gray-300 px-4 py-2">Custom implementation required</td>
-                            </tr>
-                            <tr>
-                              <td className="border border-gray-300 px-4 py-2">Backup/Recovery</td>
-                              <td className="border border-gray-300 px-4 py-2">Automated (AWS Backup)</td>
-                              <td className="border border-gray-300 px-4 py-2">Manual setup and monitoring</td>
-                            </tr>
-                            <tr className="bg-gray-50">
-                              <td className="border border-gray-300 px-4 py-2 font-semibold">Best For</td>
-                              <td className="border border-gray-300 px-4 py-2">Small teams, fast iteration</td>
-                              <td className="border border-gray-300 px-4 py-2">Large teams, cost optimization</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
               </>
@@ -968,34 +970,29 @@ Total: ~$23,458/mo (~$7,500/mo with Reserved Instances and auto-scaling optimiza
           />
 
           {/* Project Complete CTA */}
-          <Card className="bg-gradient-to-br from-magenta/5 to-navy/5 border-magenta/20 p-12 mt-12">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold mb-4">Project Complete: Orchestrated Intelligence at Enterprise Scale</h2>
-              <p className="text-lg text-gray-700 mb-6">
-                This concludes the six-phase implementation journey from foundational infrastructure to orchestrated agentic intelligence deployed on enterprise-grade cloud services. The final system—trained for $163.1K Direct Investment across all phases—delivers company-specific AI capabilities that cannot be replicated by competitors.
-              </p>
-              <p className="text-gray-700 mb-6">
-                What starts as a model registry and embedding space evolves through task-specific models, division-level agents, and sandboxed discovery into a unified orchestrator trained on the organization&apos;s discovered patterns. The modular architecture preserves strategic optionality: scale to cloud platforms when needed, swap model backends without rewriting coordination logic, and retrain as organizational needs evolve.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/"
-                  className="inline-flex items-center px-6 py-3 bg-magenta hover:bg-magenta/90 text-white font-medium rounded-lg transition-colors"
-                >
-                  Return to Homepage
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </Link>
-                <Link
-                  href="/solution"
-                  className="inline-flex items-center px-6 py-3 bg-navy hover:bg-navy/90 text-white font-medium rounded-lg transition-colors"
-                >
-                  Review All Phases
-                </Link>
-              </div>
+          <div className="bg-navy text-white p-8 rounded-lg mt-12">
+            <h3 className="text-2xl font-bold mb-4">Project Complete: Orchestrated Intelligence at Enterprise Scale</h3>
+            <p className="text-white/90 mb-4">
+              This concludes the six-phase implementation journey from foundational infrastructure to orchestrated agentic intelligence deployed on enterprise-grade cloud services. The final system, trained for $163.1K Direct Investment across all phases, delivers company-specific AI capabilities that cannot be replicated by competitors.
+            </p>
+            <p className="text-white/90 mb-6">
+              What starts as a model registry and embedding space evolves through task-specific models, division-level agents, and sandboxed discovery into a unified orchestrator trained on the organization&apos;s discovered patterns. The modular architecture preserves strategic optionality: scale to cloud platforms when needed, swap model backends without rewriting coordination logic, and retrain as organizational needs evolve.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/"
+                className="inline-block px-6 py-3 bg-teal text-white font-medium rounded-md hover:bg-teal/90 transition-colors"
+              >
+                Return to Homepage →
+              </Link>
+              <Link
+                href="/solution"
+                className="inline-block px-6 py-3 bg-white/10 text-white font-medium rounded-md hover:bg-white/20 transition-colors"
+              >
+                Review All Phases
+              </Link>
             </div>
-          </Card>
+          </div>
         </Container>
       </section>
 

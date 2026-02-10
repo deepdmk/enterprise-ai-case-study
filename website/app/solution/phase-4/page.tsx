@@ -53,23 +53,23 @@ export default function Phase4() {
           <PhaseTabs
             vision={
               <>
-                <p className="text-lg text-gray-700 mb-8">
-                  Capturing years of cross-divisional learning in 90 days through agent discovery rather than workflow design
-                </p>
-
                 <div className="prose prose-lg max-w-none">
+                  {/* The Problem */}
+                  <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                   <p>
-                    This Phase generates strategic intelligence no planning session can produce. For $6,000, the organization deploys three division agents (Fundraising, Field Operations, Business Development) as independent services and observes which collaboration patterns emerge organically over 90 days. This isn&apos;t about connecting systems. It&apos;s about capturing the relational intelligence that normally lives in people&apos;s heads: which teams should coordinate on what tasks, when division handoffs add value, where cross-functional workflows emerge naturally through actual work rather than theoretical design.
+                    Cross-divisional coordination patterns can&apos;t be designed upfront. No planning session can predict which collaborations deliver value in practice. Traditional integration projects create aspirational workflows that fail because they represent how work should happen, not how it actually happens. They also depend on past ways of doing things and miss the potential of new structures and capabilities. The relational intelligence about which teams should coordinate on what tasks, when division handoffs add value, where cross-functional workflows emerge: this knowledge normally lives only in people&apos;s heads.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">Strategic Value:</h3>
+                  {/* The Solution */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Solution</h3>
                   <p>
-                    The 90-day discovery phase compresses years of organizational learning into structured training data. Traditional enterprises spend years discovering which cross-functional collaborations work, which create overhead, and which patterns deliver consistent value. This knowledge accumulates through informal networks, tribal knowledge, and incremental adjustments to who coordinates with whom. This Phase automates that discovery by letting agents experiment with collaboration patterns, logging every pathway, measuring every handoff, and testing workflow depths from simple (1-level delegation) to complex (4-level cascades). The result is quantified evidence—not opinions—about what collaboration patterns deliver value and which create coordination overhead without commensurate return.
+                    Deploy division agents as independent services connected through A2A (Agent-to-Agent) protocol into an agentic network. Agents can ask and respond to each other to accomplish objectives. Over 90 days, the network experiments on real company queries and requests, discovering what works and what doesn&apos;t, finding new ways to accomplish tasks better. Agents log every pathway, measure every handoff, and test workflow depths from simple (1-level delegation) to complex (4-level cascades). The 7-phase adaptive depth schedule (1→2→3→2→4→2→adaptive) with control phases detecting drift ensures comprehensive coverage. This forms the training data for a highly effective Phase 5 orchestrator.
                   </p>
 
-                  <h3 className="text-2xl font-semibold mt-8 mb-4">What&apos;s Delivered:</h3>
+                  {/* The Value */}
+                  <h3 className="text-xl font-bold text-navy mt-8 mb-3">The Value</h3>
                   <p>
-                    Three division agents running as sandboxed services using A2A (Agent-to-Agent) protocol for autonomous collaboration discovery. 90 days of structured experimentation testing depth limits from 1 to 4 with control phases detecting drift. Comprehensive call logs capturing every delegation decision, synthesis pattern, and workflow outcome. Training dataset for Phase 5&apos;s orchestrator showing discovered collaboration patterns grounded in real usage. Validated insights about cross-divisional coordination that can stand alone or feed forward. Complete optionality: $6,000 investment delivers proprietary intelligence about optimal workflows whether the organization continues to Phase 5 or stops with validated collaboration insights.
+                    Years of organizational learning compressed into 90 days of quantified evidence. Not opinions, but validated intelligence about what coordination patterns work. Comprehensive call logs capturing every delegation decision, synthesis pattern, and workflow outcome become training data for Phase 5&apos;s orchestrator. Complete optionality: the investment delivers proprietary intelligence about optimal workflows whether the organization continues to Phase 5 or stops with validated collaboration insights.
                   </p>
                 </div>
               </>
@@ -537,23 +537,18 @@ python -m src.program4_adaptive_analyzer.main --export-orchestrator`} />
           />
 
           {/* Next Steps CTA */}
-          <Card className="bg-gradient-to-br from-teal/5 to-navy/5 border-teal/20 p-12 mt-12">
-            <div className="max-w-3xl">
-              <h2 className="text-3xl font-bold mb-4">Ready for Phase 5?</h2>
-              <p className="text-lg text-gray-700 mb-6">
-                The 90-day discovery experiment has generated comprehensive training data showing which collaboration patterns deliver value. Phase 5 transforms these insights into a production-ready orchestrator that routes queries intelligently, manages multi-agent workflows efficiently, and optimizes for the cost-value tradeoffs validated through empirical experimentation.
-              </p>
-              <a
-                href="/solution/phase-5"
-                className="inline-flex items-center px-6 py-3 bg-teal hover:bg-teal/90 text-white font-medium rounded-lg transition-colors"
-              >
-                Continue to Phase 5: Orchestrated Intelligence
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </a>
-            </div>
-          </Card>
+          <div className="bg-navy text-white p-8 rounded-lg mt-12">
+            <h3 className="text-2xl font-bold mb-4">Next: Phase 5 - Orchestrated Agentic System</h3>
+            <p className="text-white/90 mb-6">
+              The 90-day discovery experiment has generated comprehensive training data showing which collaboration patterns deliver value. Phase 5 transforms these insights into a production-ready orchestrator that routes queries intelligently, manages multi-agent workflows efficiently, and optimizes for the cost-value tradeoffs validated through empirical experimentation.
+            </p>
+            <a
+              href="/solution/phase-5"
+              className="inline-block px-6 py-3 bg-teal text-white font-medium rounded-md hover:bg-teal/90 transition-colors"
+            >
+              Continue to Phase 5 →
+            </a>
+          </div>
         </Container>
       </section>
 

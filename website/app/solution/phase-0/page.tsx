@@ -48,22 +48,22 @@ export default function Phase0() {
           <PhaseTabs
             vision={
               <>
-                <p className="text-xl text-gray-700 mb-6">
-                  Phase 0 establishes zero-cost staging infrastructure that enables all subsequent AI development—tracking models, datasets, and experiments while maintaining complete independence from production systems.
-                </p>
-
+                {/* The Problem */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Phase 0 creates the foundational infrastructure that enables Phases 1-5. This phase establishes three file-based registries—model registry, training data registry, and experiment tracking—that make every training run measurable and every phase capable of learning from previous work.
+                  AI projects fail when teams can&apos;t track what worked, reproduce results, or build on previous experiments. Without systematic infrastructure, learning stays local and effort gets duplicated. Every training run becomes an isolated event rather than part of cumulative organizational knowledge.
                 </p>
 
-                <h3 className="text-xl font-bold text-navy mb-3">Strategic Value</h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  Zero-cost foundation using lightweight file-based registries with structured logging. All AI experimentation happens in isolated staging environments that cannot impact production systems. Divisions maintain self-service control over their data and experiments, preserving decentralized culture while building shared infrastructure. No customer-facing changes—all work happens behind the scenes.
+                {/* The Solution */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Solution</h3>
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Three lightweight registries (models, data, experiments) that make every training run measurable and every phase capable of learning from previous work. File-based storage with structured logging, no database dependencies, no complex infrastructure. All AI experimentation happens in isolated staging environments that cannot impact production systems.
                 </p>
 
-                <h3 className="text-xl font-bold text-navy mb-3">What&apos;s Delivered</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Staged data infrastructure mirroring each division&apos;s workflows, model registries tracking all trained models across phases, experiment tracking capturing every training run, and standardized evaluation frameworks enabling systematic learning.
+                {/* The Value */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Value</h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Zero-cost foundation enabling systematic learning across all AI development, with complete isolation from production systems. Divisions maintain self-service control over their data and experiments while building shared infrastructure that compounds as teams learn what works. Staged data infrastructure mirroring each division&apos;s workflows, model registries tracking all trained models across phases, experiment tracking capturing every training run, and standardized evaluation frameworks—all established in approximately two hours with no ongoing costs.
                 </p>
               </>
             }

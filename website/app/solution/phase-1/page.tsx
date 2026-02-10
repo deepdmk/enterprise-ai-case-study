@@ -48,22 +48,22 @@ export default function Phase1() {
           <PhaseTabs
             vision={
               <>
-                <p className="text-xl text-gray-700 mb-6">
-                  Phase 1 creates a unified semantic space where all three divisions can discover relevant information across silos, improving existing search and data access workflows without requiring process changes while establishing the foundation for emergent AI capabilities.
-                </p>
-
+                {/* The Problem */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Phase 1 fine-tunes custom embedding and reranker models on cross-unit data, creating shared semantic infrastructure specifically tuned to the company&apos;s unique data and relationships. Unlike generic off-the-shelf embeddings, these models learn the organization&apos;s domain language and cross-divisional patterns. When Fundraising searches for &quot;capacity expansion plans,&quot; they automatically surface relevant Field Operations project data, not through coordination or new processes, but by improving the backend of how they already search and access information.
+                  Organizational knowledge is siloed across divisions. When Fundraising searches for a specific ongoing investment or need in the field that a funder is interested in scaling, they can&apos;t discover relevant Field Operations data without manual coordination. Generic off-the-shelf embeddings don&apos;t understand organizational domain language or cross-divisional relationships, limiting search to exact keyword matches rather than semantic understanding.
                 </p>
 
-                <h3 className="text-xl font-bold text-navy mb-3">Strategic Value</h3>
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  Training costs under $1 using consumer GPUs with immediate ROI through cross-divisional data access. Breaks down organizational silos by enabling search, retrieval, and access across all three divisions within existing portals and processes. Custom fine-tuning adapts to how teams actually work and the relationships within their data. All work happens in staging environments isolated from production systems. Divisions maintain complete autonomy over their data while gaining cross-organizational visibility through existing workflows. No process changes required. Backend semantic infrastructure improves search quality without changing how teams work.
+                {/* The Solution */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Solution</h3>
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Fine-tune custom embedding and reranker models on cross-unit data, creating shared semantic infrastructure that understands organizational relationships. Unlike generic embeddings, these models learn the organization&apos;s domain language and cross-divisional patterns. When Fundraising searches for scaling opportunities matching a funder&apos;s interests, they automatically surface relevant Field Operations project data through improved backend search, not through new processes or coordination.
                 </p>
 
-                <h3 className="text-xl font-bold text-navy mb-3">What&apos;s Delivered</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Fine-tuned embedding model (all-MiniLM-L6-v2 variant) trained on cross-unit data, fine-tuned reranker model for precision ranking, ChromaDB vector database with ingested embeddings, and Gradio search interface demonstrating enhanced cross-division semantic search within existing workflows.
+                {/* The Value */}
+                <h3 className="text-xl font-bold text-navy mb-3">The Value</h3>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Cross-divisional discovery through existing workflows. No process changes required, immediate improvement in how people find and use knowledge. Divisions maintain complete autonomy over their data while gaining cross-organizational visibility. Training costs under $1 using consumer GPUs with immediate ROI through enhanced data access. Hosting the vector database incurs a small ongoing cost, but this can reduce overall expenses by handling semantic queries through lightweight vectors rather than repeated calls to the source databases. Fine-tuned embedding model trained on cross-unit data, fine-tuned reranker model for precision ranking, ChromaDB vector database with ingested embeddings, and search interface demonstrating enhanced cross-division semantic search within existing workflows.
                 </p>
               </>
             }

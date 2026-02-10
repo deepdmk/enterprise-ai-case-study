@@ -9,66 +9,65 @@ export function VisionSection() {
         </h2>
         <p className="text-xl text-gray-700 text-center max-w-3xl mx-auto mb-12">
           AI will transform organizational intelligence and automation. How it transforms
-          everything else—workflows, customers, structure—will be discovered through use,
+          everything else (workflows, customers, structure) will be discovered through use,
           not designed in advance.
         </p>
 
-        {/* Part 1: The End State Vision */}
+        {/* Part 1: Problem → Solution → Value */}
         <div className="mb-16">
-          <h3 className="text-2xl font-bold text-navy mb-6">The End State Vision</h3>
-
-          <div className="space-y-6 text-gray-700">
-            <p>
-              The vision is an <strong>orchestrated agentic system</strong> that unifies
-              divisions through intelligent automation, leverages proprietary knowledge,
-              and transforms how the organization processes information.
-            </p>
-
-            <p>
-              <strong>What we know AI will do:</strong> Fundamentally change how knowledge
-              is accessed, how intelligence is applied to decisions, and how tasks are
-              automated through agentic systems.
-            </p>
-
-            <p>
-              <strong>What we leave open:</strong> Everything else. Will workflows change?
-              Probably—but we&apos;ll discover which ones and how. Will customer interactions
-              transform? Maybe—if experiments prove it valuable. Will organizational
-              structure adapt? Possibly—when opportunities reveal themselves.
-            </p>
-
-            <p>
-              <strong>This is the AI Habitat philosophy in practice:</strong> AI&apos;s
-              transformation of intelligence and automation is certain. Build those
-              capabilities as the foundation. Let everything else—process innovation,
-              customer model changes, structural adaptations—emerge opportunistically as
-              teams experiment and discover what becomes possible.
-            </p>
-
-            <p>
-              Traditional AI bets on specific transformations upfront: &quot;This will change
-              how sales works&quot; or &quot;Customers will interact this way.&quot; Those assumptions
-              become dependencies. This approach inverts that: <strong>guarantee the AI
-              transformation, preserve optionality for everything else.</strong>
-            </p>
-
-            <div className="bg-teal/5 border-l-4 border-teal p-6 rounded mt-6">
-              <h4 className="font-bold text-navy mb-3">The Sustainable Vision</h4>
-              <ul className="space-y-2">
-                <li>• Orchestrated intelligence that transforms knowledge work and automation (certain)</li>
-                <li>• Integration with existing workflows, with discovered improvements emerging through use (opportunistic)</li>
-                <li>• Serves current customers while building potential for new service models (flexible)</li>
-                <li>• Fits current structure while enabling adaptation when valuable (adaptive)</li>
-                <li>• Competitive moat from proprietary data that compounds regardless of which opportunities materialize</li>
-              </ul>
+          <div className="space-y-8">
+            {/* The Problem */}
+            <div>
+              <h3 className="text-xl font-bold text-navy mb-3">The Problem</h3>
+              <p className="text-gray-700 mb-4">
+                Enterprises invest heavily in AI but face vendor lock-in, generic tools that don&apos;t
+                learn organizational patterns, and top-down deployments that fail to address where
+                work actually happens. Commercial AI platforms remain generic regardless of how much
+                proprietary data exists, creating no competitive advantage.
+              </p>
+              <p className="text-gray-700">
+                Traditional AI bets on specific transformations upfront: &quot;This will change how sales
+                works&quot; or &quot;Customers will interact this way.&quot; Those assumptions become dependencies
+                that constrain future options when reality differs from projections.
+              </p>
             </div>
 
-            <p className="font-semibold text-navy">
-              <strong>What you&apos;re building toward:</strong> An orchestrated agentic system
-              that will definitely transform organizational intelligence. How it transforms
-              everything else will be discovered as teams experiment with what the new
-              capabilities make possible.
-            </p>
+            {/* The Solution */}
+            <div>
+              <h3 className="text-xl font-bold text-navy mb-3">The Solution</h3>
+              <p className="text-gray-700 mb-4">
+                Build AI capabilities from the bottom up: team-level experimentation creating
+                proprietary intelligence that compounds with use. Start with shared semantic
+                infrastructure, then fine-tune task-specific models on organizational data,
+                consolidate into division-level agents, and discover cross-division patterns
+                through structured experimentation.
+              </p>
+              <p className="text-gray-700">
+                This is the AI Habitat philosophy in practice: AI&apos;s transformation of intelligence
+                and automation is certain. Build those capabilities as the foundation. Let everything
+                else (process innovation, customer model changes, structural adaptations) emerge
+                opportunistically as teams experiment and discover what becomes possible.
+              </p>
+            </div>
+
+            {/* The Value */}
+            <div>
+              <h3 className="text-xl font-bold text-navy mb-3">The Value</h3>
+              <p className="text-gray-700 mb-4">
+                An orchestrated agentic system that transforms organizational intelligence while
+                preserving optionality at every stage. Each phase delivers working AI capabilities
+                that compound into division-level agents and ultimately enterprise-wide orchestration.
+              </p>
+              <div className="bg-teal/5 border-l-4 border-teal p-6 rounded">
+                <h4 className="font-bold text-navy mb-3">What You&apos;re Building Toward</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Orchestrated intelligence that transforms knowledge work and automation</li>
+                  <li>• Competitive moat from proprietary data that competitors cannot replicate</li>
+                  <li>• Full optionality: stop at any phase with working AI, or continue building</li>
+                  <li>• $163K total investment achieving multi-agent AI at a fraction of vendor platform costs</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
