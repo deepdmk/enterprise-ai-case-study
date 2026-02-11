@@ -265,6 +265,41 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Built With / Deploys To */}
+          <div className="bg-teal/10 border-l-4 border-teal rounded-r-lg p-6 mb-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              {/* Built With */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Built With</span>
+                <div className="flex flex-wrap gap-2">
+                  {["Python", "PyTorch", "Hugging Face", "LangChain", "ChromaDB", "FastAPI"].map((tech) => (
+                    <span key={tech} className="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden lg:block w-px h-12 bg-gray-300" />
+
+              {/* Deploys To */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Deploys To</span>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {["AWS Bedrock + SageMaker", "Azure AI", "Self-Hosted"].map((platform) => (
+                    <span key={platform} className="flex items-center gap-1 text-sm text-gray-700">
+                      <svg className="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {platform}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <Link
             href="/solution"
             className="inline-flex items-center justify-center px-6 py-3 bg-navy hover:bg-navy/90 text-white font-semibold rounded-lg transition-colors"
