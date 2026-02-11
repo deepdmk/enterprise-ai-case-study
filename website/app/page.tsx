@@ -54,7 +54,7 @@ export default function HomePage() {
       </section>
 
       {/* ==================== SECTION 1: THE CHALLENGE ==================== */}
-      <section className="py-16 bg-navy text-white border-t-4 border-amber">
+      <section id="the-challenge" className="scroll-mt-20 py-16 bg-navy text-white border-t-4 border-amber">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold mb-8">The Challenge</h2>
 

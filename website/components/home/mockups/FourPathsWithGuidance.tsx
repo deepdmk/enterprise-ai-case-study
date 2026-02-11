@@ -15,9 +15,9 @@ import { AlertTriangle, BarChart3, RefreshCw, Code, Clock } from "lucide-react";
 export function FourPathsWithGuidance() {
   const paths = [
     {
-      href: "/challenge",
-      title: "Challenge Situation",
-      description: "The crisis and constraints driving transformation",
+      href: "#the-challenge",
+      title: "Case Summary",
+      description: "Overview of the challenge, approach, solution, and results",
       persona: "Best for: Everyone",
       readTime: "5 min read",
       icon: AlertTriangle,
@@ -84,8 +84,11 @@ export function FourPathsWithGuidance() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {paths.map((path) => (
-          <Link key={path.href} href={path.href} className="group block h-full">
+        {paths.map((path) => {
+          const isHashLink = path.href.startsWith("#");
+          const LinkComponent = isHashLink ? "a" : Link;
+          return (
+          <LinkComponent key={path.href} href={path.href} className="group block h-full">
             <div className="relative bg-white rounded-lg h-full shadow-lg hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1 overflow-hidden">
               <div
                 className="p-3 h-full border-b-4"
@@ -126,8 +129,9 @@ export function FourPathsWithGuidance() {
                 </div>
               </div>
             </div>
-          </Link>
-        ))}
+          </LinkComponent>
+          );
+        })}
       </div>
     </div>
   );
