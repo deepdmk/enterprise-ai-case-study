@@ -272,7 +272,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <span className="text-sm font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Built With</span>
                 <div className="flex flex-wrap gap-2">
-                  {["Python", "PyTorch", "Hugging Face", "PEFT", "vLLM", "ChromaDB", "FastAPI", "Agno", "LangChain"].map((tech) => (
+                  {["Python", "PyTorch", "Hugging Face", "PEFT/LoRA", "Unsloth", "Mergekit", "vLLM", "ChromaDB", "FastAPI", "Agno", "LangChain"].map((tech) => (
                     <span key={tech} className="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700">
                       {tech}
                     </span>
