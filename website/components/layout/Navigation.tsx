@@ -7,8 +7,7 @@ import { Container } from "./Container";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/summary", label: "Summary", dividerBefore: true },
-  { href: "/challenge", label: "Challenge" },
+  { href: "/challenge", label: "Challenge", dividerBefore: true },
   { href: "/strategy", label: "Strategy" },
   { href: "/transformation", label: "Transformation" },
   { href: "/solution", label: "Solution" },

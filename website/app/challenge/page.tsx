@@ -22,14 +22,7 @@ export default function ChallengePage() {
       />
       <PageNav current="/challenge" />
 
-      {/* ==================== MODULE 1: CHALLENGE FLOW GRAPHIC ==================== */}
-      <section className="py-12 bg-slate-100 border-t-4 border-teal">
-        <Container>
-          <ChallengeFlowGraphic />
-        </Container>
-      </section>
-
-      {/* ==================== MODULE 2: THE QUESTION (ENHANCED HOOK) ==================== */}
+      {/* ==================== MODULE 1: THE QUESTION (ENHANCED HOOK) ==================== */}
       <section className="py-12 bg-slate-800">
         <Container>
           <div className="text-center">
@@ -56,6 +49,13 @@ export default function ChallengePage() {
               <span className="absolute -right-4 -bottom-4 text-6xl text-slate-600 font-serif">&rdquo;</span>
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* ==================== MODULE 2: CHALLENGE FLOW GRAPHIC ==================== */}
+      <section className="py-12 bg-slate-100 border-t-4 border-teal">
+        <Container>
+          <ChallengeFlowGraphic />
         </Container>
       </section>
 

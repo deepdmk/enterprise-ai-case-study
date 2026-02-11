@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
-import { ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const pages = [
-  { slug: "/summary", label: "Summary" },
+  { slug: "/", label: "Home" },
   { slug: "/challenge", label: "Challenge" },
   { slug: "/strategy", label: "Strategy" },
   { slug: "/transformation", label: "Transformation" },
@@ -37,14 +37,6 @@ export function PageNav({ current }: PageNavProps) {
               </Link>
             )}
           </div>
-
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-3 py-1 border border-gray-400 rounded-md text-sm font-semibold text-gray-700 hover:border-teal hover:text-teal transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            <span>Home</span>
-          </Link>
 
           <div className="flex-1 text-right">
             {next && (
