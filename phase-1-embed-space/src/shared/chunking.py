@@ -120,7 +120,7 @@ class TextChunker:
         # Use langchain splitter
         chunks = self._splitter.split_text(text)
 
-        results = []
+        results: list[ChunkResult] = []
         current_pos = 0
 
         for i, chunk_text in enumerate(chunks):

@@ -19,7 +19,7 @@ from typing import Any
 from tqdm import tqdm
 
 # Import local config BEFORE adding phase-0 to path
-from config.settings import DatabaseConfig, IngestionConfig, Settings
+from config.settings import DatabaseConfig, IngestionConfig
 
 # Add phase-0-infrastructure to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
@@ -30,7 +30,7 @@ from src.shared.chunking import TextChunker
 from src.shared.database import DatabaseConnectionManager, ExtractedRecord
 from src.shared.embedding_model import EmbeddingModelManager
 
-from .metadata_extractor import ChunkMetadata, MetadataExtractor
+from .metadata_extractor import MetadataExtractor
 
 logger = get_logger(__name__)
 

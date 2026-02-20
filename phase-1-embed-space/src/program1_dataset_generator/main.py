@@ -14,6 +14,7 @@ import asyncio
 import random
 import sys
 from pathlib import Path
+from typing import cast
 
 from datasets import Dataset
 
@@ -27,10 +28,14 @@ from registries.data_registry import DataRegistry
 from registries.schemas import DataType, Phase, RegisteredDataset
 
 from src.shared.chunking import TextChunker
-from src.shared.database import DatabaseConnectionManager, MockDatabaseManager
+from src.shared.database import DatabaseConnectionManager
 
 from .extractors.text_extractor import TextDataExtractor, generate_mock_samples
-from .pair_generators.contrastive_pairs import ContrastivePair, ContrastivePairGenerator
+from .pair_generators.contrastive_pairs import (
+    ContrastivePair,
+    ContrastivePairGenerator,
+    PairStrategy,
+)
 
 logger = get_logger(__name__)
 
@@ -122,7 +127,7 @@ async def run_extraction(
     )
 
     pair_generator = ContrastivePairGenerator(
-        strategy=config.pair_generation.strategy,
+        strategy=cast(PairStrategy, config.pair_generation.strategy),
         chunker=chunker,
         min_pair_length=config.pair_generation.min_chunk_length,
     )

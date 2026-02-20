@@ -8,7 +8,6 @@ with parent document retrieval.
 import asyncio
 import sys
 from pathlib import Path
-from typing import Any
 
 import gradio as gr
 
@@ -28,7 +27,7 @@ from .parent_document_fetcher import (
     ParentDocumentFetcher,
     SearchResultWithDocument,
 )
-from .retriever import SearchResult, SemanticRetriever
+from .retriever import SemanticRetriever
 
 logger = get_logger(__name__)
 
@@ -348,6 +347,7 @@ class SearchApp:
         if self._app is None:
             self.create_interface()
 
+        assert self._app is not None, "Failed to create Gradio interface"
         self._app.launch(
             server_name=host or self.config.gradio.host,
             server_port=port or self.config.gradio.port,

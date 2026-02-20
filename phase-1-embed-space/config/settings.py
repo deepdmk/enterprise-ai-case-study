@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
 
@@ -16,9 +16,11 @@ from pydantic_settings import BaseSettings
 # This avoids namespace conflicts with the local config package
 _phase0_config_path = Path(__file__).parent.parent.parent / "phase-0-infrastructure" / "config" / "base_settings.py"
 _spec = importlib.util.spec_from_file_location("phase0_base_settings", _phase0_config_path)
+if _spec is None or _spec.loader is None:
+    raise ImportError(f"Failed to load module spec from {_phase0_config_path}")
 _phase0_module = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_phase0_module)
-HabitatBaseSettings = _phase0_module.HabitatBaseSettings
+HabitatBaseSettings: type[BaseSettings] = _phase0_module.HabitatBaseSettings
 
 
 class TableConfig(BaseModel):
@@ -188,7 +190,7 @@ class AppConfig(BaseModel):
     log_dir: str = "data/logs"
 
 
-class Settings(HabitatBaseSettings):
+class Settings(HabitatBaseSettings):  # type: ignore[misc, valid-type]
     """Main settings class that loads from YAML config file."""
 
     app: AppConfig = Field(default_factory=AppConfig)

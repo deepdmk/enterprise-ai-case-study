@@ -31,6 +31,7 @@ class QueryResult:
     distances: list[float]
     metadatas: list[dict[str, Any]]
     embeddings: list[list[float]] | None = None
+    documents: list[str] | None = None
 
     def __len__(self):
         return len(self.ids)
@@ -126,6 +127,9 @@ class ChromaDBClient:
         if self._client is None:
             self.connect()
 
+        # Assert client is connected after connect() call
+        assert self._client is not None, "ChromaDB client failed to connect"
+
         name = name or self.config.collection_name
         metadata = metadata or {
             "description": "Enterprise unified embedding space",
@@ -196,7 +200,7 @@ class ChromaDBClient:
         query_embeddings: list[list[float]],
         n_results: int = 5,
         where: dict[str, Any] | None = None,
-        include_embeddings: bool = False,
+        include: list[str] | None = None,
     ) -> QueryResult:
         """
         Query the collection for similar embeddings.
@@ -205,14 +209,14 @@ class ChromaDBClient:
             query_embeddings: List of query embedding vectors.
             n_results: Number of results per query.
             where: Optional metadata filter.
-            include_embeddings: Whether to include embeddings in results.
+            include: List of fields to include (e.g., ["metadatas", "distances", "embeddings", "documents"]).
+                     Defaults to ["metadatas", "distances"] if None.
 
         Returns:
             QueryResult with matching IDs, distances, and metadata.
         """
-        include = ["metadatas", "distances"]
-        if include_embeddings:
-            include.append("embeddings")
+        if include is None:
+            include = ["metadatas", "distances"]
 
         results = self.collection.query(
             query_embeddings=query_embeddings,
@@ -227,6 +231,7 @@ class ChromaDBClient:
             distances=results["distances"][0] if results["distances"] else [],
             metadatas=results["metadatas"][0] if results["metadatas"] else [],
             embeddings=results["embeddings"][0] if results.get("embeddings") else None,
+            documents=results["documents"][0] if results.get("documents") else None,
         )
 
     def delete_by_ids(self, ids: list[str]) -> None:
@@ -315,6 +320,7 @@ class ChromaDBClient:
         """
         if self._client is None:
             self.connect()
+        assert self._client is not None, "ChromaDB client failed to connect"
         collections = self._client.list_collections()
         return [c.name for c in collections]
 
@@ -327,6 +333,7 @@ class ChromaDBClient:
         """
         if self._client is None:
             self.connect()
+        assert self._client is not None, "ChromaDB client failed to connect"
 
         name = name or self.config.collection_name
         self._client.delete_collection(name=name)

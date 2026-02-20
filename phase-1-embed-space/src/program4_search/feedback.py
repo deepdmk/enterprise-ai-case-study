@@ -8,7 +8,7 @@ Stores feedback in JSONL format for easy processing.
 import json
 import sys
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 

@@ -7,7 +7,6 @@ Uses Sentence-Transformers library for model management.
 
 import sys
 from pathlib import Path
-from typing import Literal
 
 import numpy as np
 import torch

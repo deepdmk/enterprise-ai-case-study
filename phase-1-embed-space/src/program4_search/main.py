@@ -11,7 +11,6 @@ Usage:
 """
 
 import argparse
-import asyncio
 import sys
 from pathlib import Path
 
@@ -23,12 +22,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-inf
 from habitat_logging import configure_logging, get_logger
 
 from src.shared.chromadb_client import ChromaDBClient
-from src.shared.database import DatabaseConnectionManager, MockDatabaseManager
-from src.shared.embedding_model import EmbeddingModelManager
 
-from .gradio_app import SearchApp, create_search_app
-from .parent_document_fetcher import MockParentDocumentFetcher, ParentDocumentFetcher
-from .retriever import SemanticRetriever
+from .gradio_app import create_search_app
 
 logger = get_logger(__name__)
 
@@ -111,7 +106,7 @@ def main() -> None:
     print("\n" + "=" * 50)
     print("ENTERPRISE DOCUMENT SEARCH")
     print("=" * 50)
-    print(f"\nStarting server...")
+    print("\nStarting server...")
     print(f"  Host: {args.host or settings.search.gradio.host}")
     print(f"  Port: {args.port or settings.search.gradio.port}")
     if args.test_mode:

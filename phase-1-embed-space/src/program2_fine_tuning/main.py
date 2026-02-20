@@ -20,19 +20,19 @@ from config.settings import Settings, load_settings
 # Add phase-0-infrastructure to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import configure_logging, get_logger
-from registries.model_registry import ModelRegistry
 from registries.experiment_tracker import ExperimentTracker
+from registries.model_registry import ModelRegistry
 from registries.schemas import (
-    Phase,
-    ModelType,
-    ModelStatus,
-    RegisteredModel,
     DataCharacteristics,
     HyperparameterConfig,
+    ModelStatus,
+    ModelType,
+    Phase,
+    RegisteredModel,
     TrainingMetrics,
 )
 
-from .evaluator import EmbeddingEvaluator, evaluate_model_on_dataset
+from .evaluator import evaluate_model_on_dataset
 from .trainer import EmbeddingTrainer
 
 logger = get_logger(__name__)
@@ -310,7 +310,7 @@ def main() -> None:
                 error_message=str(e),
             )
 
-    print(f"\nFine-tuning complete!")
+    print("\nFine-tuning complete!")
     print(f"  Model saved to: {output_path}")
     print(f"  Final loss: {result.final_loss:.4f}")
     if result.eval_loss is not None:

@@ -14,8 +14,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-inf
 from habitat_logging import get_logger
 
 from config.settings import RerankingConfig
-from src.shared.chromadb_client import ChromaDBClient, QueryResult
+from src.shared.chromadb_client import ChromaDBClient
 from src.shared.embedding_model import EmbeddingModelManager
+
 from .reranker import SearchReranker
 
 logger = get_logger(__name__)

@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 # Import local config BEFORE adding phase-0 to path
-from config.settings import Settings, load_settings, DatabaseConfig, TableConfig
+from config.settings import Settings, load_settings
 
 # Add phase-0-infrastructure to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
@@ -88,6 +88,7 @@ async def run_ingestion(
         IngestionStats with results.
     """
     # Initialize database manager
+    db_manager: DatabaseConnectionManager | MockDatabaseManager
     if test_mode:
         logger.info("using_mock_database")
         db_manager = create_mock_database_manager(settings)
@@ -194,10 +195,10 @@ def main() -> None:
         # Just show collection stats
         chromadb_client = ChromaDBClient(settings.chromadb)
         chromadb_client.connect()
-        stats = chromadb_client.get_collection_stats()
-        print(f"\nCollection: {stats.name}")
-        print(f"Count:      {stats.count}")
-        print(f"Metadata:   {json.dumps(stats.metadata, indent=2)}")
+        collection_stats = chromadb_client.get_collection_stats()
+        print(f"\nCollection: {collection_stats.name}")
+        print(f"Count:      {collection_stats.count}")
+        print(f"Metadata:   {json.dumps(collection_stats.metadata, indent=2)}")
         return
 
     # Run ingestion

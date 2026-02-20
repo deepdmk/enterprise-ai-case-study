@@ -145,9 +145,9 @@ class EmbeddingEvaluator:
         similarity_matrix = np.matmul(query_embeddings, corpus_embeddings.T)
 
         # Calculate metrics
-        ndcg_scores = {k: [] for k in k_values}
-        mrr_scores = []
-        precision_scores = {k: [] for k in k_values}
+        ndcg_scores: dict[int, list[float]] = {k: [] for k in k_values}
+        mrr_scores: list[float] = []
+        precision_scores: dict[int, list[float]] = {k: [] for k in k_values}
 
         for i, (scores, relevant_docs) in enumerate(zip(similarity_matrix, relevance)):
             # Get ranking

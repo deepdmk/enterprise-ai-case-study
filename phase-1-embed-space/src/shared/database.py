@@ -5,7 +5,6 @@ Provides async connection pooling and query execution for multiple PostgreSQL da
 Supports the placeholder pattern for unknown schemas with schema discovery capabilities.
 """
 
-import asyncio
 import sys
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
