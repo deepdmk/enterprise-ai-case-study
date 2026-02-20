@@ -36,11 +36,11 @@ Basic usage:
 """
 
 from .metrics_schema import (
-    TokenMetrics,
     CostMetrics,
+    EvaluationReport,
     LoadMetrics,
     QualityMetrics,
-    EvaluationReport,
+    TokenMetrics,
 )
 
 __all__ = [

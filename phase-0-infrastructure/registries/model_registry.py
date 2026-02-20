@@ -13,18 +13,19 @@ This registry provides centralized model tracking with:
 from __future__ import annotations
 
 import json
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import structlog
 
 from .schemas import (
-    Phase,
-    ModelType,
     ModelStatus,
+    ModelType,
+    Phase,
     RegisteredModel,
 )
+from .storage import JSONStorage
 
 logger = structlog.get_logger(__name__)
 
@@ -50,66 +51,39 @@ class ModelRegistry:
         # Use separate file for test mode
         filename = "model_registry_test.json" if test_mode else "model_registry.json"
         self.registry_file = self.data_dir / filename
+        self._storage = JSONStorage(self.registry_file)
         self.test_mode = test_mode
 
         self._models: dict[str, RegisteredModel] = {}
         self._load()
 
     def _load(self) -> None:
-        """Load registry from disk."""
-        if self.registry_file.exists():
-            try:
-                with open(self.registry_file) as f:
-                    data = json.load(f)
-                    self._models = {
-                        model_id: RegisteredModel(**entry)
-                        for model_id, entry in data.get("models", {}).items()
-                    }
-                logger.info(
-                    "registry_loaded",
-                    file=str(self.registry_file),
-                    count=len(self._models),
-                    test_mode=self.test_mode,
-                )
-            except Exception as e:
-                logger.error(
-                    "registry_load_failed",
-                    file=str(self.registry_file),
-                    error=str(e),
-                )
-                raise
-        else:
-            logger.info(
-                "registry_initialized",
-                file=str(self.registry_file),
-                test_mode=self.test_mode,
-            )
+        """Load registry from disk using thread-safe storage."""
+        data = self._storage.load()
+        self._models = {
+            model_id: RegisteredModel(**entry)
+            for model_id, entry in data.get("models", {}).items()
+        }
+        logger.info(
+            "registry_loaded",
+            file=str(self.registry_file),
+            count=len(self._models),
+            test_mode=self.test_mode,
+        )
 
     def _save(self) -> None:
-        """Save registry to disk."""
-        try:
-            data = {
-                "version": "1.0",
-                "updated_at": datetime.now(UTC).isoformat(),
-                "models": {
-                    model_id: entry.model_dump()
-                    for model_id, entry in self._models.items()
-                },
+        """Save registry to disk using thread-safe storage."""
+        self._storage.save({
+            "models": {
+                model_id: entry.model_dump()
+                for model_id, entry in self._models.items()
             }
-            with open(self.registry_file, "w") as f:
-                json.dump(data, f, indent=2)
-            logger.info(
-                "registry_saved",
-                file=str(self.registry_file),
-                count=len(self._models),
-            )
-        except Exception as e:
-            logger.error(
-                "registry_save_failed",
-                file=str(self.registry_file),
-                error=str(e),
-            )
-            raise
+        })
+        logger.info(
+            "registry_saved",
+            file=str(self.registry_file),
+            count=len(self._models),
+        )
 
     def register(self, model: RegisteredModel) -> RegisteredModel:
         """
@@ -334,18 +308,14 @@ class ModelRegistry:
         Returns:
             Dictionary with routing configuration for MoE router
         """
-        routing_config = {
-            "version": "1.0",
-            "generated_at": datetime.now(UTC).isoformat(),
-            "models": [],
-        }
+        models_list: list[dict[str, Any]] = []
 
         # Only include models that are ready for deployment
         eligible_statuses = [ModelStatus.EVALUATED, ModelStatus.EXPORTED]
 
         for model in self._models.values():
             if model.status in eligible_statuses:
-                routing_config["models"].append({
+                models_list.append({
                     "model_id": model.model_id,
                     "phase": model.phase,
                     "unit": model.unit,
@@ -357,10 +327,16 @@ class ModelRegistry:
                     "negative_prompts": model.negative_prompts,
                 })
 
+        routing_config: dict[str, Any] = {
+            "version": "1.0",
+            "generated_at": datetime.now(UTC).isoformat(),
+            "models": models_list,
+        }
+
         logger.info(
             "routing_config_generated",
             total_models=len(self._models),
-            eligible_models=len(routing_config["models"]),
+            eligible_models=len(models_list),
         )
 
         return routing_config
@@ -411,7 +387,8 @@ class ModelRegistry:
 
         # Save export metadata
         # Format: {unit}_{task}_v{version}.json
-        export_file = output_dir / f"{model.unit}_{model.task}_{model.model_id.split('_v')[-1]}.json"
+        version = model.model_id.split("_v")[-1]
+        export_file = output_dir / f"{model.unit}_{model.task}_{version}.json"
         with open(export_file, "w") as f:
             json.dump(export_data, f, indent=2)
 
@@ -436,36 +413,41 @@ class ModelRegistry:
         """
         models = list(self._models.values())
 
-        summary = {
-            "total_models": len(models),
-            "by_status": {},
-            "by_phase": {},
-            "by_unit": {},
-            "by_model_type": {},
-        }
+        by_status: dict[str, int] = {}
+        by_phase: dict[str, int] = {}
+        by_unit: dict[str, int] = {}
+        by_model_type: dict[str, int] = {}
 
         # Count by status
         for status in ModelStatus:
             count = len([m for m in models if m.status == status])
             if count > 0:
-                summary["by_status"][status.value] = count
+                by_status[status.value] = count
 
         # Count by phase
         for phase in Phase:
             count = len([m for m in models if m.phase == phase])
             if count > 0:
-                summary["by_phase"][phase.value] = count
+                by_phase[phase.value] = count
 
         # Count by unit
         units = set(m.unit for m in models)
         for unit in units:
-            summary["by_unit"][unit] = len([m for m in models if m.unit == unit])
+            by_unit[unit] = len([m for m in models if m.unit == unit])
 
         # Count by model type
         for model_type in ModelType:
             count = len([m for m in models if m.model_type == model_type])
             if count > 0:
-                summary["by_model_type"][model_type.value] = count
+                by_model_type[model_type.value] = count
+
+        summary: dict[str, Any] = {
+            "total_models": len(models),
+            "by_status": by_status,
+            "by_phase": by_phase,
+            "by_unit": by_unit,
+            "by_model_type": by_model_type,
+        }
 
         logger.info(
             "summary_generated",

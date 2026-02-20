@@ -7,16 +7,10 @@ and machine-parseable JSON formatting.
 
 import logging
 import sys
-from typing import Any
+from typing import cast
 
 import structlog
-from structlog.types import EventDict, Processor
-
-
-def add_logger_name(logger: Any, method_name: str, event_dict: EventDict) -> EventDict:
-    """Add logger name to the event dict."""
-    event_dict["logger"] = event_dict.get("logger", logger.name)
-    return event_dict
+from structlog.types import Processor
 
 
 def configure_logging(level: str = "INFO", format: str = "console") -> None:
@@ -44,7 +38,6 @@ def configure_logging(level: str = "INFO", format: str = "console") -> None:
         structlog.contextvars.merge_contextvars,
         structlog.stdlib.add_log_level,
         structlog.stdlib.add_logger_name,
-        add_logger_name,
         structlog.processors.TimeStamper(fmt="iso", utc=True),
         structlog.stdlib.PositionalArgumentsFormatter(),
         structlog.processors.StackInfoRenderer(),
@@ -85,4 +78,4 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
         >>> logger = get_logger(__name__)
         >>> logger.info("registry_loaded", registry_type="dataset", path="/path/to/registry.json")
     """
-    return structlog.get_logger(name)
+    return cast(structlog.stdlib.BoundLogger, structlog.get_logger(name))

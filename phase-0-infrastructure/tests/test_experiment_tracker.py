@@ -1,14 +1,12 @@
 """Tests for ExperimentTracker."""
 
+
 import pytest
-from pathlib import Path
 
 from registries.experiment_tracker import ExperimentTracker
 from registries.schemas import (
-    Phase,
     ExperimentStatus,
-    DataCharacteristics,
-    HyperparameterConfig,
+    Phase,
     TrainingMetrics,
 )
 
@@ -274,7 +272,7 @@ class TestExperimentTracker:
 
     def test_list_with_status_filter(self, tracker):
         """Test listing experiments filtered by status."""
-        exp1 = tracker.start_experiment(phase=Phase.PHASE_2, unit="unit1", task="task1")
+        tracker.start_experiment(phase=Phase.PHASE_2, unit="unit1", task="task1")
         exp2 = tracker.start_experiment(phase=Phase.PHASE_2, unit="unit1", task="task2")
 
         tracker.complete_experiment(exp2.experiment_id)
@@ -324,7 +322,8 @@ class TestExperimentTracker:
         best = tracker.find_best_config("unit1", "task1", metric="eval_loss", minimize=True)
 
         assert best is not None
-        assert abs(best.metrics.eval_loss - 0.6) < 0.001  # Minimum value (with floating point tolerance)
+        # Minimum value (with floating point tolerance)
+        assert abs(best.metrics.eval_loss - 0.6) < 0.001
 
     def test_find_best_config_maximize_metric(
         self,
@@ -351,7 +350,9 @@ class TestExperimentTracker:
             tracker.log_training_metrics(exp.experiment_id, metrics)
             tracker.complete_experiment(exp.experiment_id)
 
-        best = tracker.find_best_config("unit1", "task1", metric="format_compliance", minimize=False)
+        best = tracker.find_best_config(
+            "unit1", "task1", metric="format_compliance", minimize=False
+        )
 
         assert best is not None
         assert best.metrics.format_compliance == 0.9  # Maximum value
@@ -393,7 +394,7 @@ class TestExperimentTracker:
 
     def test_summary_with_experiments(self, tracker):
         """Test summary with multiple experiments."""
-        exp1 = tracker.start_experiment(phase=Phase.PHASE_2, unit="unit1", task="task1")
+        tracker.start_experiment(phase=Phase.PHASE_2, unit="unit1", task="task1")
         exp2 = tracker.start_experiment(phase=Phase.PHASE_2, unit="unit2", task="task2")
         exp3 = tracker.start_experiment(phase=Phase.PHASE_3, unit="unit1", task="task3")
 
@@ -454,7 +455,7 @@ class TestExperimentTracker:
         """Test that tracker persists across instances."""
         # Create first instance and start experiment
         tracker1 = ExperimentTracker(data_dir=temp_storage_dir, test_mode=True)
-        experiment = tracker1.start_experiment(
+        tracker1.start_experiment(
             phase=Phase.PHASE_2,
             unit="unit1",
             task="task1",

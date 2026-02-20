@@ -51,21 +51,21 @@ def make_id(phase: int, unit: str, task: str, version: str) -> str:
     return ID_FORMAT.format(phase=phase, unit=unit, task=task, version=version)
 
 
-def parse_id(id_str: str) -> dict:
+def parse_id(id_str: str) -> dict[str, str | int]:
     """Parse a standardized resource ID into its components.
 
     Args:
         id_str: Resource ID string in the format {phase}/{unit}/{task}/{version}
 
     Returns:
-        Dictionary with keys: phase, unit, task, version
+        Dictionary with keys: phase (int), unit (str), task (str), version (str)
 
     Raises:
         ValueError: If the ID string doesn't match the expected format
 
     Example:
         >>> parse_id("2/program1/format-alpaca/v1.0.0")
-        {"phase": "2", "unit": "program1", "task": "format-alpaca", "version": "v1.0.0"}
+        {"phase": 2, "unit": "program1", "task": "format-alpaca", "version": "v1.0.0"}
     """
     parts = id_str.split("/")
     if len(parts) != 4:
@@ -75,7 +75,7 @@ def parse_id(id_str: str) -> dict:
         )
 
     return {
-        "phase": parts[0],
+        "phase": int(parts[0]),
         "unit": parts[1],
         "task": parts[2],
         "version": parts[3]

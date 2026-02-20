@@ -4,7 +4,7 @@ This module defines standard log events used across phase-0-infrastructure
 to ensure consistency in logging patterns and make log analysis easier.
 """
 
-from typing import Final
+from typing import Any, Final
 
 # Standard log events with descriptions
 # Use these event names as the first argument to logger methods for consistency
@@ -49,8 +49,8 @@ def format_registry_event(
     event: str,
     registry_type: str,
     path: str,
-    **kwargs: str | int | float | bool,
-) -> dict[str, str | int | float | bool]:
+    **kwargs: Any,
+) -> dict[str, Any]:
     """Format a registry-related log event with standard fields.
 
     Args:
@@ -63,8 +63,10 @@ def format_registry_event(
         Dictionary of structured log fields
 
     Example:
-        >>> format_registry_event("registry_loaded", "dataset", "/data/registry.json", count=42)
-        {'event': 'registry_loaded', 'registry_type': 'dataset', 'path': '/data/registry.json', 'count': 42}
+        >>> format_registry_event(
+        ...     "registry_loaded", "dataset", "/data/registry.json", count=42
+        ... )
+        {'event': 'registry_loaded', 'registry_type': 'dataset', ...}
     """
     return {
         "event": event,
@@ -78,8 +80,8 @@ def format_validation_event(
     event: str,
     validator: str,
     passed: bool,
-    **kwargs: str | int | float | bool,
-) -> dict[str, str | int | float | bool]:
+    **kwargs: Any,
+) -> dict[str, Any]:
     """Format a validation-related log event with standard fields.
 
     Args:
@@ -92,8 +94,11 @@ def format_validation_event(
         Dictionary of structured log fields
 
     Example:
-        >>> format_validation_event("validation_failed", "DatasetValidator", False, errors=["missing field: name"])
-        {'event': 'validation_failed', 'validator': 'DatasetValidator', 'passed': False, 'errors': ['missing field: name']}
+        >>> format_validation_event(
+        ...     "validation_failed", "DatasetValidator", False,
+        ...     errors=["missing field: name"]
+        ... )
+        {'event': 'validation_failed', 'validator': 'DatasetValidator', ...}
     """
     return {
         "event": event,
@@ -106,8 +111,8 @@ def format_validation_event(
 def format_experiment_event(
     event: str,
     experiment_id: str,
-    **kwargs: str | int | float | bool,
-) -> dict[str, str | int | float | bool]:
+    **kwargs: Any,
+) -> dict[str, Any]:
     """Format an experiment-related log event with standard fields.
 
     Args:
@@ -119,8 +124,10 @@ def format_experiment_event(
         Dictionary of structured log fields
 
     Example:
-        >>> format_experiment_event("experiment_completed", "exp_001", duration_sec=120.5, accuracy=0.95)
-        {'event': 'experiment_completed', 'experiment_id': 'exp_001', 'duration_sec': 120.5, 'accuracy': 0.95}
+        >>> format_experiment_event(
+        ...     "experiment_completed", "exp_001", duration_sec=120.5, accuracy=0.95
+        ... )
+        {'event': 'experiment_completed', 'experiment_id': 'exp_001', ...}
     """
     return {
         "event": event,

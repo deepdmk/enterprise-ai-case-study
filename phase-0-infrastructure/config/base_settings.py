@@ -5,6 +5,7 @@ across all phases of the emergent-enterprise-ai project.
 """
 
 from pathlib import Path
+
 from pydantic import Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -70,7 +71,7 @@ class PhaseSettings(HabitatBaseSettings):
         description="Optional unit identifier"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def registry_dir(self) -> Path:
         """Compute registry directory from data_dir if not explicitly set.

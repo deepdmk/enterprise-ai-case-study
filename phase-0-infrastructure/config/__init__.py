@@ -18,7 +18,7 @@ Basic usage:
 """
 
 from .base_settings import HabitatBaseSettings, PhaseSettings
-from .conventions import make_id, parse_id, ID_FORMAT
+from .conventions import ID_FORMAT, make_id, parse_id
 
 __all__ = [
     "HabitatBaseSettings",

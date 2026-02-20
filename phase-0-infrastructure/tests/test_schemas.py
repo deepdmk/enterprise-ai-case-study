@@ -1,21 +1,21 @@
 """Tests for Pydantic schemas."""
 
+
 import pytest
-from datetime import datetime
 from pydantic import ValidationError
 
 from registries.schemas import (
-    Phase,
-    DataType,
-    ModelType,
-    ModelStatus,
+    DataCharacteristics,
     DatasetStatus,
+    DataType,
+    ExperimentResult,
     ExperimentStatus,
+    HyperparameterConfig,
+    ModelStatus,
+    ModelType,
+    Phase,
     RegisteredDataset,
     RegisteredModel,
-    ExperimentResult,
-    DataCharacteristics,
-    HyperparameterConfig,
     TrainingMetrics,
     ValidationResult,
 )

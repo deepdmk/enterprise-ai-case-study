@@ -1,11 +1,9 @@
 """Tests for JSONStorage."""
 
-import pytest
 import json
 import threading
-import time
-from pathlib import Path
-from datetime import datetime
+
+import pytest
 
 from registries.storage import JSONStorage
 
@@ -16,7 +14,7 @@ class TestJSONStorage:
     def test_initialization_creates_file(self, temp_storage_dir):
         """Test that initialization creates file and directories."""
         storage_file = temp_storage_dir / "test.json"
-        storage = JSONStorage(storage_file)
+        JSONStorage(storage_file)  # Side effect: creates file
 
         assert storage_file.exists()
         assert storage_file.parent.exists()
@@ -24,7 +22,7 @@ class TestJSONStorage:
     def test_initialization_without_auto_create(self, temp_storage_dir):
         """Test initialization without auto_create."""
         storage_file = temp_storage_dir / "test.json"
-        storage = JSONStorage(storage_file, auto_create=False)
+        JSONStorage(storage_file, auto_create=False)  # Side effect: no file created
 
         # File should not exist
         assert not storage_file.exists()

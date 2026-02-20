@@ -5,10 +5,10 @@ This module defines the schema for capturing various metrics during model evalua
 including token usage, costs, performance load, and quality assessments.
 """
 
-from datetime import datetime
-from typing import Any, Optional
+from datetime import UTC, datetime
+from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 
 
 class TokenMetrics(BaseModel):
@@ -17,13 +17,13 @@ class TokenMetrics(BaseModel):
     input_tokens: int = Field(..., ge=0, description="Number of input tokens processed")
     output_tokens: int = Field(..., ge=0, description="Number of output tokens generated")
     total_tokens: int = Field(..., ge=0, description="Total number of tokens (input + output)")
-    tokens_per_second: Optional[float] = Field(
+    tokens_per_second: float | None = Field(
         None, ge=0, description="Token generation rate in tokens per second"
     )
 
     @field_validator("total_tokens")
     @classmethod
-    def validate_total_tokens(cls, v: int, info) -> int:
+    def validate_total_tokens(cls, v: int, info: ValidationInfo) -> int:
         """Ensure total_tokens matches input_tokens + output_tokens if both are present."""
         if info.data:
             input_tokens = info.data.get("input_tokens", 0)
@@ -47,7 +47,7 @@ class CostMetrics(BaseModel):
 
     @field_validator("total_cost")
     @classmethod
-    def validate_total_cost(cls, v: float, info) -> float:
+    def validate_total_cost(cls, v: float, info: ValidationInfo) -> float:
         """Ensure total_cost matches input_cost + output_cost if both are present."""
         if info.data:
             input_cost = info.data.get("input_cost", 0.0)
@@ -66,13 +66,13 @@ class LoadMetrics(BaseModel):
     """Metrics related to system performance and resource utilization."""
 
     latency_ms: float = Field(..., ge=0, description="Response latency in milliseconds")
-    throughput_rps: Optional[float] = Field(
+    throughput_rps: float | None = Field(
         None, ge=0, description="Throughput in requests per second"
     )
-    memory_mb: Optional[float] = Field(
+    memory_mb: float | None = Field(
         None, ge=0, description="Memory usage in megabytes"
     )
-    gpu_utilization: Optional[float] = Field(
+    gpu_utilization: float | None = Field(
         None, ge=0, le=1, description="GPU utilization as a fraction (0-1)"
     )
 
@@ -86,13 +86,13 @@ class QualityMetrics(BaseModel):
     content_coverage: float = Field(
         ..., ge=0, le=1, description="Content coverage score (0-1)"
     )
-    factual_accuracy: Optional[float] = Field(
+    factual_accuracy: float | None = Field(
         None, ge=0, le=1, description="Factual accuracy score (0-1)"
     )
-    relevance_score: Optional[float] = Field(
+    relevance_score: float | None = Field(
         None, ge=0, le=1, description="Relevance score (0-1)"
     )
-    human_preference_score: Optional[float] = Field(
+    human_preference_score: float | None = Field(
         None, ge=0, le=1, description="Human preference score (0-1)"
     )
 
@@ -102,29 +102,29 @@ class EvaluationReport(BaseModel):
 
     report_id: str = Field(..., description="Unique identifier for this evaluation report")
     model_id: str = Field(..., description="Identifier for the model being evaluated")
-    dataset_id: Optional[str] = Field(
+    dataset_id: str | None = Field(
         None, description="Identifier for the dataset used in evaluation"
     )
     created_at: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(UTC),
         description="Timestamp when the report was created",
     )
-    token_metrics: Optional[TokenMetrics] = Field(
+    token_metrics: TokenMetrics | None = Field(
         None, description="Token usage metrics"
     )
-    cost_metrics: Optional[CostMetrics] = Field(
+    cost_metrics: CostMetrics | None = Field(
         None, description="Cost metrics"
     )
-    load_metrics: Optional[LoadMetrics] = Field(
+    load_metrics: LoadMetrics | None = Field(
         None, description="Performance and load metrics"
     )
-    quality_metrics: Optional[QualityMetrics] = Field(
+    quality_metrics: QualityMetrics | None = Field(
         None, description="Quality assessment metrics"
     )
-    sample_outputs: Optional[list[dict[str, Any]]] = Field(
+    sample_outputs: list[dict[str, Any]] | None = Field(
         None, description="Sample outputs from the evaluation"
     )
-    notes: Optional[str] = Field(
+    notes: str | None = Field(
         None, description="Additional notes or observations about the evaluation"
     )
     schema_version: str = Field(

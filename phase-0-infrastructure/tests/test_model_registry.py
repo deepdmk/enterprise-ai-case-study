@@ -1,13 +1,13 @@
 """Tests for ModelRegistry."""
 
+
 import pytest
-from pathlib import Path
 
 from registries.model_registry import ModelRegistry
 from registries.schemas import (
-    Phase,
-    ModelType,
     ModelStatus,
+    ModelType,
+    Phase,
     RegisteredModel,
 )
 

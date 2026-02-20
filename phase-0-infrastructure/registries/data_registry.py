@@ -2,21 +2,21 @@
 
 from __future__ import annotations
 
-import json
 import os
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import structlog
 
 from .schemas import (
-    DataType,
     DatasetStatus,
+    DataType,
     Phase,
     RegisteredDataset,
     ValidationResult,
 )
+from .storage import JSONStorage
 
 logger = structlog.get_logger(__name__)
 
@@ -38,35 +38,28 @@ class DataRegistry:
         # Use different file in test mode
         filename = "data_registry_test.json" if test_mode else "data_registry.json"
         self.registry_file = self.data_dir / filename
+        self._storage = JSONStorage(self.registry_file)
 
         self._datasets: dict[str, RegisteredDataset] = {}
         self._load()
 
     def _load(self) -> None:
-        """Load registry from disk."""
-        if self.registry_file.exists():
-            with open(self.registry_file) as f:
-                data = json.load(f)
-                self._datasets = {
-                    dataset_id: RegisteredDataset(**entry)
-                    for dataset_id, entry in data.get("datasets", {}).items()
-                }
-            logger.info("registry_loaded", count=len(self._datasets))
-        else:
-            logger.info("registry_initialized")
+        """Load registry from disk using thread-safe storage."""
+        data = self._storage.load()
+        self._datasets = {
+            dataset_id: RegisteredDataset(**entry)
+            for dataset_id, entry in data.get("datasets", {}).items()
+        }
+        logger.info("registry_loaded", count=len(self._datasets))
 
     def _save(self) -> None:
-        """Save registry to disk."""
-        data = {
-            "version": "1.0",
-            "updated_at": datetime.now(UTC).isoformat(),
+        """Save registry to disk using thread-safe storage."""
+        self._storage.save({
             "datasets": {
                 dataset_id: entry.model_dump()
                 for dataset_id, entry in self._datasets.items()
-            },
-        }
-        with open(self.registry_file, "w") as f:
-            json.dump(data, f, indent=2)
+            }
+        })
         logger.info("registry_saved", count=len(self._datasets))
 
     def register(self, dataset: RegisteredDataset) -> RegisteredDataset:
@@ -163,7 +156,7 @@ class DataRegistry:
 
         logger.info("status_updated", dataset_id=dataset_id, status=status)
 
-    def get_lineage(self, dataset_id: str) -> list[RegisteredDataset]:
+    def get_lineage(self, dataset_id: str) -> list[RegisteredDataset]:  # type: ignore[valid-type]
         """
         Get dataset lineage chain (parent -> grandparent -> ...).
 
@@ -173,16 +166,15 @@ class DataRegistry:
         Returns:
             List of datasets in lineage chain (starting with parent)
         """
-        lineage = []
-        current_id = dataset_id
+        lineage: list[RegisteredDataset] = []
 
         # Get the starting dataset
-        dataset = self._datasets.get(current_id)
+        dataset = self._datasets.get(dataset_id)
         if not dataset:
             return lineage
 
         # Follow parent chain
-        current_id = dataset.parent_dataset_id
+        current_id: str | None = dataset.parent_dataset_id
         while current_id:
             parent = self._datasets.get(current_id)
             if not parent:

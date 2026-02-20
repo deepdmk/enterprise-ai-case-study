@@ -8,7 +8,7 @@ To run this example:
     2. Run: python -m logging.example_usage
 """
 
-from logging import (
+from habitat_logging import (
     LOG_EVENTS,
     configure_logging,
     format_experiment_event,
@@ -83,7 +83,9 @@ def demo_json_logging() -> None:
 
     # Same logs as above, but in JSON format
     logger.info("model_registered", model_id="model_001", framework="pytorch", size_mb=3200)
-    logger.info("model_exported", model_id="model_001", export_path="/exports/model_001.safetensors")
+    logger.info(
+        "model_exported", model_id="model_001", export_path="/exports/model_001.safetensors"
+    )
 
     logger.info(**format_validation_event(
         "validation_passed",

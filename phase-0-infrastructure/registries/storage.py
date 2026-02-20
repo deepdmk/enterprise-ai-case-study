@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import json
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
-from filelock import FileLock
+
 import structlog
+from filelock import FileLock
 
 logger = structlog.get_logger(__name__)
 
@@ -69,7 +70,7 @@ class JSONStorage:
             return {}
 
         try:
-            with open(self.file_path, "r") as f:
+            with open(self.file_path) as f:
                 storage_data = json.load(f)
 
             # Handle legacy format (direct data without metadata wrapper)
@@ -78,9 +79,9 @@ class JSONStorage:
                     "legacy_format_detected",
                     file_path=str(self.file_path),
                 )
-                return storage_data
+                return dict(storage_data)
 
-            return storage_data["data"]
+            return dict(storage_data["data"])
         except json.JSONDecodeError as e:
             logger.error(
                 "json_decode_error",

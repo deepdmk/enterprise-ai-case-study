@@ -2,21 +2,22 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from datetime import datetime, UTC
-from typing import Any
 import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
 import structlog
 
-from .storage import JSONStorage
 from .schemas import (
+    DataCharacteristics,
     ExperimentResult,
     ExperimentStatus,
-    Phase,
-    DataCharacteristics,
     HyperparameterConfig,
+    Phase,
     TrainingMetrics,
 )
+from .storage import JSONStorage
 
 logger = structlog.get_logger(__name__)
 
@@ -82,8 +83,8 @@ class ExperimentTracker:
             )
             raise ValueError(f"Experiment {experiment_id} already exists")
 
-        # Create experiment record
-        experiment = ExperimentResult(
+        # Create experiment record (Pydantic Field defaults handle optional args)
+        experiment = ExperimentResult(  # type: ignore[call-arg]
             experiment_id=experiment_id,
             phase=phase,
             unit=unit,
@@ -444,18 +445,18 @@ class ExperimentTracker:
             status_counts[exp.status] += 1
 
         # Count by phase
-        phase_counts = {}
+        phase_counts: dict[str, int] = {}
         for exp in experiments:
             # exp.phase is already a string due to use_enum_values = True
             phase_counts[exp.phase] = phase_counts.get(exp.phase, 0) + 1
 
         # Count by unit
-        unit_counts = {}
+        unit_counts: dict[str, int] = {}
         for exp in experiments:
             unit_counts[exp.unit] = unit_counts.get(exp.unit, 0) + 1
 
         # Count by task
-        task_counts = {}
+        task_counts: dict[str, int] = {}
         for exp in experiments:
             task_counts[exp.task] = task_counts.get(exp.task, 0) + 1
 

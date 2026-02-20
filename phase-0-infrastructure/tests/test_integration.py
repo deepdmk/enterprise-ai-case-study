@@ -1,22 +1,22 @@
 """Integration tests for cross-registry workflows."""
 
+
 import pytest
-from pathlib import Path
 
 from registries.data_registry import DataRegistry
-from registries.model_registry import ModelRegistry
 from registries.experiment_tracker import ExperimentTracker
+from registries.model_registry import ModelRegistry
 from registries.schemas import (
-    Phase,
-    DataType,
+    DataCharacteristics,
     DatasetStatus,
-    ModelType,
-    ModelStatus,
+    DataType,
     ExperimentStatus,
+    HyperparameterConfig,
+    ModelStatus,
+    ModelType,
+    Phase,
     RegisteredDataset,
     RegisteredModel,
-    DataCharacteristics,
-    HyperparameterConfig,
     TrainingMetrics,
 )
 
@@ -194,7 +194,7 @@ class TestCrossRegistryIntegration:
         experiment_tracker.log_training_metrics(experiment.experiment_id, metrics)
 
         # Step 6: Complete experiment and link to model
-        completed_exp = experiment_tracker.complete_experiment(
+        experiment_tracker.complete_experiment(
             experiment.experiment_id,
             model_id="pipeline_model_v1",
         )
@@ -232,7 +232,9 @@ class TestCrossRegistryIntegration:
         model_lineage = model_registry.get_lineage(model.model_id)
         assert model_lineage["source_dataset_id"] == dataset.dataset_id
 
-    def test_multiple_models_from_same_dataset(self, data_registry, model_registry, temp_storage_dir):
+    def test_multiple_models_from_same_dataset(
+        self, data_registry, model_registry, temp_storage_dir
+    ):
         """Test creating multiple models from the same dataset."""
         # Register dataset
         train_file = temp_storage_dir / "train.jsonl"
@@ -272,7 +274,9 @@ class TestCrossRegistryIntegration:
         source = data_registry.get("shared_dataset")
         assert source is not None
 
-    def test_dataset_parent_child_with_models(self, data_registry, model_registry, temp_storage_dir):
+    def test_dataset_parent_child_with_models(
+        self, data_registry, model_registry, temp_storage_dir
+    ):
         """Test dataset parent-child relationships with model training."""
         # Create parent dataset
         parent_file = temp_storage_dir / "parent.jsonl"

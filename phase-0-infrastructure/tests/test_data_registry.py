@@ -1,14 +1,13 @@
 """Tests for DataRegistry."""
 
+
 import pytest
-import os
-from pathlib import Path
 
 from registries.data_registry import DataRegistry
 from registries.schemas import (
-    Phase,
-    DataType,
     DatasetStatus,
+    DataType,
+    Phase,
     RegisteredDataset,
 )
 
