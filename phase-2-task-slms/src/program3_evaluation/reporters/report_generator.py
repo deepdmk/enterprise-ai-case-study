@@ -1,7 +1,7 @@
 """Report generators for evaluation results."""
 
 import json
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -82,9 +82,9 @@ class JSONReporter:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        report_data = {
+        report_data: dict[str, Any] = {
             "model_id": report.model_id,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "summary": {
                 "num_samples": report.num_samples,
                 "avg_format_compliance": round(report.avg_format_compliance, 4),
@@ -150,7 +150,7 @@ class MarkdownReporter:
         lines = [
             f"# Evaluation Report: {report.model_id}",
             "",
-            f"**Generated:** {datetime.now(UTC).isoformat()}",
+            f"**Generated:** {datetime.now(timezone.utc).isoformat()}",
             "",
             "## Summary",
             "",
@@ -234,7 +234,7 @@ class ComparisonReporter:
         lines = [
             "# Model Comparison Report",
             "",
-            f"**Generated:** {datetime.now(UTC).isoformat()}",
+            f"**Generated:** {datetime.now(timezone.utc).isoformat()}",
             "",
             "## Performance Comparison",
             "",
@@ -252,7 +252,7 @@ class ComparisonReporter:
         lines.append("")
 
         # Section coverage comparison
-        all_sections = set()
+        all_sections: set[str] = set()
         for report in reports:
             all_sections.update(report.section_coverage.keys())
 
@@ -302,25 +302,25 @@ def generate_evaluation_report(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     formats = formats or ["json", "md", "phase0"]
-    paths = {}
+    paths: dict[str, Path] = {}
 
     if "json" in formats:
-        reporter = JSONReporter()
-        paths["json"] = reporter.generate(
+        json_reporter = JSONReporter()
+        paths["json"] = json_reporter.generate(
             report,
             output_dir / "evaluation_report.json",
         )
 
     if "md" in formats:
-        reporter = MarkdownReporter()
-        paths["md"] = reporter.generate(
+        md_reporter = MarkdownReporter()
+        paths["md"] = md_reporter.generate(
             report,
             output_dir / "evaluation_report.md",
         )
 
     if "phase0" in formats:
-        reporter = Phase0Reporter()
-        paths["phase0"] = reporter.generate(
+        phase0_reporter = Phase0Reporter()
+        paths["phase0"] = phase0_reporter.generate(
             report,
             output_dir / "evaluation_report_phase0.json",
             report_id=report_id,

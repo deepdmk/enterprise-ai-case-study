@@ -106,6 +106,8 @@ class LoRATrainingArgs:
 
     def to_lora_config(self) -> LoRAConfig:
         """Convert to LoRAConfig for model_loader."""
+        # target_modules is guaranteed non-None after __post_init__
+        assert self.target_modules is not None, "target_modules should be set by __post_init__"
         return LoRAConfig(
             r=self.r,
             lora_alpha=self.lora_alpha,

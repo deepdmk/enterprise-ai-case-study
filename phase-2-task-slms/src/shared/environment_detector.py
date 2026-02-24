@@ -74,7 +74,7 @@ def detect_mps() -> bool:
     try:
         import torch
 
-        return torch.backends.mps.is_available()
+        return bool(torch.backends.mps.is_available())
     except (ImportError, AttributeError):
         return False
 

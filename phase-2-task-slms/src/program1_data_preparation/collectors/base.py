@@ -217,8 +217,9 @@ class DirectoryCollector(DataCollector):
         if not self.directory.exists():
             raise FileNotFoundError(f"Directory not found: {self.directory}")
 
-        all_examples = []
+        all_examples: list[dict[str, Any]] = []
         for file_path in self.directory.glob(self.pattern):
+            collector: DataCollector
             if file_path.suffix == ".jsonl":
                 collector = JSONLCollector(
                     file_path, self.input_key, self.output_key

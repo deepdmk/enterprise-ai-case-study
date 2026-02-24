@@ -33,6 +33,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.3.0",
     "mypy>=1.8.0",
+    "types-PyYAML>=6.0.0",
 ]
 cuda = [
     "bitsandbytes>=0.41.0",

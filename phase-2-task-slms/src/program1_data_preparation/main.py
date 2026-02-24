@@ -3,6 +3,7 @@
 import argparse
 import sys
 from pathlib import Path
+from typing import Any
 
 from tqdm import tqdm
 
@@ -333,7 +334,7 @@ def prepare_all_units(
     Returns:
         Nested dictionary with statistics per unit and task
     """
-    all_stats = {}
+    all_stats: dict[str, dict[str, Any]] = {}
 
     # Use tqdm for progress indication when processing multiple units
     unit_progress = tqdm(

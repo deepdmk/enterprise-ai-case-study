@@ -2,7 +2,7 @@
 
 import json
 import shutil
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -93,7 +93,7 @@ class ModelExporter:
             "positive_prompts": entry.positive_prompts,
             "negative_prompts": entry.negative_prompts,
             "metrics": entry.metrics.model_dump() if entry.metrics else None,
-            "exported_at": datetime.now(UTC).isoformat(),
+            "exported_at": datetime.now(timezone.utc).isoformat(),
             "model_path": str(export_model_dir),
         }
 
@@ -160,7 +160,7 @@ class ModelExporter:
         # Create unit manifest
         unit_manifest = {
             "unit_id": unit_id,
-            "exported_at": datetime.now(UTC).isoformat(),
+            "exported_at": datetime.now(timezone.utc).isoformat(),
             "num_models": len(exported),
             "models": exported,
         }
@@ -216,7 +216,7 @@ class ModelExporter:
 
         # Create master manifest
         master_manifest = {
-            "exported_at": datetime.now(UTC).isoformat(),
+            "exported_at": datetime.now(timezone.utc).isoformat(),
             "base_model": self.settings.model.base_model,
             "units": unit_exports,
             "moe_config_path": str(output_dir / "moe_config.yaml"),

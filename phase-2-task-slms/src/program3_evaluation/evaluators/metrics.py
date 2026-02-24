@@ -3,7 +3,7 @@
 import re
 import time
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -176,7 +176,7 @@ class EvaluationReport:
             report_id=report_id or f"phase2_eval_{uuid4().hex[:8]}",
             model_id=self.model_id,
             dataset_id=dataset_id,
-            created_at=datetime.now(UTC),
+            created_at=datetime.now(timezone.utc),
             token_metrics=avg_token_metrics,
             cost_metrics=None,  # Not tracked in phase-2
             load_metrics=avg_load_metrics,
@@ -513,7 +513,7 @@ class TaskSLMEvaluator:
         avg_tps = sum(r.tokens_per_second for r in results) / len(results)
 
         # Section coverage
-        all_sections = set()
+        all_sections: set[str] = set()
         for r in results:
             all_sections.update(r.section_scores.keys())
 

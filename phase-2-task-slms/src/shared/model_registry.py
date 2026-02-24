@@ -4,7 +4,7 @@ This module provides backward-compatible access to the centralized Phase 0 model
 It wraps the Phase 0 ModelRegistry with the Phase 2 API for seamless migration.
 """
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -71,8 +71,8 @@ class ModelEntry(BaseModel):
     unit_id: str  # Maps to RegisteredModel.unit
     task_id: str  # Maps to RegisteredModel.task
     version: str
-    created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
-    updated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     adapter_path: str
     base_model: str
     status: str = "trained"  # trained, evaluated, exported, archived
@@ -90,9 +90,9 @@ class ModelEntry(BaseModel):
         version = f"v{model.model_id.split('_v')[-1]}" if "_v" in model.model_id else "v1"
 
         # Extract metrics from tags
-        metrics_dict = {}
-        training_config_dict = {}
-        other_tags = []
+        metrics_dict: dict[str, float] = {}
+        training_config_dict: dict[str, int | float | str] = {}
+        other_tags: list[str] = []
 
         for tag in model.tags:
             if tag.startswith("metric:"):
@@ -133,16 +133,17 @@ class ModelEntry(BaseModel):
 
         # Create training config if we have the required fields
         training_config = None
-        if all(k in training_config_dict for k in ["epochs", "batch_size", "learning_rate", "lora_r", "lora_alpha", "train_samples", "val_samples"]):
+        required_keys = ["epochs", "batch_size", "learning_rate", "lora_r", "lora_alpha", "train_samples", "val_samples"]
+        if all(k in training_config_dict for k in required_keys):
             training_config = TrainingConfig(
-                epochs=training_config_dict["epochs"],
-                batch_size=training_config_dict["batch_size"],
-                learning_rate=training_config_dict["learning_rate"],
-                lora_r=training_config_dict["lora_r"],
-                lora_alpha=training_config_dict["lora_alpha"],
-                base_model=training_config_dict.get("base_model", model.base_model),
-                train_samples=training_config_dict["train_samples"],
-                val_samples=training_config_dict["val_samples"],
+                epochs=int(training_config_dict["epochs"]),
+                batch_size=int(training_config_dict["batch_size"]),
+                learning_rate=float(training_config_dict["learning_rate"]),
+                lora_r=int(training_config_dict["lora_r"]),
+                lora_alpha=int(training_config_dict["lora_alpha"]),
+                base_model=str(training_config_dict.get("base_model", model.base_model)),
+                train_samples=int(training_config_dict["train_samples"]),
+                val_samples=int(training_config_dict["val_samples"]),
             )
 
         return cls(

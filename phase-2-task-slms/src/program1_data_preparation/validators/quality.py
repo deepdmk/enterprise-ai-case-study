@@ -82,8 +82,8 @@ class DataValidator:
         Returns:
             ValidationResult with errors and warnings
         """
-        errors = []
-        warnings = []
+        errors: list[str] = []
+        warnings: list[str] = []
 
         input_text = example.get("input", "")
         output_text = example.get("output", "")
@@ -192,16 +192,25 @@ class DataValidator:
 
 
 class DuplicateDetector:
-    """Detect and remove duplicate examples."""
+    """Detect and remove duplicate examples.
+
+    Currently implements exact hash-based deduplication. The similarity_threshold
+    parameter is reserved for future fuzzy/near-duplicate detection using techniques
+    like MinHash, SimHash, or embedding similarity.
+    """
 
     def __init__(self, similarity_threshold: float = 0.95):
         """
         Initialize duplicate detector.
 
         Args:
-            similarity_threshold: Threshold for considering examples duplicates
+            similarity_threshold: Threshold for considering examples duplicates.
+                Currently unused - only exact matching is implemented.
+                Reserved for future fuzzy matching implementation.
         """
-        self.similarity_threshold = similarity_threshold
+        # Note: similarity_threshold is stored for API compatibility but currently unused.
+        # Only exact hash-based deduplication is implemented.
+        self._similarity_threshold = similarity_threshold
         self._seen_hashes: set[int] = set()
 
     def _hash_example(self, example: dict[str, Any]) -> int:

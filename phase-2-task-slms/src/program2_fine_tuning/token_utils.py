@@ -10,13 +10,21 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from habitat_logging import get_logger
+from src.shared.data_formatter import (
+    CHAT_TEMPLATES,
+    get_default_template,
+)
 
 logger = get_logger(__name__)
 
-# ChatML special tokens used in Llama 3.1 format
-CHATML_ASSISTANT_MARKERS = [
-    "<|start_header_id|>assistant<|end_header_id|>",
-]
+
+def _get_assistant_markers() -> list[str]:
+    """Get all known assistant start markers from configured templates."""
+    markers = []
+    for template in CHAT_TEMPLATES.values():
+        if template.assistant_start and template.assistant_start not in markers:
+            markers.append(template.assistant_start)
+    return markers
 
 
 def calculate_token_lengths(
@@ -111,17 +119,19 @@ def _split_input_output_tokens(
     """
     total = len(tokens)
 
-    # Try to find assistant response marker in text
+    # Try to find assistant response marker in text using template markers
     assistant_start = -1
-    for marker in CHATML_ASSISTANT_MARKERS:
+    assistant_markers = _get_assistant_markers()
+
+    for marker in assistant_markers:
         pos = text.find(marker)
         if pos != -1:
             assistant_start = pos + len(marker)
             break
 
     if assistant_start == -1:
-        # Fallback markers for other formats
-        for marker in ["### Response:", "### Output:", "[/INST]", "ASSISTANT:"]:
+        # Fallback markers for other formats not in templates
+        for marker in ["### Response:", "### Output:", "ASSISTANT:"]:
             pos = text.find(marker)
             if pos != -1:
                 assistant_start = pos + len(marker)
