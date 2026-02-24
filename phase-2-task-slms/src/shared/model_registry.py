@@ -4,15 +4,16 @@ This module provides backward-compatible access to the centralized Phase 0 model
 It wraps the Phase 0 ModelRegistry with the Phase 2 API for seamless migration.
 """
 
-import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
 
 # Import from Phase 0
 from habitat_logging import get_logger
@@ -70,8 +71,8 @@ class ModelEntry(BaseModel):
     unit_id: str  # Maps to RegisteredModel.unit
     task_id: str  # Maps to RegisteredModel.task
     version: str
-    created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
-    updated_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     adapter_path: str
     base_model: str
     status: str = "trained"  # trained, evaluated, exported, archived

@@ -12,20 +12,16 @@ Then run without --test-mode flag:
 """
 
 import random
-import sys
 from pathlib import Path
 from typing import Any
 
-# Ensure phase-2 config is found first
-_phase2_root = Path(__file__).parent.parent.parent
-if str(_phase2_root) not in sys.path:
-    sys.path.insert(0, str(_phase2_root))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
 from config.settings import TaskDefinition
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(_phase2_root.parent / "phase-0-infrastructure"))
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

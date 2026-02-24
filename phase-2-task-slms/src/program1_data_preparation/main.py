@@ -4,14 +4,15 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add parent directory to path for imports - MUST BE FIRST for correct config resolution
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from tqdm import tqdm
 
-# Import local config BEFORE adding phase-0 to path
+# Configure paths once at module load - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
 from config.settings import Settings, get_settings, load_task_definitions
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import configure_logging, get_logger
 from registries.data_registry import DataRegistry
 from registries.schemas import DataType, Phase, RegisteredDataset
@@ -72,7 +73,16 @@ def prepare_task_data(
 
     stats = {}
 
-    for task in tasks:
+    # Use tqdm for progress indication on long-running operations
+    task_progress = tqdm(
+        tasks,
+        desc=f"Preparing {unit_id} tasks",
+        unit="task",
+        disable=len(tasks) <= 1,  # Disable for single task
+    )
+
+    for task in task_progress:
+        task_progress.set_postfix(task=task.id)
         logger.info(
             "preparing_task_data",
             unit=unit_id,
@@ -230,15 +240,55 @@ def _generate_mock_data(
         return examples
 
     except ValueError as e:
-        logger.warning("mock_generation_failed", error=str(e))
-        # Return minimal examples for testing
+        error_msg = str(e)
+        # Distinguish between expected (no template) vs unexpected errors
+        is_missing_template = "template" in error_msg.lower() or "not found" in error_msg.lower()
+
+        if is_missing_template:
+            logger.warning(
+                "mock_generation_no_template",
+                unit=unit_id,
+                task=task_id,
+                error=error_msg,
+                fallback="Using generic test data - add templates for realistic mock data",
+            )
+        else:
+            # Unexpected error - log at error level with full context
+            logger.error(
+                "mock_generation_failed",
+                unit=unit_id,
+                task=task_id,
+                error=error_msg,
+                error_type=type(e).__name__,
+                fallback="Using generic test data due to unexpected error",
+            )
+
+        # Return minimal examples for testing with clear indication they are fallback data
+        print(f"\n  Warning: Using fallback mock data for {unit_id}/{task_id}")
+        print(f"  Reason: {error_msg}")
+        print(f"  For better mock data, add templates to MOCK_TEMPLATES in mock_data_generator.py\n")
+
         return [
             {
-                "input": f"Test input for {task_id} task {i}",
-                "output": f"Test output for {task_id} task {i}. This is sample content.",
+                "input": f"[FALLBACK] Test input for {task_id} task {i}: Analyze this sample request.",
+                "output": f"[FALLBACK] Test output for {task_id} task {i}. This is generic sample content "
+                          f"generated because no specific template was found for {unit_id}/{task_id}. "
+                          f"For production, use real training data.",
             }
             for i in range(num_samples)
         ]
+    except Exception as e:
+        # Catch any other unexpected errors and fail loudly in non-test scenarios
+        logger.error(
+            "mock_generation_unexpected_error",
+            unit=unit_id,
+            task=task_id,
+            error=str(e),
+            error_type=type(e).__name__,
+        )
+        raise RuntimeError(
+            f"Unexpected error during mock data generation for {unit_id}/{task_id}: {e}"
+        ) from e
 
 
 def _collect_real_data(
@@ -285,7 +335,16 @@ def prepare_all_units(
     """
     all_stats = {}
 
-    for unit_config in settings.units:
+    # Use tqdm for progress indication when processing multiple units
+    unit_progress = tqdm(
+        settings.units,
+        desc="Preparing units",
+        unit="unit",
+        disable=len(settings.units) <= 1,  # Disable for single unit
+    )
+
+    for unit_config in unit_progress:
+        unit_progress.set_postfix(unit=unit_config.id)
         logger.info("preparing_unit", unit=unit_config.id)
         try:
             unit_stats = prepare_task_data(
@@ -339,6 +398,29 @@ def main():
         format=settings.logging.format if hasattr(settings.logging, 'format') else "console"
     )
 
+    # Validate unit and task IDs early before processing
+    base_path = Path(__file__).parent.parent.parent
+    if args.unit:
+        valid_units = [u.id for u in settings.units]
+        if args.unit not in valid_units:
+            print(f"\nError: Invalid unit '{args.unit}'")
+            print(f"Available units: {', '.join(valid_units)}")
+            sys.exit(1)
+
+        # Validate task ID if specified
+        if args.task:
+            unit_config = next(u for u in settings.units if u.id == args.unit)
+            try:
+                unit_def = load_task_definitions(unit_config.tasks_file, base_path)
+                valid_tasks = [t.id for t in unit_def.tasks]
+                if args.task not in valid_tasks:
+                    print(f"\nError: Invalid task '{args.task}' for unit '{args.unit}'")
+                    print(f"Available tasks: {', '.join(valid_tasks)}")
+                    sys.exit(1)
+            except FileNotFoundError as e:
+                print(f"\nError: Could not load task definitions: {e}")
+                sys.exit(1)
+
     logger.info(
         "data_preparation_started",
         test_mode=args.test_mode,
@@ -347,7 +429,6 @@ def main():
     )
 
     # Initialize data registry
-    base_path = Path(__file__).parent.parent.parent
     data_dir = base_path / settings.paths.data_dir
     data_registry = DataRegistry(data_dir=data_dir, test_mode=args.test_mode)
 

@@ -2,17 +2,15 @@
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
 from config.settings import Settings, get_settings, load_task_definitions
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import configure_logging, get_logger
 from src.program4_model_registry.exporter import ModelExporter, create_routing_embeddings
 from src.shared.model_registry import (

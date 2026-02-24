@@ -5,11 +5,50 @@ import sys
 from pathlib import Path
 from dataclasses import dataclass, field
 
-# Add phase-0-infrastructure and parent to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+import pytest
+
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
 
 from src.program3_evaluation.evaluators.metrics import EvaluationResult, EvaluationReport
+
+
+@pytest.fixture
+def phase0_report():
+    """Fixture providing a phase0 report for testing."""
+    results = [
+        EvaluationResult(
+            input_text=f"Sample input {i}",
+            expected_output=f"Expected output {i}",
+            generated_output=f"Generated output {i} with some content",
+            format_compliance=0.90 + (i * 0.01),
+            content_coverage=0.85 + (i * 0.02),
+            latency_ms=150.0 + (i * 10),
+            tokens_generated=40 + i,
+            tokens_per_second=250.0 + (i * 5),
+            section_scores={"section_1": True, "section_2": i % 2 == 0},
+        )
+        for i in range(5)
+    ]
+
+    report = EvaluationReport(
+        model_id="fundraising/portfolio_analysis_v1",
+        num_samples=5,
+        avg_format_compliance=0.92,
+        avg_content_coverage=0.89,
+        avg_latency_ms=170.0,
+        avg_tokens_per_second=262.5,
+        section_coverage={"section_1": 1.0, "section_2": 0.6},
+        results=results,
+        metadata={"unit_id": "fundraising", "task_id": "portfolio_analysis"},
+    )
+
+    return report.to_phase0_report(
+        report_id="test_eval_001",
+        dataset_id="fundraising/portfolio_analysis_eval",
+    )
 
 
 def test_evaluation_result_conversion():
@@ -50,7 +89,8 @@ def test_evaluation_result_conversion():
     print(f"  - Format compliance: {quality_metrics.format_compliance:.2%}")
     print(f"  - Content coverage:  {quality_metrics.content_coverage:.2%}")
 
-    return True
+    assert token_metrics.output_tokens == 42
+    assert load_metrics.latency_ms == 156.3
 
 
 def test_evaluation_report_conversion():
@@ -112,7 +152,8 @@ def test_evaluation_report_conversion():
 
     print(f"\n✓ Sample outputs:  {len(phase0_report.sample_outputs)} samples")
 
-    return phase0_report
+    assert phase0_report.report_id == "test_eval_001"
+    assert phase0_report.model_id == "fundraising/portfolio_analysis_v1"
 
 
 def test_json_serialization(phase0_report):
@@ -140,7 +181,7 @@ def test_json_serialization(phase0_report):
     print(f"\n✓ Successfully deserialized")
     print(f"  - Report ID matches: {reloaded.report_id == phase0_report.report_id}")
 
-    return True
+    assert reloaded.report_id == phase0_report.report_id
 
 
 def test_cross_phase_comparison():
@@ -219,7 +260,9 @@ def test_cross_phase_comparison():
 
     print(f"\n✓ Standardized schemas enable direct cross-phase comparison")
 
-    return True
+    # Verify improvements (phase-3 should be better)
+    assert phase3_report.quality_metrics.format_compliance > phase2_report.quality_metrics.format_compliance
+    assert phase3_report.load_metrics.latency_ms < phase2_report.load_metrics.latency_ms
 
 
 def main():
@@ -231,7 +274,39 @@ def main():
     try:
         # Run tests
         test_evaluation_result_conversion()
-        phase0_report = test_evaluation_report_conversion()
+        test_evaluation_report_conversion()
+
+        # Create phase0_report for json serialization test
+        from src.program3_evaluation.evaluators.metrics import EvaluationResult, EvaluationReport
+        results = [
+            EvaluationResult(
+                input_text=f"Sample input {i}",
+                expected_output=f"Expected output {i}",
+                generated_output=f"Generated output {i} with some content",
+                format_compliance=0.90 + (i * 0.01),
+                content_coverage=0.85 + (i * 0.02),
+                latency_ms=150.0 + (i * 10),
+                tokens_generated=40 + i,
+                tokens_per_second=250.0 + (i * 5),
+                section_scores={"section_1": True, "section_2": i % 2 == 0},
+            )
+            for i in range(5)
+        ]
+        report = EvaluationReport(
+            model_id="fundraising/portfolio_analysis_v1",
+            num_samples=5,
+            avg_format_compliance=0.92,
+            avg_content_coverage=0.89,
+            avg_latency_ms=170.0,
+            avg_tokens_per_second=262.5,
+            section_coverage={"section_1": 1.0, "section_2": 0.6},
+            results=results,
+            metadata={"unit_id": "fundraising", "task_id": "portfolio_analysis"},
+        )
+        phase0_report = report.to_phase0_report(
+            report_id="test_eval_001",
+            dataset_id="fundraising/portfolio_analysis_eval",
+        )
         test_json_serialization(phase0_report)
         test_cross_phase_comparison()
 

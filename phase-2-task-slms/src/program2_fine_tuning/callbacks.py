@@ -1,13 +1,16 @@
 """Training callbacks for fine-tuning."""
 
 import json
-import sys
 import time
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
+
+# Now import from phase-0-infrastructure
 from habitat_logging import get_logger
 
 from transformers import TrainerCallback, TrainerControl, TrainerState, TrainingArguments

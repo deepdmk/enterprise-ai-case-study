@@ -1,19 +1,21 @@
 """Unsloth-based trainer for fast fine-tuning on Linux/CUDA."""
 
-import sys
 from pathlib import Path
 from typing import Any
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
-from config.settings import Settings
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
+from config.settings import Settings
 from habitat_logging import get_logger
 
 from datasets import Dataset
 from src.program2_fine_tuning.callbacks import get_training_callbacks
 from src.program2_fine_tuning.lora_config import LoRATrainingArgs
+from src.program2_fine_tuning.token_utils import calculate_token_lengths
 
 logger = get_logger(__name__)
 
@@ -250,6 +252,29 @@ def train_with_unsloth(
     """
     trainer = UnslothTrainer(settings)
     trainer.load_model(base_model)
+
+    # Calculate actual token lengths now that tokenizer is available
+    if experiment_tracker and experiment_id:
+        from registries.schemas import DataCharacteristics
+
+        avg_input, avg_output, avg_total = calculate_token_lengths(
+            train_dataset,
+            trainer.tokenizer,
+            max_samples=500,  # Sample for performance on large datasets
+        )
+        characteristics = DataCharacteristics(
+            num_samples=len(train_dataset),
+            avg_input_length=avg_input,
+            avg_output_length=avg_output,
+        )
+        experiment_tracker.log_data_characteristics(experiment_id, characteristics)
+        logger.info(
+            "data_characteristics_logged",
+            num_samples=len(train_dataset),
+            avg_input_tokens=round(avg_input, 1),
+            avg_output_tokens=round(avg_output, 1),
+        )
+
     metrics = trainer.train(
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,

@@ -1,20 +1,99 @@
 """Model loader abstraction for Unsloth and HuggingFace backends."""
 
-import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 import torch
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
-from config.settings import LoRAConfig, ModelConfig, Settings
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
+from config.settings import LoRAConfig, ModelConfig, Settings
 from habitat_logging import get_logger
 from src.shared.environment_detector import detect_environment, get_device, get_dtype
 
 logger = get_logger(__name__)
+
+
+# ============================================================================
+# TYPE PROTOCOLS
+# ============================================================================
+# These protocols define the expected interfaces for models and tokenizers,
+# providing better type hints than using 'Any' while remaining compatible
+# with both Unsloth and HuggingFace implementations.
+
+
+@runtime_checkable
+class TokenizerProtocol(Protocol):
+    """Protocol for tokenizer objects (HuggingFace/Unsloth compatible)."""
+
+    pad_token: str | None
+    eos_token: str
+    pad_token_id: int | None
+
+    def __call__(
+        self,
+        text: str | list[str],
+        return_tensors: str | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Tokenize text input."""
+        ...
+
+    def decode(
+        self,
+        token_ids: Any,
+        skip_special_tokens: bool = False,
+        **kwargs: Any,
+    ) -> str:
+        """Decode token IDs back to text."""
+        ...
+
+    def save_pretrained(self, save_directory: str, **kwargs: Any) -> None:
+        """Save tokenizer to directory."""
+        ...
+
+
+@runtime_checkable
+class CausalLMProtocol(Protocol):
+    """Protocol for causal language model objects (HuggingFace/Unsloth compatible)."""
+
+    def generate(
+        self,
+        input_ids: Any = None,
+        max_new_tokens: int | None = None,
+        temperature: float | None = None,
+        top_p: float | None = None,
+        do_sample: bool | None = None,
+        pad_token_id: int | None = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Generate text given input tokens."""
+        ...
+
+    def save_pretrained(self, save_directory: str, **kwargs: Any) -> None:
+        """Save model to directory."""
+        ...
+
+    def eval(self) -> "CausalLMProtocol":
+        """Set model to evaluation mode."""
+        ...
+
+
+@runtime_checkable
+class PeftModelProtocol(CausalLMProtocol, Protocol):
+    """Protocol for PEFT models with LoRA adapters."""
+
+    def merge_and_unload(self) -> CausalLMProtocol:
+        """Merge LoRA weights and return base model."""
+        ...
+
+
+# Type aliases for common return types
+ModelTokenizerPair = tuple[CausalLMProtocol, TokenizerProtocol]
 
 
 class ModelLoader:
@@ -37,7 +116,7 @@ class ModelLoader:
         self,
         model_config: ModelConfig | None = None,
         force_backend: str | None = None,
-    ) -> tuple[Any, Any]:
+    ) -> ModelTokenizerPair:
         """
         Load the base model and tokenizer.
 
@@ -46,7 +125,7 @@ class ModelLoader:
             force_backend: Force a specific backend ('unsloth' or 'transformers').
 
         Returns:
-            Tuple of (model, tokenizer)
+            Tuple of (model, tokenizer) - both implement their respective protocols
         """
         config = model_config or self.settings.model
         backend = force_backend or self.env_info.recommended_backend
@@ -71,7 +150,7 @@ class ModelLoader:
         logger.info("model_loaded", backend=self._backend)
         return model, tokenizer
 
-    def _load_with_unsloth(self, config: ModelConfig) -> tuple[Any, Any]:
+    def _load_with_unsloth(self, config: ModelConfig) -> ModelTokenizerPair:
         """Load model using Unsloth (fast path)."""
         try:
             from unsloth import FastLanguageModel
@@ -87,8 +166,24 @@ class ModelLoader:
             logger.warning("unsloth_import_failed", error=str(e))
             return self._load_with_transformers(config)
 
-    def _load_with_transformers(self, config: ModelConfig) -> tuple[Any, Any]:
-        """Load model using HuggingFace Transformers (fallback path)."""
+    def _load_with_transformers(self, config: ModelConfig) -> ModelTokenizerPair:
+        """Load model using HuggingFace Transformers (fallback path).
+
+        Security Note:
+            This method uses trust_remote_code=True which allows executing
+            custom code from the model repository. This is necessary for some
+            models (e.g., Llama with custom tokenization) but poses a security
+            risk if loading untrusted models.
+
+            ONLY load models from trusted sources (e.g., official Hugging Face
+            repos, verified organizations). Never load models from unknown
+            sources in production environments.
+
+            For maximum security in production:
+            1. Audit model code before deployment
+            2. Use models without custom code when possible
+            3. Run model loading in sandboxed environments
+        """
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
         # Configure quantization if requested
@@ -101,9 +196,22 @@ class ModelLoader:
                 bnb_4bit_quant_type="nf4",
             )
 
+        # Get trust_remote_code setting from config (default True for backward compatibility)
+        trust_remote_code = getattr(config, 'trust_remote_code', True)
+
+        # SECURITY WARNING: trust_remote_code allows arbitrary code execution
+        # from the model repository. Only use with models from trusted sources.
+        # See docstring above for security recommendations.
+        if trust_remote_code:
+            logger.info(
+                "loading_model_with_remote_code",
+                model=config.base_model,
+                warning="trust_remote_code=True - only load from trusted sources",
+            )
+
         tokenizer = AutoTokenizer.from_pretrained(
             config.base_model,
-            trust_remote_code=True,
+            trust_remote_code=trust_remote_code,
         )
 
         # Ensure tokenizer has padding token
@@ -115,25 +223,25 @@ class ModelLoader:
             quantization_config=quantization_config,
             device_map="auto" if self.env_info.has_cuda else None,
             torch_dtype=get_dtype(),
-            trust_remote_code=True,
+            trust_remote_code=trust_remote_code,
         )
 
         return model, tokenizer
 
     def apply_lora(
         self,
-        model: Any,
+        model: CausalLMProtocol,
         lora_config: LoRAConfig | None = None,
-    ) -> Any:
+    ) -> PeftModelProtocol:
         """
         Apply LoRA adapters to the model.
 
         Args:
-            model: The base model
+            model: The base model implementing CausalLMProtocol
             lora_config: LoRA configuration. Uses settings default if not provided.
 
         Returns:
-            Model with LoRA adapters applied
+            Model with LoRA adapters applied (implements PeftModelProtocol)
         """
         config = lora_config or self.settings.lora
 
@@ -152,7 +260,7 @@ class ModelLoader:
 
         return model
 
-    def _apply_lora_unsloth(self, model: Any, config: LoRAConfig) -> Any:
+    def _apply_lora_unsloth(self, model: CausalLMProtocol, config: LoRAConfig) -> PeftModelProtocol:
         """Apply LoRA using Unsloth."""
         from unsloth import FastLanguageModel
 
@@ -167,7 +275,7 @@ class ModelLoader:
         )
         return model
 
-    def _apply_lora_peft(self, model: Any, config: LoRAConfig) -> Any:
+    def _apply_lora_peft(self, model: CausalLMProtocol, config: LoRAConfig) -> PeftModelProtocol:
         """Apply LoRA using PEFT."""
         from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
@@ -191,7 +299,7 @@ class ModelLoader:
         adapter_path: str | Path,
         base_model: str | None = None,
         merge_adapter: bool = False,
-    ) -> tuple[Any, Any]:
+    ) -> ModelTokenizerPair:
         """
         Load a trained adapter for inference.
 
@@ -201,7 +309,7 @@ class ModelLoader:
             merge_adapter: Whether to merge the adapter into the base model
 
         Returns:
-            Tuple of (model, tokenizer)
+            Tuple of (model, tokenizer) implementing their respective protocols
         """
         adapter_path = Path(adapter_path)
         base_model = base_model or self.settings.model.base_model
@@ -222,7 +330,7 @@ class ModelLoader:
         self,
         adapter_path: Path,
         merge_adapter: bool,
-    ) -> tuple[Any, Any]:
+    ) -> ModelTokenizerPair:
         """Load adapter for inference using Unsloth."""
         from unsloth import FastLanguageModel
 
@@ -246,7 +354,7 @@ class ModelLoader:
         adapter_path: Path,
         base_model: str,
         merge_adapter: bool,
-    ) -> tuple[Any, Any]:
+    ) -> ModelTokenizerPair:
         """Load adapter for inference using PEFT."""
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -281,8 +389,8 @@ class ModelLoader:
 
     def save_adapter(
         self,
-        model: Any,
-        tokenizer: Any,
+        model: PeftModelProtocol | CausalLMProtocol,
+        tokenizer: TokenizerProtocol,
         output_path: str | Path,
         save_merged: bool = False,
     ) -> Path:
@@ -290,8 +398,8 @@ class ModelLoader:
         Save the trained LoRA adapter.
 
         Args:
-            model: The trained model with LoRA adapter
-            tokenizer: The tokenizer
+            model: The trained model with LoRA adapter (PeftModelProtocol or CausalLMProtocol)
+            tokenizer: The tokenizer implementing TokenizerProtocol
             output_path: Directory to save the adapter
             save_merged: Whether to save the merged model (larger file)
 
@@ -328,8 +436,8 @@ class ModelLoader:
 
     def generate(
         self,
-        model: Any,
-        tokenizer: Any,
+        model: CausalLMProtocol,
+        tokenizer: TokenizerProtocol,
         prompt: str,
         max_new_tokens: int = 512,
         temperature: float = 0.7,
@@ -339,8 +447,8 @@ class ModelLoader:
         Generate text using the model.
 
         Args:
-            model: The model (with or without LoRA)
-            tokenizer: The tokenizer
+            model: The model implementing CausalLMProtocol (with or without LoRA)
+            tokenizer: The tokenizer implementing TokenizerProtocol
             prompt: Input prompt
             max_new_tokens: Maximum tokens to generate
             temperature: Sampling temperature

@@ -2,16 +2,17 @@
 
 import json
 import shutil
-import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
-from config.settings import Settings
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
+from config.settings import Settings
 from habitat_logging import get_logger
 from src.shared.model_loader import ModelLoader
 from src.shared.model_registry import ModelEntry, ModelRegistry
@@ -92,7 +93,7 @@ class ModelExporter:
             "positive_prompts": entry.positive_prompts,
             "negative_prompts": entry.negative_prompts,
             "metrics": entry.metrics.model_dump() if entry.metrics else None,
-            "exported_at": datetime.utcnow().isoformat(),
+            "exported_at": datetime.now(UTC).isoformat(),
             "model_path": str(export_model_dir),
         }
 
@@ -159,7 +160,7 @@ class ModelExporter:
         # Create unit manifest
         unit_manifest = {
             "unit_id": unit_id,
-            "exported_at": datetime.utcnow().isoformat(),
+            "exported_at": datetime.now(UTC).isoformat(),
             "num_models": len(exported),
             "models": exported,
         }
@@ -215,7 +216,7 @@ class ModelExporter:
 
         # Create master manifest
         master_manifest = {
-            "exported_at": datetime.utcnow().isoformat(),
+            "exported_at": datetime.now(UTC).isoformat(),
             "base_model": self.settings.model.base_model,
             "units": unit_exports,
             "moe_config_path": str(output_dir / "moe_config.yaml"),

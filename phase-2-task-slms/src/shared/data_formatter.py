@@ -1,15 +1,20 @@
 """Data formatters for ChatML and instruction formats."""
 
 import json
-import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
+
+# Now import from phase-0-infrastructure
 from habitat_logging import get_logger
 
-from datasets import Dataset
+# Lazy import for Dataset to avoid heavy dependencies at module load time
+if TYPE_CHECKING:
+    from datasets import Dataset
 
 logger = get_logger(__name__)
 
@@ -121,7 +126,7 @@ def create_conversation_dataset(
     system_prompt: str,
     input_key: str = "input",
     output_key: str = "output",
-) -> Dataset:
+) -> "Dataset":
     """
     Create a HuggingFace Dataset from examples.
 
@@ -134,6 +139,8 @@ def create_conversation_dataset(
     Returns:
         HuggingFace Dataset ready for training
     """
+    from datasets import Dataset  # Lazy import to avoid heavy dependency at module load
+
     formatted = format_for_training(examples, system_prompt, input_key, output_key)
     return Dataset.from_list(formatted)
 
@@ -336,7 +343,7 @@ class DataFormatter:
         examples: list[dict[str, Any]],
         input_key: str = "input",
         output_key: str = "output",
-    ) -> Dataset:
+    ) -> "Dataset":
         """Create a HuggingFace Dataset from examples."""
         return create_conversation_dataset(
             examples=examples,

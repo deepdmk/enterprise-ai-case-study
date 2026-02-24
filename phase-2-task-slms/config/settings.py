@@ -41,12 +41,23 @@ class LoRAConfig(BaseModel):
 
 
 class ModelConfig(BaseModel):
-    """Base model configuration."""
+    """Base model configuration.
+
+    Security Note:
+        The `trust_remote_code` setting allows models to execute custom Python
+        code from the Hugging Face Hub. This is required for some models but
+        poses security risks. Only enable for trusted model sources.
+    """
 
     base_model: str = "unsloth/Meta-Llama-3.1-8B-bnb-4bit"
     max_seq_length: int = 2048
     dtype: str | None = None
     load_in_4bit: bool = True
+    # SECURITY: Set to False if loading models from untrusted sources
+    trust_remote_code: bool = Field(
+        default=True,
+        description="Allow executing custom code from model repos. SECURITY RISK - only enable for trusted sources."
+    )
 
 
 class TrainingConfig(BaseModel):

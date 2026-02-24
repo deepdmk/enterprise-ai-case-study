@@ -1,13 +1,16 @@
 """Report generators for evaluation results."""
 
 import json
-import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent / "phase-0-infrastructure"))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
+
+# Import from Phase 0
 from habitat_logging import get_logger
 
 from src.program3_evaluation.evaluators.metrics import EvaluationReport, EvaluationResult
@@ -81,7 +84,7 @@ class JSONReporter:
 
         report_data = {
             "model_id": report.model_id,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "summary": {
                 "num_samples": report.num_samples,
                 "avg_format_compliance": round(report.avg_format_compliance, 4),
@@ -147,7 +150,7 @@ class MarkdownReporter:
         lines = [
             f"# Evaluation Report: {report.model_id}",
             "",
-            f"**Generated:** {datetime.utcnow().isoformat()}",
+            f"**Generated:** {datetime.now(UTC).isoformat()}",
             "",
             "## Summary",
             "",
@@ -231,7 +234,7 @@ class ComparisonReporter:
         lines = [
             "# Model Comparison Report",
             "",
-            f"**Generated:** {datetime.utcnow().isoformat()}",
+            f"**Generated:** {datetime.now(UTC).isoformat()}",
             "",
             "## Performance Comparison",
             "",

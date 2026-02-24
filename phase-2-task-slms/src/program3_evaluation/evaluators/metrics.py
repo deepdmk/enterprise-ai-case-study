@@ -1,19 +1,20 @@
 """Evaluation metrics for Task SLMs."""
 
 import re
-import sys
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent / "phase-0-infrastructure"))
-from habitat_logging import get_logger
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Import phase-0-infrastructure metrics schemas
+configure_paths()
+
+# Import from Phase 0
+from habitat_logging import get_logger
 from evaluation.metrics_schema import (
     TokenMetrics,
     LoadMetrics,
@@ -175,7 +176,7 @@ class EvaluationReport:
             report_id=report_id or f"phase2_eval_{uuid4().hex[:8]}",
             model_id=self.model_id,
             dataset_id=dataset_id,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
             token_metrics=avg_token_metrics,
             cost_metrics=None,  # Not tracked in phase-2
             load_metrics=avg_load_metrics,

@@ -2,14 +2,17 @@
 
 import os
 import platform
-import sys
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+# Configure paths - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
+
+configure_paths()
+
+# Import from Phase 0
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

@@ -5,26 +5,61 @@ import json
 import sys
 from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+# Configure paths once at module load - centralizes sys.path manipulation
+from src.shared.path_config import configure_paths
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
+configure_paths()
+
+# Now import from both local config and phase-0-infrastructure
 from config.settings import Settings, get_settings, load_task_definitions
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import configure_logging, get_logger
 from registries.experiment_tracker import ExperimentTracker
 from registries.schemas import (
     Phase,
-    DataCharacteristics,
     HyperparameterConfig,
     TrainingMetrics,
 )
 from src.shared.data_formatter import load_jsonl
 from src.shared.environment_detector import detect_environment, print_environment_info
+from src.shared.model_registry import ModelRegistry
 
 logger = get_logger(__name__)
+
+
+def get_next_version(
+    registry_dir: Path,
+    unit_id: str,
+    task_id: str,
+) -> str:
+    """
+    Get the next version number for a model from the registry.
+
+    Args:
+        registry_dir: Path to the registry directory
+        unit_id: Unit identifier
+        task_id: Task identifier
+
+    Returns:
+        Next version string (e.g., "v1", "v2", etc.)
+    """
+    try:
+        registry = ModelRegistry(registry_dir)
+        existing = registry.get_latest(unit_id, task_id)
+
+        if existing:
+            # Extract version number and increment
+            current_version = int(existing.version.replace("v", ""))
+            return f"v{current_version + 1}"
+        return "v1"
+    except Exception as e:
+        logger.warning(
+            "version_detection_failed",
+            unit=unit_id,
+            task=task_id,
+            error=str(e),
+            fallback="v1",
+        )
+        return "v1"
 
 
 def load_training_data(
@@ -68,52 +103,6 @@ def create_dataset(examples: list[dict]):
     from datasets import Dataset
 
     return Dataset.from_list(examples)
-
-
-def calculate_avg_lengths(data: list[dict]) -> tuple[float, float]:
-    """
-    Calculate average input and output lengths.
-
-    Args:
-        data: List of examples with 'text' field
-
-    Returns:
-        Tuple of (avg_input_length, avg_output_length) in tokens
-    """
-    if not data:
-        return 0.0, 0.0
-
-    # Simple approximation: split by whitespace
-    total_input = 0
-    total_output = 0
-    count = 0
-
-    for example in data:
-        text = example.get("text", "")
-        # Split on common separators to find input/output
-        if "### Response:" in text:
-            parts = text.split("### Response:")
-            input_text = parts[0]
-            output_text = parts[1] if len(parts) > 1 else ""
-        elif "### Output:" in text:
-            parts = text.split("### Output:")
-            input_text = parts[0]
-            output_text = parts[1] if len(parts) > 1 else ""
-        else:
-            # Approximate: first half is input, second half is output
-            tokens = text.split()
-            mid = len(tokens) // 2
-            input_text = " ".join(tokens[:mid])
-            output_text = " ".join(tokens[mid:])
-
-        total_input += len(input_text.split())
-        total_output += len(output_text.split())
-        count += 1
-
-    avg_input = total_input / count if count > 0 else 0.0
-    avg_output = total_output / count if count > 0 else 0.0
-
-    return avg_input, avg_output
 
 
 def train_task_slm(
@@ -182,17 +171,8 @@ def train_task_slm(
             experiment_id=experiment.experiment_id,
         )
 
-        # Log data characteristics
-        avg_input, avg_output = calculate_avg_lengths(train_data)
-        characteristics = DataCharacteristics(
-            num_samples=len(train_data),
-            avg_input_length=avg_input,
-            avg_output_length=avg_output,
-        )
-        experiment_tracker.log_data_characteristics(
-            experiment.experiment_id,
-            characteristics,
-        )
+        # Note: Data characteristics (token lengths) are logged in the trainer
+        # after the tokenizer is loaded, for accurate token counts
 
         # Log hyperparameters
         hyperparameters = HyperparameterConfig(
@@ -213,10 +193,24 @@ def train_task_slm(
     train_dataset = create_dataset(train_data)
     val_dataset = create_dataset(val_data) if val_data else None
 
-    # Determine output directory
+    # Determine output directory with auto-incremented version
+    version = None
     if output_dir is None:
-        version = "v1"  # TODO: Auto-increment from registry
+        registry_dir = base_path / settings.paths.registry_dir
+        version = get_next_version(registry_dir, unit_id, task_id)
         output_dir = base_path / settings.paths.models_dir / unit_id / f"{task_id}_{version}"
+        logger.info(
+            "output_directory_determined",
+            unit=unit_id,
+            task=task_id,
+            version=version,
+            output_dir=str(output_dir),
+        )
+    else:
+        # Extract version from output_dir if provided
+        dir_name = output_dir.name
+        if "_v" in dir_name:
+            version = "v" + dir_name.split("_v")[-1]
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Train based on backend
@@ -259,6 +253,7 @@ def train_task_slm(
         "unit_id": unit_id,
         "task_id": task_id,
         "task_name": task_def.name,
+        "version": version or "v1",  # Include version in metadata
         "base_model": settings.model.base_model,
         "backend": backend,
         "train_samples": len(train_data),
@@ -302,14 +297,12 @@ def main():
     parser.add_argument(
         "--unit",
         type=str,
-        required=True,
-        help="Unit to train",
+        help="Unit to train (required unless --show-env)",
     )
     parser.add_argument(
         "--task",
         type=str,
-        required=True,
-        help="Task to train",
+        help="Task to train (required unless --show-env)",
     )
     parser.add_argument(
         "--test-mode",
@@ -339,6 +332,10 @@ def main():
         print_environment_info()
         return
 
+    # Validate required arguments when not showing env
+    if not args.unit or not args.task:
+        parser.error("--unit and --task are required (unless using --show-env)")
+
     # Load settings
     config_path = Path(__file__).parent.parent.parent / args.config
     settings = get_settings(config_path)
@@ -349,6 +346,27 @@ def main():
         level=settings.logging.level.upper(),
         format=settings.logging.format if hasattr(settings.logging, 'format') else "console"
     )
+
+    # Validate unit and task IDs early before processing
+    base_path = Path(__file__).parent.parent.parent
+    valid_units = [u.id for u in settings.units]
+    if args.unit not in valid_units:
+        print(f"\nError: Invalid unit '{args.unit}'")
+        print(f"Available units: {', '.join(valid_units)}")
+        sys.exit(1)
+
+    # Validate task ID exists in the unit's task definitions
+    unit_config = next(u for u in settings.units if u.id == args.unit)
+    try:
+        unit_def = load_task_definitions(unit_config.tasks_file, base_path)
+        valid_tasks = [t.id for t in unit_def.tasks]
+        if args.task not in valid_tasks:
+            print(f"\nError: Invalid task '{args.task}' for unit '{args.unit}'")
+            print(f"Available tasks: {', '.join(valid_tasks)}")
+            sys.exit(1)
+    except FileNotFoundError as e:
+        print(f"\nError: Could not load task definitions: {e}")
+        sys.exit(1)
 
     logger.info(
         "fine_tuning_started",
@@ -381,26 +399,21 @@ def main():
             experiment_tracker=tracker,
         )
 
-        # Get experiment ID from metadata file if available
-        if output_dir:
-            metadata_file = output_dir / "training_metadata.json"
-            if metadata_file.exists():
-                with open(metadata_file, "r") as f:
-                    metadata = json.load(f)
-                    experiment_id = metadata.get("experiment_id")
-        else:
-            # Construct the default output dir to find metadata
-            version = "v1"
-            default_output_dir = base_path / settings.paths.models_dir / args.unit / f"{args.task}_{version}"
-            metadata_file = default_output_dir / "training_metadata.json"
-            if metadata_file.exists():
-                with open(metadata_file, "r") as f:
-                    metadata = json.load(f)
-                    experiment_id = metadata.get("experiment_id")
+        # Get experiment ID and version from metadata file
+        # The adapter_path tells us where the model was saved
+        actual_output_dir = adapter_path.parent if hasattr(adapter_path, 'parent') else Path(adapter_path).parent
+        metadata_file = actual_output_dir / "training_metadata.json"
+        version = "v1"  # Default fallback
 
-        # Mark experiment as completed
+        if metadata_file.exists():
+            with open(metadata_file, "r") as f:
+                metadata = json.load(f)
+                experiment_id = metadata.get("experiment_id")
+                version = metadata.get("version", "v1")
+
+        # Mark experiment as completed with correct version
         if experiment_id:
-            model_id = f"{args.unit}_{args.task}_v1"
+            model_id = f"{args.unit}_{args.task}_{version}"
             tracker.complete_experiment(experiment_id, model_id=model_id)
             logger.info(
                 "experiment_completed",

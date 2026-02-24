@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# Phase 2 Task SLMs CLI wrapper
+#
+# This script sets up the correct Python path and runs Phase 2 commands.
+#
+# Usage:
+#   ./bin/phase2 prep --test-mode --unit fundraising
+#   ./bin/phase2 train --show-env
+#   ./bin/phase2 eval --unit fundraising --task investor_profiling
+#   ./bin/phase2 export --unit fundraising
+#
+
+set -e
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PHASE2_ROOT="$(dirname "$SCRIPT_DIR")"
+PHASE0_ROOT="$(dirname "$PHASE2_ROOT")/phase-0-infrastructure"
+
+# Set up PYTHONPATH
+export PYTHONPATH="${PHASE2_ROOT}:${PHASE0_ROOT}:${PYTHONPATH:-}"
+
+# Map commands to modules
+case "${1:-help}" in
+    prep)
+        shift
+        exec python -m src.program1_data_preparation.main "$@"
+        ;;
+    train)
+        shift
+        exec python -m src.program2_fine_tuning.main "$@"
+        ;;
+    eval)
+        shift
+        exec python -m src.program3_evaluation.main "$@"
+        ;;
+    export)
+        shift
+        exec python -m src.program4_model_registry.main "$@"
+        ;;
+    help|--help|-h)
+        echo "Phase 2 Task SLMs CLI"
+        echo ""
+        echo "Usage: $(basename "$0") <command> [options]"
+        echo ""
+        echo "Commands:"
+        echo "  prep    Data preparation (Program 1)"
+        echo "  train   Fine-tuning (Program 2)"
+        echo "  eval    Evaluation (Program 3)"
+        echo "  export  Model export (Program 4)"
+        echo ""
+        echo "Examples:"
+        echo "  $(basename "$0") prep --test-mode --unit fundraising"
+        echo "  $(basename "$0") train --show-env"
+        echo "  $(basename "$0") train --unit fundraising --task investor_profiling --test-mode"
+        echo "  $(basename "$0") eval --unit fundraising --task investor_profiling"
+        echo "  $(basename "$0") export --unit fundraising"
+        echo ""
+        echo "For command-specific help:"
+        echo "  $(basename "$0") <command> --help"
+        ;;
+    *)
+        echo "Unknown command: $1"
+        echo "Run '$(basename "$0") help' for usage."
+        exit 1
+        ;;
+esac
