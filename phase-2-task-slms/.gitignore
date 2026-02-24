@@ -68,3 +68,4 @@ logs/
 # Cache
 .cache/
 *.cache
+*.lock
