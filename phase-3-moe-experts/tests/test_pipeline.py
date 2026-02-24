@@ -48,7 +48,7 @@ class TestPhase2Importer:
 
         assert "units" in manifest
         assert "base_model" in manifest
-        assert len(manifest["units"]) == 2
+        assert len(manifest["units"]) == 3  # fundraising, business_development, field_operations
 
     def test_discover_adapters(self, mock_export_dir, temp_import_dir):
         """Test adapter discovery from manifest."""
@@ -61,13 +61,14 @@ class TestPhase2Importer:
         manifest = importer._load_manifest()
         adapters = importer._discover_from_manifest(manifest)
 
-        assert len(adapters) == 3
+        assert len(adapters) == 5  # 2 fundraising + 1 business_dev + 2 field_ops
         assert all(isinstance(a, AdapterInfo) for a in adapters)
 
         # Check adapter details
         unit_ids = [a.unit_id for a in adapters]
         assert "fundraising" in unit_ids
         assert "business_development" in unit_ids
+        assert "field_operations" in unit_ids
 
     def test_import_with_fixtures(self, mock_export_dir, temp_import_dir):
         """Test full import with fixture data."""
@@ -79,8 +80,8 @@ class TestPhase2Importer:
 
         result = importer.import_all(copy_files=True)
 
-        assert result.total_adapters == 3
-        assert len(result.units) == 2
+        assert result.total_adapters == 5  # 2 fundraising + 1 business_dev + 2 field_ops
+        assert len(result.units) == 3  # fundraising, business_development, field_operations
         assert temp_import_dir.exists()
 
 

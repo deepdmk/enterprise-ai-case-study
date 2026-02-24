@@ -65,10 +65,13 @@ class PerUnitMergekitConfigBuilder:
 
         self.configs_dir.mkdir(parents=True, exist_ok=True)
 
-        # Determine base model
+        # Determine base model - require explicit specification
         base_model = base_model_override or import_result.base_model
-        if not base_model and import_result.adapters:
-            base_model = str(import_result.adapters[0].import_path)
+        if not base_model:
+            raise ValueError(
+                "No base_model specified. Either set it in the import manifest, "
+                "pass base_model_override, or ensure adapters have base_model defined."
+            )
 
         configs = {}
 
@@ -77,8 +80,10 @@ class PerUnitMergekitConfigBuilder:
             unit_adapters = import_result.get_adapters_by_unit(unit_id)
 
             if not unit_adapters:
-                logger.warning("no_adapters_for_unit", unit=unit_id)
-                continue
+                raise ValueError(
+                    f"Unit '{unit_id}' has no adapters - cannot create MoE. "
+                    f"Either remove unit from configuration or import adapters for it."
+                )
 
             config_path = self._build_unit_config(
                 unit_id=unit_id,
@@ -117,10 +122,19 @@ class PerUnitMergekitConfigBuilder:
             experts.append(expert)
 
         # Adjust experts_per_token if we have fewer experts
-        experts_per_token = min(
-            self.settings.moe.experts_per_token,
-            len(experts),
-        )
+        requested_experts_per_token = self.settings.moe.experts_per_token
+        experts_per_token = min(requested_experts_per_token, len(experts))
+
+        if experts_per_token < requested_experts_per_token:
+            logger.warning(
+                "experts_per_token_degraded",
+                unit=unit_id,
+                requested=requested_experts_per_token,
+                actual=experts_per_token,
+                num_experts=len(experts),
+                message=f"Reduced experts_per_token from {requested_experts_per_token} to {experts_per_token} "
+                        f"because unit only has {len(experts)} experts",
+            )
 
         # Build full config
         config = {

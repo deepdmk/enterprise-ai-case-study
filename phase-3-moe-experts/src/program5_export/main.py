@@ -58,9 +58,16 @@ def _update_registry_export_status(
                 model_id=model_id,
                 unit=unit_id,
             )
-    except Exception as e:
+    except (ValueError, KeyError) as e:
         logger.error(
-            "registry_update_failed",
+            "registry_update_failed_validation",
+            model_id=model_id,
+            error=str(e),
+            exc_type=type(e).__name__,
+        )
+    except IOError as e:
+        logger.error(
+            "registry_update_failed_io",
             model_id=model_id,
             error=str(e),
         )
@@ -70,6 +77,7 @@ def run_export_all(
     settings: Settings,
     generate_agent_configs: bool = True,
     generate_routing_embeddings: bool = True,
+    dry_run: bool = False,
 ) -> dict[str, ExportResult]:
     """
     Export all units' MoE models for Phase 4.
@@ -78,14 +86,16 @@ def run_export_all(
         settings: Application settings
         generate_agent_configs: Generate A2A agent configs
         generate_routing_embeddings: Compute routing embeddings
+        dry_run: Validate configuration without writing files
 
     Returns:
         Dictionary mapping unit_id to ExportResult
     """
     base_path = Path(__file__).parent.parent.parent
 
+    mode_str = " (DRY RUN)" if dry_run else ""
     print("\n" + "=" * 60)
-    print("Phase 3: Export for Phase 4 A2A Agents")
+    print(f"Phase 3: Export for Phase 4 A2A Agents{mode_str}")
     print("  (Exporting 3 MoE packages, one per unit)")
     print("=" * 60)
 
@@ -112,6 +122,7 @@ def run_export_all(
         adapters=adapters,
         generate_agent_configs=generate_agent_configs and settings.export_config.generate_agent_configs,
         generate_routing_embeddings=generate_routing_embeddings and settings.export_config.generate_routing_embeddings,
+        dry_run=dry_run,
     )
 
     # Report results and update registry
@@ -151,6 +162,7 @@ def run_export_unit(
     output_dir: str | Path | None = None,
     generate_agent_config: bool = True,
     generate_routing_embeddings: bool = True,
+    dry_run: bool = False,
 ) -> ExportResult:
     """
     Export a single unit's MoE model for Phase 4.
@@ -162,14 +174,16 @@ def run_export_unit(
         output_dir: Override output directory
         generate_agent_config: Generate A2A agent config
         generate_routing_embeddings: Compute routing embeddings
+        dry_run: Validate configuration without writing files
 
     Returns:
         ExportResult
     """
     base_path = Path(__file__).parent.parent.parent
 
+    mode_str = " (DRY RUN)" if dry_run else ""
     print("\n" + "=" * 60)
-    print(f"Phase 3: Export {unit_id} MoE for Phase 4")
+    print(f"Phase 3: Export {unit_id} MoE for Phase 4{mode_str}")
     print("=" * 60)
 
     # Load adapter metadata from imports
@@ -210,6 +224,7 @@ def run_export_unit(
         adapters=unit_adapters,
         generate_agent_config=generate_agent_config and settings.export_config.generate_agent_configs,
         generate_routing_embeddings=generate_routing_embeddings and settings.export_config.generate_routing_embeddings,
+        dry_run=dry_run,
     )
 
     # Report result
@@ -246,20 +261,22 @@ def run_export_unit(
     return result
 
 
-def run_test_mode(settings: Settings) -> dict[str, ExportResult]:
+def run_test_mode(settings: Settings, dry_run: bool = False) -> dict[str, ExportResult]:
     """
     Run test mode export for all units (mock structure).
 
     Args:
         settings: Application settings
+        dry_run: Validate configuration without writing files
 
     Returns:
         Dictionary mapping unit_id to ExportResult
     """
     base_path = Path(__file__).parent.parent.parent
 
+    mode_str = " - DRY RUN" if dry_run else ""
     print("\n" + "=" * 60)
-    print("Phase 3: Export (TEST MODE)")
+    print(f"Phase 3: Export (TEST MODE{mode_str})")
     print("  (Exporting 3 mock MoE packages)")
     print("=" * 60)
 
@@ -308,6 +325,7 @@ def run_test_mode(settings: Settings) -> dict[str, ExportResult]:
             adapters=unit_adapters,
             generate_agent_config=True,
             generate_routing_embeddings=False,  # Skip in test mode
+            dry_run=dry_run,
         )
 
         results[unit_id] = result
@@ -406,6 +424,11 @@ def main():
         action="store_true",
         help="Run in test mode",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate configuration without writing files",
+    )
 
     args = parser.parse_args()
 
@@ -428,7 +451,7 @@ def main():
 
     # Run appropriate mode
     if args.test_mode:
-        run_test_mode(settings)
+        run_test_mode(settings, dry_run=args.dry_run)
     elif args.unit:
         run_export_unit(
             settings=settings,
@@ -437,12 +460,14 @@ def main():
             output_dir=args.output_dir,
             generate_agent_config=generate_agent_configs,
             generate_routing_embeddings=generate_embeddings,
+            dry_run=args.dry_run,
         )
     else:
         run_export_all(
             settings=settings,
             generate_agent_configs=generate_agent_configs,
             generate_routing_embeddings=generate_embeddings,
+            dry_run=args.dry_run,
         )
 
 

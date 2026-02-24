@@ -1,0 +1,58 @@
+# Mock data for test mode
+# This file externalizes the hardcoded mock data from the importer module
+
+units:
+  fundraising:
+    tasks:
+      - task_id: investor_profiling
+        positive_prompts:
+          - Profile this investor
+          - Create investor profile
+          - Analyze investor background
+        negative_prompts:
+          - Analyze RFP
+          - Assess market conditions
+
+      - task_id: funding_opportunity
+        positive_prompts:
+          - Evaluate funding opportunity
+          - Assess investment potential
+        negative_prompts:
+          - Profile investor
+          - Analyze competition
+
+  business_development:
+    tasks:
+      - task_id: rfp_analysis
+        positive_prompts:
+          - Analyze this RFP
+          - Review funding requirements
+        negative_prompts:
+          - Profile investor
+          - Evaluate market
+
+      - task_id: competitive_landscape
+        positive_prompts:
+          - Analyze competitive landscape
+          - Review competitor activity
+        negative_prompts:
+          - Profile investor
+          - Assess project performance
+
+  field_operations:
+    tasks:
+      - task_id: market_intelligence
+        positive_prompts:
+          - Analyze market conditions
+          - Assess local market
+        negative_prompts:
+          - Profile investor
+          - Analyze RFP
+
+      - task_id: project_performance
+        positive_prompts:
+          - Evaluate project performance
+          - Assess project outcomes
+        negative_prompts:
+          - Analyze competition
+          - Profile investor

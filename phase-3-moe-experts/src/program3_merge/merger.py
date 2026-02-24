@@ -142,10 +142,17 @@ class MoEMerger:
                 cuda=cuda,
                 result=result,
             )
-        except Exception as e:
+        except (subprocess.SubprocessError, subprocess.TimeoutExpired, OSError, yaml.YAMLError, ValueError) as e:
             result.error = str(e)
             result.end_time = datetime.utcnow()
-            logger.error("merge_exception", error=str(e))
+            logger.error("merge_exception", error=str(e), exc_type=type(e).__name__)
+            self._cleanup_failed_merge(output_dir)
+        except KeyboardInterrupt:
+            result.error = "Merge cancelled by user"
+            result.end_time = datetime.utcnow()
+            logger.warning("merge_cancelled_by_user")
+            self._cleanup_failed_merge(output_dir)
+            raise  # Re-raise to allow proper cleanup
 
         return result
 
@@ -227,6 +234,18 @@ class MoEMerger:
             json.dump(result.to_dict(), f, indent=2)
 
         logger.info("metadata_saved", path=str(metadata_path))
+
+    def _cleanup_failed_merge(self, output_dir: Path) -> None:
+        """Clean up partial outputs from a failed merge."""
+        if output_dir.exists():
+            try:
+                # Only remove if directory is empty or only contains partial files
+                files = list(output_dir.iterdir())
+                if not files or all(f.suffix in [".tmp", ".partial"] for f in files):
+                    shutil.rmtree(output_dir)
+                    logger.info("cleanup_partial_merge", path=str(output_dir))
+            except OSError as e:
+                logger.warning("cleanup_failed", path=str(output_dir), error=str(e))
 
 
 class MockMerger:
@@ -317,9 +336,15 @@ class MockMerger:
                 num_experts=num_experts,
             )
 
-        except Exception as e:
+        except (OSError, json.JSONDecodeError, yaml.YAMLError, KeyError) as e:
             result.error = str(e)
-            logger.error("mock_merge_failed", error=str(e))
+            logger.error("mock_merge_failed", error=str(e), exc_type=type(e).__name__)
+            # Clean up partial mock output
+            if output_dir.exists():
+                try:
+                    shutil.rmtree(output_dir)
+                except OSError:
+                    pass
 
         result.end_time = datetime.utcnow()
         return result

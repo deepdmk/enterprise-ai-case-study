@@ -102,10 +102,38 @@ class Phase2AdapterImporter:
                     )
 
 
+def load_mock_data_config(config_path: Path | None = None) -> dict[str, list[dict]]:
+    """
+    Load mock data from external YAML config.
+
+    Args:
+        config_path: Path to mock_data.yaml (uses default if None)
+
+    Returns:
+        Dictionary mapping unit_id to list of task definitions
+    """
+    import yaml
+
+    if config_path is None:
+        config_path = Path(__file__).parent.parent.parent / "config" / "mock_data.yaml"
+
+    if config_path.exists():
+        with open(config_path) as f:
+            data = yaml.safe_load(f)
+        return {
+            unit_id: unit_data["tasks"]
+            for unit_id, unit_data in data.get("units", {}).items()
+        }
+
+    # Fallback to hardcoded data if config doesn't exist
+    logger.warning("mock_data_config_not_found", path=str(config_path))
+    return MockAdapterGenerator.MOCK_UNIT_TASKS
+
+
 class MockAdapterGenerator:
     """Generate mock adapters for testing - creates adapters for 3 units."""
 
-    # Define mock tasks per unit (matching real structure)
+    # Fallback mock tasks per unit (used if config/mock_data.yaml doesn't exist)
     MOCK_UNIT_TASKS = {
         "fundraising": [
             {
@@ -182,16 +210,18 @@ class MockAdapterGenerator:
         ],
     }
 
-    def __init__(self, settings: Settings):
+    def __init__(self, settings: Settings, mock_data_path: Path | None = None):
         """
         Initialize mock generator.
 
         Args:
             settings: Application settings
+            mock_data_path: Optional path to mock_data.yaml config
         """
         self.settings = settings
         self.base_path = Path(__file__).parent.parent.parent
         self.import_dir = self.base_path / settings.paths.imports_dir
+        self.mock_unit_tasks = load_mock_data_config(mock_data_path)
 
     def generate_mock_exports(self) -> ImportResult:
         """
@@ -225,7 +255,7 @@ class MockAdapterGenerator:
         adapters = []
         num_experts_per_unit = self.settings.test_mode_config.num_experts_per_unit
 
-        for unit_id, tasks in self.MOCK_UNIT_TASKS.items():
+        for unit_id, tasks in self.mock_unit_tasks.items():
             # Limit tasks per unit in test mode
             for task in tasks[:num_experts_per_unit]:
                 adapter = AdapterInfo(

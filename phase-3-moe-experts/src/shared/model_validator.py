@@ -104,9 +104,13 @@ class MoEValidator:
             if "lora_alpha" not in config:
                 result.add_warning("Missing lora_alpha in adapter config")
 
+            if "target_modules" not in config:
+                result.add_warning("Missing target_modules in adapter config")
+
             result.info["lora_rank"] = config.get("r")
             result.info["lora_alpha"] = config.get("lora_alpha")
             result.info["base_model"] = adapter_base
+            result.info["target_modules"] = config.get("target_modules", [])
 
         except json.JSONDecodeError as e:
             result.add_error(f"Invalid JSON in adapter_config.json: {e}")
@@ -208,6 +212,8 @@ class MoEValidator:
 
         base_models = set()
         lora_ranks = set()
+        target_modules_sets: list[frozenset] = []
+        lora_alphas = set()
 
         for adapter_path in adapter_paths:
             adapter_result = self.validate_adapter(Path(adapter_path))
@@ -220,6 +226,12 @@ class MoEValidator:
                 base_models.add(adapter_result.info["base_model"])
             if "lora_rank" in adapter_result.info:
                 lora_ranks.add(adapter_result.info["lora_rank"])
+            if "lora_alpha" in adapter_result.info:
+                lora_alphas.add(adapter_result.info["lora_alpha"])
+            if "target_modules" in adapter_result.info:
+                modules = adapter_result.info["target_modules"]
+                if isinstance(modules, list):
+                    target_modules_sets.append(frozenset(modules))
 
         # Check base model consistency
         if len(base_models) > 1:
@@ -229,9 +241,95 @@ class MoEValidator:
         if len(lora_ranks) > 1:
             result.add_warning(f"Inconsistent LoRA ranks: {lora_ranks}")
 
+        # Check LoRA alpha consistency (warning only)
+        if len(lora_alphas) > 1:
+            result.add_warning(f"Inconsistent LoRA alphas: {lora_alphas}")
+
+        # Check target modules consistency (warning only)
+        if target_modules_sets and len(set(target_modules_sets)) > 1:
+            result.add_warning(
+                f"Inconsistent target modules across adapters - this may cause merge issues"
+            )
+
         result.info["num_adapters"] = len(adapter_paths)
         result.info["base_models_found"] = list(base_models)
         result.info["lora_ranks_found"] = list(lora_ranks)
+        result.info["lora_alphas_found"] = list(lora_alphas)
+
+        return result
+
+    def validate_phase2_adapter_compatibility(
+        self,
+        adapter_configs: list[dict[str, Any]],
+    ) -> ValidationResult:
+        """
+        Validate Phase 2 adapter configs are compatible for MoE merging.
+
+        This validates the adapter configs directly without needing file paths,
+        useful for pre-import validation.
+
+        Args:
+            adapter_configs: List of adapter_config.json contents
+
+        Returns:
+            ValidationResult
+        """
+        result = ValidationResult(is_valid=True)
+
+        if not adapter_configs:
+            result.add_error("No adapter configs provided")
+            return result
+
+        base_models = set()
+        lora_ranks = set()
+        lora_alphas = set()
+        target_modules_sets: list[frozenset] = []
+
+        for idx, config in enumerate(adapter_configs):
+            # Validate required fields
+            if "base_model_name_or_path" not in config:
+                result.add_warning(f"Adapter {idx}: missing base_model_name_or_path")
+            else:
+                base_models.add(config["base_model_name_or_path"])
+
+            if "r" in config:
+                lora_ranks.add(config["r"])
+            else:
+                result.add_warning(f"Adapter {idx}: missing LoRA rank (r)")
+
+            if "lora_alpha" in config:
+                lora_alphas.add(config["lora_alpha"])
+
+            if "target_modules" in config:
+                modules = config["target_modules"]
+                if isinstance(modules, list):
+                    target_modules_sets.append(frozenset(modules))
+
+        # Check base model consistency - this is critical for MoE
+        if len(base_models) > 1:
+            result.add_error(
+                f"Adapters use different base models: {base_models}. "
+                "All adapters must use the same base model for MoE merging."
+            )
+
+        # Check LoRA rank consistency
+        if len(lora_ranks) > 1:
+            result.add_warning(
+                f"Adapters have different LoRA ranks: {lora_ranks}. "
+                "Consider using the same rank for all adapters."
+            )
+
+        # Check target modules consistency
+        if target_modules_sets and len(set(target_modules_sets)) > 1:
+            result.add_warning(
+                "Adapters have different target modules. "
+                "This may cause issues during MoE merge."
+            )
+
+        result.info["num_adapters"] = len(adapter_configs)
+        result.info["base_models_found"] = list(base_models)
+        result.info["lora_ranks_found"] = list(lora_ranks)
+        result.info["lora_alphas_found"] = list(lora_alphas)
 
         return result
 

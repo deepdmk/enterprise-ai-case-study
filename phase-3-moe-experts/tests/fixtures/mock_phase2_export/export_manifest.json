@@ -68,6 +68,49 @@
           "model_path": "business_development/rfp_analysis/v1/model"
         }
       ]
+    },
+    {
+      "unit_id": "field_operations",
+      "exported_at": "2024-01-15T10:00:00.000000",
+      "num_models": 2,
+      "models": [
+        {
+          "model_id": "field_operations_market_intelligence_v1",
+          "unit_id": "field_operations",
+          "task_id": "market_intelligence",
+          "version": "v1",
+          "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+          "merged": false,
+          "positive_prompts": [
+            "Analyze market conditions",
+            "Assess local market",
+            "Review market intelligence"
+          ],
+          "negative_prompts": [
+            "Profile investor",
+            "Analyze RFP"
+          ],
+          "model_path": "field_operations/market_intelligence/v1/model"
+        },
+        {
+          "model_id": "field_operations_project_performance_v1",
+          "unit_id": "field_operations",
+          "task_id": "project_performance",
+          "version": "v1",
+          "base_model": "unsloth/Meta-Llama-3.1-8B-bnb-4bit",
+          "merged": false,
+          "positive_prompts": [
+            "Evaluate project performance",
+            "Assess project outcomes",
+            "Review project metrics"
+          ],
+          "negative_prompts": [
+            "Analyze competition",
+            "Profile investor"
+          ],
+          "model_path": "field_operations/project_performance/v1/model"
+        }
+      ]
     }
   ],
   "moe_config_path": "moe_config.yaml"

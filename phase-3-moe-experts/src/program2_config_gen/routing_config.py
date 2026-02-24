@@ -15,6 +15,11 @@ from src.shared.phase2_importer import AdapterInfo, ImportResult
 logger = get_logger(__name__)
 
 
+class EmbeddingComputationError(Exception):
+    """Raised when embedding computation fails."""
+    pass
+
+
 class RoutingConfigBuilder:
     """Build routing configuration for MoE expert selection."""
 
@@ -84,12 +89,32 @@ class RoutingConfigBuilder:
 
         return output_path
 
-    def _compute_prompt_embeddings(self, adapter: AdapterInfo) -> dict[str, Any]:
-        """Compute embeddings for adapter prompts."""
+    def _compute_prompt_embeddings(
+        self,
+        adapter: AdapterInfo,
+        raise_on_error: bool = True,
+    ) -> dict[str, Any]:
+        """Compute embeddings for adapter prompts.
+
+        Args:
+            adapter: Adapter info with prompts to embed
+            raise_on_error: If True, raise EmbeddingComputationError on failure.
+                           If False, return empty dict (legacy behavior).
+
+        Returns:
+            Dictionary with positive_embeddings and/or negative_embeddings
+
+        Raises:
+            EmbeddingComputationError: If raise_on_error=True and embedding fails
+        """
         try:
             from sentence_transformers import SentenceTransformer
 
-            model = SentenceTransformer(self.settings.export_config.embedding_model)
+            # Use configurable timeout for model download
+            timeout = getattr(self.settings.export_config, "embedding_timeout", 300)
+            model = SentenceTransformer(
+                self.settings.export_config.embedding_model,
+            )
 
             result = {}
             if adapter.positive_prompts:
@@ -102,11 +127,17 @@ class RoutingConfigBuilder:
 
             return result
 
-        except ImportError:
-            logger.warning("sentence_transformers_not_available")
+        except ImportError as e:
+            error_msg = "sentence_transformers not installed - cannot compute embeddings"
+            logger.error("embedding_import_failed", error=error_msg)
+            if raise_on_error:
+                raise EmbeddingComputationError(error_msg) from e
             return {}
         except Exception as e:
-            logger.warning("embedding_computation_failed", error=str(e))
+            error_msg = f"Embedding computation failed for adapter {adapter.model_id}: {e}"
+            logger.error("embedding_computation_failed", error=str(e), adapter=adapter.model_id)
+            if raise_on_error:
+                raise EmbeddingComputationError(error_msg) from e
             return {}
 
 

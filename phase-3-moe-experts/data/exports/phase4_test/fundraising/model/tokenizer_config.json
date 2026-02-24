@@ -1,4 +1,0 @@
-{
-  "model_max_length": 32768,
-  "tokenizer_class": "LlamaTokenizer"
-}

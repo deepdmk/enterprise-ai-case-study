@@ -72,6 +72,7 @@ class ExportConfig(BaseModel):
     generate_routing_embeddings: bool = True
     embedding_model: str = "BAAI/bge-base-en-v1.5"
     export_format: str = "safetensors"
+    embedding_timeout: int = Field(default=300, description="Timeout in seconds for embedding model download")
 
 
 class PathsConfig(BaseModel):

@@ -3,6 +3,7 @@
 import json
 import shutil
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -66,6 +67,7 @@ class Phase4Exporter:
         adapters: list[AdapterInfo],
         generate_agent_configs: bool = True,
         generate_routing_embeddings: bool = True,
+        dry_run: bool = False,
     ) -> dict[str, ExportResult]:
         """
         Export all units' MoE models for Phase 4.
@@ -74,6 +76,7 @@ class Phase4Exporter:
             adapters: All adapter info records
             generate_agent_configs: Whether to generate A2A agent configs
             generate_routing_embeddings: Whether to compute routing embeddings
+            dry_run: Validate configuration without writing files
 
         Returns:
             Dictionary mapping unit_id to ExportResult
@@ -98,6 +101,7 @@ class Phase4Exporter:
                 adapters=unit_adapters,
                 generate_agent_config=generate_agent_configs,
                 generate_routing_embeddings=generate_routing_embeddings,
+                dry_run=dry_run,
             )
             results[unit_id] = result
 
@@ -111,6 +115,7 @@ class Phase4Exporter:
         adapters: list[AdapterInfo] | None = None,
         generate_agent_config: bool = True,
         generate_routing_embeddings: bool = True,
+        dry_run: bool = False,
     ) -> ExportResult:
         """
         Export a single unit's MoE model for Phase 4.
@@ -122,6 +127,7 @@ class Phase4Exporter:
             adapters: Adapter info for this unit's experts
             generate_agent_config: Whether to generate A2A agent config
             generate_routing_embeddings: Whether to compute routing embeddings
+            dry_run: Validate configuration without writing files
 
         Returns:
             ExportResult
@@ -138,44 +144,77 @@ class Phase4Exporter:
             unit_id=unit_id,
         )
 
-        try:
-            # Create export directory
-            output_dir.mkdir(parents=True, exist_ok=True)
+        # Dry run: validate configuration only
+        if dry_run:
+            if not model_path.exists():
+                result.errors.append(f"Model path not found: {model_path}")
+            if not adapters:
+                result.errors.append("No adapters provided")
+            result.success = len(result.errors) == 0
+            result.metadata["dry_run"] = True
+            logger.info("dry_run_complete", unit=unit_id, valid=result.success)
+            return result
 
+        # Use atomic writes via temp directory
+        temp_dir = Path(tempfile.mkdtemp(prefix=f"export_{unit_id}_"))
+        try:
             # Export model
             if model_path.exists():
-                model_result = self._export_model(model_path, output_dir)
+                model_result = self._export_model(model_path, temp_dir)
                 result.model_exported = model_result
             else:
                 result.errors.append(f"Model path not found: {model_path}")
 
             # Export routing metadata
             if adapters:
-                routing_result = self._export_routing(adapters, output_dir, unit_id)
+                routing_result = self._export_routing(adapters, temp_dir, unit_id)
                 result.routing_exported = routing_result
 
                 if generate_routing_embeddings:
-                    self._export_routing_embeddings(adapters, output_dir)
+                    self._export_routing_embeddings(adapters, temp_dir)
 
             # Generate agent config
             if generate_agent_config and adapters:
-                agent_result = self._generate_agent_config(unit_id, adapters, output_dir)
+                agent_result = self._generate_agent_config(unit_id, adapters, temp_dir)
                 result.agent_config_exported = agent_result
 
             # Create export manifest
-            self._create_manifest(result, model_path, adapters)
+            self._create_manifest(result, model_path, adapters, temp_dir)
 
-            result.success = len(result.errors) == 0
-            logger.info(
-                "unit_export_complete",
-                unit=unit_id,
-                success=result.success,
-                export_dir=str(output_dir),
-            )
+            # Only move to final location if no errors
+            if len(result.errors) == 0:
+                # Remove existing output directory if present
+                if output_dir.exists():
+                    shutil.rmtree(output_dir)
+                # Move temp directory to final location
+                output_dir.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(temp_dir), str(output_dir))
+                result.success = True
+                logger.info(
+                    "unit_export_complete",
+                    unit=unit_id,
+                    success=result.success,
+                    export_dir=str(output_dir),
+                )
+            else:
+                # Clean up temp directory on error
+                shutil.rmtree(temp_dir, ignore_errors=True)
+                logger.warning(
+                    "unit_export_partial_failure",
+                    unit=unit_id,
+                    errors=result.errors,
+                )
 
-        except Exception as e:
+        except (OSError, IOError, shutil.Error) as e:
             result.errors.append(str(e))
-            logger.error("unit_export_failed", unit=unit_id, error=str(e))
+            # Clean up temp directory on exception
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            logger.error("unit_export_failed", unit=unit_id, error=str(e), exc_type=type(e).__name__)
+        except KeyboardInterrupt:
+            # Clean up temp directory on interrupt
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            logger.warning("unit_export_cancelled", unit=unit_id)
+            raise
 
         return result
 
@@ -395,8 +434,16 @@ class Phase4Exporter:
         result: ExportResult,
         model_path: Path,
         adapters: list[AdapterInfo] | None,
+        target_dir: Path | None = None,
     ) -> None:
-        """Create export manifest for a unit."""
+        """Create export manifest for a unit.
+
+        Args:
+            result: ExportResult being populated
+            model_path: Source model path
+            adapters: Adapter info for this unit
+            target_dir: Directory to write manifest to (uses result.export_dir if None)
+        """
         manifest = {
             "exported_at": datetime.utcnow().isoformat(),
             "unit_id": result.unit_id,
@@ -412,7 +459,8 @@ class Phase4Exporter:
             "errors": result.errors,
         }
 
-        manifest_path = result.export_dir / "export_manifest.json"
+        output_path = target_dir if target_dir else result.export_dir
+        manifest_path = output_path / "export_manifest.json"
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
 

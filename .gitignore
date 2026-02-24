@@ -216,3 +216,10 @@ _planning/
 
 # Phase 3 feedback data (generated during testing)
 phase-3-moe-experts/data/feedback/
+
+# Phase 3 generated data (test mode outputs with local paths)
+phase-3-moe-experts/data/configs/
+phase-3-moe-experts/data/exports/
+phase-3-moe-experts/data/imports/
+phase-3-moe-experts/data/model_registry*.json
+phase-3-moe-experts/data/*.lock
