@@ -5,8 +5,10 @@ Fine-tunes Phase 3 MoE models with LoRA to add A2A protocol capabilities.
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
-import torch
+from typing import Optional, Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import torch
 
 from ..shared.phase0_integration import get_phase0_integration
 
@@ -122,6 +124,7 @@ class A2AFineTuner:
             return result
 
         try:
+            import torch
             from transformers import (
                 AutoModelForCausalLM,
                 AutoTokenizer,
@@ -378,9 +381,12 @@ class A2AFineTuner:
 
     def _get_default_device(self) -> str:
         """Determine default device"""
-        if torch.cuda.is_available():
-            return "cuda"
-        elif torch.backends.mps.is_available():
-            return "mps"
-        else:
-            return "cpu"
+        try:
+            import torch
+            if torch.cuda.is_available():
+                return "cuda"
+            elif torch.backends.mps.is_available():
+                return "mps"
+        except ImportError:
+            pass
+        return "cpu"

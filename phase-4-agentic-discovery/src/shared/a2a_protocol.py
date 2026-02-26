@@ -58,6 +58,12 @@ class A2AMetadata:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "A2AMetadata":
         """Create from dictionary"""
+        required_fields = ["call_id", "timestamp", "call_depth", "max_depth",
+                           "source_agent", "target_agent"]
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            raise ValueError(f"A2AMetadata missing required fields: {missing}")
+
         data = data.copy()
         data["timestamp"] = datetime.fromisoformat(data["timestamp"])
         return cls(**data)
@@ -94,6 +100,11 @@ class A2ARequest:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "A2ARequest":
         """Create from dictionary"""
+        required_fields = ["goal", "target"]
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            raise ValueError(f"A2ARequest missing required fields: {missing}")
+
         data = data.copy()
         if data.get("metadata"):
             data["metadata"] = A2AMetadata.from_dict(data["metadata"])
@@ -136,6 +147,11 @@ class A2AResponse:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "A2AResponse":
         """Create from dictionary"""
+        required_fields = ["status", "content"]
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            raise ValueError(f"A2AResponse missing required fields: {missing}")
+
         data = data.copy()
         data["status"] = ResponseStatus(data["status"])
         if data.get("metadata"):
@@ -180,4 +196,9 @@ class A2ACapability:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "A2ACapability":
         """Create from dictionary"""
+        required_fields = ["agent_id", "name", "description", "domains"]
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            raise ValueError(f"A2ACapability missing required fields: {missing}")
+
         return cls(**data)

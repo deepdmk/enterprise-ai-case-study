@@ -3,11 +3,12 @@ A2A Call Logger for Discovery Analysis
 Tracks agent-to-agent calls during the 90-day discovery phase.
 """
 
+import fcntl
 import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 from .a2a_protocol import A2ARequest, A2AResponse, ResponseStatus
 
@@ -135,23 +136,25 @@ class A2ACallLogger:
             workflow_id=workflow_id
         )
 
-        # Write to phase-specific log file
+        # Write to phase-specific log file with file locking
         log_file = self._get_log_file(self._current_phase)
         with open(log_file, "a") as f:
-            f.write(json.dumps(log_entry.to_dict()) + "\n")
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+            try:
+                f.write(json.dumps(log_entry.to_dict()) + "\n")
+            finally:
+                fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
-    def load_logs(self, phase: Optional[int] = None) -> List[A2ACallLog]:
+    def iter_logs(self, phase: Optional[int] = None) -> Iterator[A2ACallLog]:
         """
-        Load call logs from disk.
+        Stream logs without loading all into memory.
 
         Args:
             phase: Load logs for a specific phase, or all phases if None
 
-        Returns:
-            List of call logs
+        Yields:
+            Call log entries one at a time
         """
-        logs = []
-
         if phase is not None:
             log_files = [self._get_log_file(phase)]
         else:
@@ -163,9 +166,19 @@ class A2ACallLogger:
                 with open(log_file) as f:
                     for line in f:
                         if line.strip():
-                            logs.append(A2ACallLog.from_dict(json.loads(line)))
+                            yield A2ACallLog.from_dict(json.loads(line))
 
-        return logs
+    def load_logs(self, phase: Optional[int] = None) -> List[A2ACallLog]:
+        """
+        Load call logs from disk.
+
+        Args:
+            phase: Load logs for a specific phase, or all phases if None
+
+        Returns:
+            List of call logs
+        """
+        return list(self.iter_logs(phase))
 
     def get_phase_stats(self, phase: int) -> Dict[str, Any]:
         """

@@ -5,8 +5,10 @@ Loads Phase 3 Mixture-of-Experts models for use in A2A agents.
 
 import sys
 from pathlib import Path
-from typing import Optional, Dict, Any
-import torch
+from typing import Optional, Dict, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import torch
 
 
 class MoEModelLoader:
@@ -65,6 +67,7 @@ class MoEModelLoader:
         model_path = self._get_model_path(unit_name)
 
         # Load base model
+        import torch
         print(f"Loading MoE model for {unit_name} from {model_path}")
         model = AutoModelForCausalLM.from_pretrained(
             str(model_path),
@@ -171,12 +174,15 @@ class MoEModelLoader:
 
     def _get_default_device(self) -> str:
         """Determine default device"""
-        if torch.cuda.is_available():
-            return "cuda"
-        elif torch.backends.mps.is_available():
-            return "mps"
-        else:
-            return "cpu"
+        try:
+            import torch
+            if torch.cuda.is_available():
+                return "cuda"
+            elif torch.backends.mps.is_available():
+                return "mps"
+        except ImportError:
+            pass
+        return "cpu"
 
 
 class MockMoEModel:
@@ -197,6 +203,7 @@ class MockMoEModel:
 
     def __call__(self, *args, **kwargs):
         """Mock forward pass"""
+        import torch
         batch_size = args[0].shape[0] if args else 1
         seq_len = args[0].shape[1] if args else 10
         vocab_size = 32000
@@ -217,6 +224,7 @@ class MockTokenizer:
 
     def __call__(self, text, **kwargs):
         """Mock tokenization"""
+        import torch
         return {
             'input_ids': torch.randint(0, 1000, (1, 10)),
             'attention_mask': torch.ones(1, 10)

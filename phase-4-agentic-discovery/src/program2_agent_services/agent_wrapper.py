@@ -67,6 +67,7 @@ class A2AAgent:
         self.call_logger = call_logger
         self.agent_registry = agent_registry or {}
         self.test_mode = test_mode
+        self.default_timeout_ms = 5000  # Default timeout in milliseconds
 
         # Use mock model if test_mode or no model provided
         if test_mode or model is None:
@@ -76,7 +77,7 @@ class A2AAgent:
             self.model = model
             self.tokenizer = tokenizer
 
-    def process_request(self, request: A2ARequest) -> A2AResponse:
+    async def process_request(self, request: A2ARequest) -> A2AResponse:
         """
         Process an A2A request.
 
@@ -112,7 +113,7 @@ class A2AAgent:
 
             if a2a_calls:
                 # Process cascading calls
-                final_content = self._process_cascading_calls(
+                final_content = await self._process_cascading_calls(
                     request,
                     a2a_calls,
                     response_content
@@ -284,7 +285,7 @@ To call another agent, use:
 
         return calls
 
-    def _process_cascading_calls(
+    async def _process_cascading_calls(
         self,
         original_request: A2ARequest,
         a2a_calls: list,
@@ -309,7 +310,7 @@ To call another agent, use:
             parameters = call.get("parameters", {})
 
             # Make cascading call
-            result = self._call_agent(
+            result = await self._call_agent(
                 target_agent=target_agent,
                 goal=goal,
                 parameters=parameters,
@@ -335,7 +336,7 @@ To call another agent, use:
 
         return final_response
 
-    def _call_agent(
+    async def _call_agent(
         self,
         target_agent: str,
         goal: str,
@@ -376,14 +377,18 @@ To call another agent, use:
         if not agent_url:
             return f"Error: Agent {target_agent} not found"
 
+        # Use metadata timeout or default
+        timeout_seconds = (parent_metadata.timeout_ms or self.default_timeout_ms) / 1000
+
         try:
-            # Make HTTP call
-            response = httpx.post(
-                f"{agent_url}/a2a",
-                json=cascade_request.to_dict(),
-                timeout=5.0
-            )
-            response.raise_for_status()
+            # Make async HTTP call
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    f"{agent_url}/a2a",
+                    json=cascade_request.to_dict(),
+                    timeout=timeout_seconds
+                )
+                response.raise_for_status()
 
             a2a_response = A2AResponse.from_dict(response.json())
 
@@ -392,8 +397,14 @@ To call another agent, use:
             else:
                 return f"Error from {target_agent}: {a2a_response.error_message}"
 
-        except Exception as e:
-            return f"Error calling {target_agent}: {str(e)}"
+        except httpx.TimeoutException:
+            return f"Timeout calling {target_agent}"
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code >= 500:
+                return f"Server error from {target_agent}: {e.response.status_code}"
+            return f"Client error from {target_agent}: {e.response.status_code}"
+        except httpx.RequestError as e:
+            return f"Network error calling {target_agent}: {str(e)}"
 
     def _depth_limit_response(
         self,
