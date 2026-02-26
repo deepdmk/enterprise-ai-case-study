@@ -224,3 +224,6 @@ phase-3-moe-experts/data/exports/
 phase-3-moe-experts/data/imports/
 phase-3-moe-experts/data/model_registry*.json
 phase-3-moe-experts/data/*.lock
+
+# Phase 4 generated data (test mode outputs)
+phase-4-agentic-discovery/data/*.lock
