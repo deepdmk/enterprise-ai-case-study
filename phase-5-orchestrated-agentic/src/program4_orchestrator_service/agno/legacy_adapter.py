@@ -9,7 +9,7 @@ from typing import Dict, Any, List, Optional
 import time
 import re
 import structlog
-from agno.team import Team
+from agno.team.team import Team
 
 from ...shared.routing_schema import (
     RoutingDecision,
@@ -270,14 +270,15 @@ class LegacyAdapter:
         """
         query_lower = query.lower()
 
-        if "funding opportunity" in query_lower or "evaluate" in query_lower:
-            return WorkflowType.EVALUATE_FUNDING_OPPORTUNITY
+        # Check more specific patterns before general ones
+        if "regional" in query_lower or "country" in query_lower:
+            return WorkflowType.EVALUATE_REGIONAL_PROJECT
         elif "investor capacity" in query_lower or "investment capacity" in query_lower:
             return WorkflowType.ASSESS_INVESTOR_CAPACITY
         elif "competitive landscape" in query_lower or "market fit" in query_lower:
             return WorkflowType.ANALYZE_COMPETITIVE_LANDSCAPE
-        elif "regional" in query_lower or "country" in query_lower:
-            return WorkflowType.EVALUATE_REGIONAL_PROJECT
+        elif "funding opportunity" in query_lower or "evaluate" in query_lower:
+            return WorkflowType.EVALUATE_FUNDING_OPPORTUNITY
         else:
             return WorkflowType.UNKNOWN
 

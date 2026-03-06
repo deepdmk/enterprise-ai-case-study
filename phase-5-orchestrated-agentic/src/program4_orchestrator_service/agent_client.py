@@ -49,6 +49,9 @@ class AgentClient:
         # Semaphore for concurrent requests
         self.semaphore = asyncio.Semaphore(max_concurrent)
 
+        # Reusable HTTP client
+        self._client = httpx.AsyncClient(timeout=self.timeout_ms / 1000)
+
     async def call_agent(
         self,
         agent: AgentType,
@@ -93,12 +96,10 @@ class AgentClient:
 
         try:
             async with self.semaphore:
-                async with httpx.AsyncClient() as client:
-                    response = await client.post(
-                        f"{agent_url}/process",
-                        json=request_payload,
-                        timeout=self.timeout_ms / 1000
-                    )
+                response = await self._client.post(
+                    f"{agent_url}/process",
+                    json=request_payload,
+                )
 
             latency_ms = (time.time() - start_time) * 1000
 
@@ -196,6 +197,10 @@ class AgentClient:
 
         return results
 
+    async def close(self) -> None:
+        """Close the HTTP client and release resources."""
+        await self._client.aclose()
+
     async def check_agent_health(self, agent: AgentType) -> bool:
         """
         Check if agent is healthy.
@@ -213,12 +218,10 @@ class AgentClient:
             return False
 
         try:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(
-                    f"{agent_url}/health",
-                    timeout=5.0
-                )
-
+            response = await self._client.get(
+                f"{agent_url}/health",
+                timeout=5.0
+            )
             return response.status_code == 200
 
         except Exception as e:

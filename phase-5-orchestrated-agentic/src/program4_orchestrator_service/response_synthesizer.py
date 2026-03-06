@@ -129,7 +129,7 @@ class ResponseSynthesizer:
         # Group responses by agent
         by_agent = {}
         for response in agent_responses:
-            agent_name = response.agent.value
+            agent_name = response.agent.value if hasattr(response.agent, 'value') else response.agent
             if agent_name not in by_agent:
                 by_agent[agent_name] = []
             by_agent[agent_name].append(response)
@@ -137,11 +137,12 @@ class ResponseSynthesizer:
         # Build hierarchical response
         parts = [f"Query: {query}\n"]
         parts.append(f"Routing Strategy: {routing_decision.reasoning}\n")
-        parts.append(f"Entry Agent: {routing_decision.entry_agent.value}")
+        entry_agent_str = routing_decision.entry_agent.value if hasattr(routing_decision.entry_agent, 'value') else routing_decision.entry_agent
+        parts.append(f"Entry Agent: {entry_agent_str}")
         parts.append(f"Optimal Depth: {routing_decision.optimal_depth}\n")
 
         # Primary response (from entry agent)
-        entry_agent = routing_decision.entry_agent.value
+        entry_agent = entry_agent_str
         if entry_agent in by_agent:
             entry_responses = by_agent[entry_agent]
             parts.append(f"\nPrimary Response ({entry_agent}):")
@@ -165,7 +166,7 @@ class ResponseSynthesizer:
         parts.append(f"  Total latency: {total_latency}ms")
         parts.append(f"  Agents called: {len(agent_responses)}")
         parts.append(f"  Successful calls: {successful}")
-        parts.append(f"  Success rate: {successful / len(agent_responses):.0%}")
+        parts.append(f"  Success rate: {successful / len(agent_responses) if agent_responses else 0:.0%}")
 
         return "\n".join(parts)
 

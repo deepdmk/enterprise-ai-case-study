@@ -41,6 +41,9 @@ class RoutingEngine:
 
         self.logger = logger.bind(component="routing_engine")
 
+        # Reusable HTTP client
+        self._client = httpx.AsyncClient(timeout=self.timeout_ms / 1000)
+
         # Routing statistics
         self.stats = {
             "total_requests": 0,
@@ -78,9 +81,10 @@ class RoutingEngine:
 
             # Update average latency
             n = self.stats["successful_routes"] + self.stats["fallback_routes"]
-            self.stats["avg_latency_ms"] = (
-                self.stats["avg_latency_ms"] * (n - 1) + latency_ms
-            ) / n
+            if n > 0:
+                self.stats["avg_latency_ms"] = (
+                    self.stats["avg_latency_ms"] * (n - 1) + latency_ms
+                ) / n
 
             self.logger.info(
                 "routing_complete",
@@ -136,16 +140,14 @@ Query: {query}<|end|>
 """
 
         # Call inference server
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                self.inference_server_url,
-                json={
-                    "prompt": prompt,
-                    "max_tokens": 256,
-                    "temperature": 0.1
-                },
-                timeout=self.timeout_ms / 1000
-            )
+        response = await self._client.post(
+            self.inference_server_url,
+            json={
+                "prompt": prompt,
+                "max_tokens": 256,
+                "temperature": 0.1
+            },
+        )
 
         if response.status_code != 200:
             raise Exception(f"Inference server error: HTTP {response.status_code}")
@@ -287,16 +289,21 @@ Query: {query}<|end|>
         """
         query_lower = query.lower()
 
-        if "funding opportunity" in query_lower or "evaluate" in query_lower:
-            return WorkflowType.EVALUATE_FUNDING_OPPORTUNITY
+        # Check more specific patterns before general ones
+        if "regional" in query_lower or "country" in query_lower:
+            return WorkflowType.EVALUATE_REGIONAL_PROJECT
         elif "investor capacity" in query_lower or "investment capacity" in query_lower:
             return WorkflowType.ASSESS_INVESTOR_CAPACITY
         elif "competitive landscape" in query_lower or "market fit" in query_lower:
             return WorkflowType.ANALYZE_COMPETITIVE_LANDSCAPE
-        elif "regional" in query_lower or "country" in query_lower:
-            return WorkflowType.EVALUATE_REGIONAL_PROJECT
+        elif "funding opportunity" in query_lower or "evaluate" in query_lower:
+            return WorkflowType.EVALUATE_FUNDING_OPPORTUNITY
         else:
             return WorkflowType.UNKNOWN
+
+    async def close(self) -> None:
+        """Close the HTTP client and release resources."""
+        await self._client.aclose()
 
     def get_stats(self) -> Dict[str, Any]:
         """Get routing statistics"""

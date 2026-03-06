@@ -40,6 +40,7 @@ from src.shared.routing_schema import (
 )
 from agno.models.vllm import VLLM
 from agno.models.openai.like import OpenAILike
+from agno.team.mode import TeamMode
 
 
 # Test Model Provider
@@ -198,7 +199,7 @@ class TestTeamCreation:
         )
 
         assert team.name == "Phase5Orchestrator"
-        # Agno 2.4.1 doesn't have mode attribute
+        assert team.mode == TeamMode.route
         assert len(team.members) == 3
 
     def test_create_orchestrator_team_production_mode(self):
@@ -216,6 +217,7 @@ class TestTeamCreation:
         )
 
         assert team.name == "Phase5Orchestrator"
+        assert team.mode == TeamMode.route
         assert len(team.members) == 1
 
 
@@ -243,6 +245,19 @@ class TestLegacyAdapter:
         # Test regional project detection (avoid "evaluate" keyword which matches funding opportunity)
         workflow = adapter._detect_workflow("Assess regional project in Kenya")
         assert workflow == WorkflowType.EVALUATE_REGIONAL_PROJECT
+
+    def test_detect_workflow_ordering(self):
+        """Test that 'Evaluate regional project' matches EVALUATE_REGIONAL_PROJECT, not EVALUATE_FUNDING_OPPORTUNITY"""
+        mock_team = Mock()
+        adapter = LegacyAdapter(mock_team)
+
+        # This should match EVALUATE_REGIONAL_PROJECT because "regional" is more specific
+        workflow = adapter._detect_workflow("Evaluate regional project in East Africa")
+        assert workflow == WorkflowType.EVALUATE_REGIONAL_PROJECT
+
+        # "evaluate" alone should still match EVALUATE_FUNDING_OPPORTUNITY
+        workflow = adapter._detect_workflow("Evaluate this opportunity")
+        assert workflow == WorkflowType.EVALUATE_FUNDING_OPPORTUNITY
 
     def test_map_name_to_agent_type(self):
         """Test agent name to AgentType mapping"""
@@ -375,6 +390,15 @@ class TestTrainingLogger:
         )
 
         logger.log_orchestration(response)  # Should not raise error
+
+    def test_training_logger_disabled_get_stats(self, tmp_path):
+        """Test get_stats when logger is disabled doesn't crash (bug 1.3 fix)"""
+        log_dir = str(tmp_path / "training_logs")
+        logger = TrainingLogger(log_dir=log_dir, enabled=False)
+
+        # This should not raise AttributeError
+        stats = logger.get_stats()
+        assert stats["total_logs"] == 0
 
 
 # Integration Tests

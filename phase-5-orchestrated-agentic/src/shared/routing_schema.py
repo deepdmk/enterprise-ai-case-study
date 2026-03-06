@@ -197,7 +197,7 @@ class OrchestratedResponse(BaseModel):
     Final orchestrated response combining multiple agent responses.
     """
     query: str = Field(description="Original user query")
-    routing_decision: RoutingDecision = Field(description="Routing decision made")
+    routing_decision: Optional[RoutingDecision] = Field(default=None, description="Routing decision made")
     agent_responses: List[AgentResponse] = Field(
         default_factory=list,
         description="Responses from all agents called"

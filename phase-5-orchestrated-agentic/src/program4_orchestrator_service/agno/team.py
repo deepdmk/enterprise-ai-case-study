@@ -6,7 +6,8 @@ Creates the coordinator team that delegates to Phase 4 agents.
 
 from typing import Dict, Optional
 import structlog
-from agno.team import Team
+from agno.team.team import Team
+from agno.team.mode import TeamMode
 from agno.agent import Agent
 from agno.models.vllm import VLLM
 from agno.models.openai.like import OpenAILike
@@ -68,7 +69,9 @@ def create_orchestrator_team(
         model = create_vllm_model(
             inference_url=inference_server_url,
             model_id="phase5-orchestrator",
-            use_openai_compatible=use_openai_compatible
+            use_openai_compatible=use_openai_compatible,
+            max_tokens=model_max_tokens,
+            temperature=model_temperature,
         )
 
     # Create team members
@@ -82,18 +85,16 @@ def create_orchestrator_team(
     instructions = create_coordinator_instructions()
     description = create_coordinator_description()
 
-    # Create team with correct Agno 2.4.1 parameters
+    # Create team with Agno Team parameters
     team = Team(
         name="Phase5Orchestrator",
+        mode=TeamMode.route,
         model=model,
         members=members,
         description=description,
         instructions=instructions,
-        # Delegation control (Agno 2.4.1 parameters):
-        respond_directly=respond_directly,  # Members respond directly
-        show_members_responses=show_members_responses,  # Show individual responses
-        # Additional settings
-        markdown=True  # Enable markdown formatting in responses
+        show_members_responses=show_members_responses,
+        markdown=True
     )
 
     logger.info(

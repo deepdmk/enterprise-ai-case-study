@@ -21,7 +21,10 @@ from src.program4_orchestrator_service.routing_engine import RoutingEngine
 from src.program4_orchestrator_service.response_synthesizer import ResponseSynthesizer
 
 # Shared
-from src.shared.routing_schema import TrainingExample, AgentType, AgentResponse
+from src.shared.routing_schema import (
+    TrainingExample, AgentType, AgentResponse, RoutingDecision,
+    WorkflowType, OrchestratedResponse
+)
 from src.shared.phase4_importer import Phase4Importer
 
 
@@ -138,6 +141,34 @@ class TestOrchestratorService:
         decision = await engine.route("Evaluate Kenya project")
         assert decision.entry_agent == AgentType.FIELD_OPERATIONS
 
+    @pytest.mark.asyncio
+    async def test_routing_engine_workflow_ordering(self):
+        """Test that 'Evaluate regional project' matches EVALUATE_REGIONAL_PROJECT, not EVALUATE_FUNDING_OPPORTUNITY"""
+        engine = RoutingEngine(
+            inference_server_url="http://localhost:8100",
+            test_mode=True
+        )
+
+        decision = await engine.route("Evaluate regional project in East Africa")
+        assert decision.workflow == WorkflowType.EVALUATE_REGIONAL_PROJECT
+
+    @pytest.mark.asyncio
+    async def test_routing_engine_avg_latency_no_division_by_zero(self):
+        """Test that routing engine handles zero requests without division by zero"""
+        engine = RoutingEngine(
+            inference_server_url="http://localhost:8100",
+            test_mode=True
+        )
+
+        # Stats should start at zero without error
+        stats = engine.get_stats()
+        assert stats["avg_latency_ms"] == 0
+
+        # After one route, stats should be valid
+        await engine.route("Test query")
+        stats = engine.get_stats()
+        assert stats["avg_latency_ms"] >= 0
+
     def test_response_synthesizer(self):
         """Test response synthesis"""
         synthesizer = ResponseSynthesizer(strategy="concatenation")
@@ -162,7 +193,6 @@ class TestOrchestratorService:
         ]
 
         # Create mock routing decision
-        from src.shared.routing_schema import RoutingDecision, WorkflowType
         decision = RoutingDecision(
             workflow=WorkflowType.EVALUATE_FUNDING_OPPORTUNITY,
             entry_agent=AgentType.FIELD_OPERATIONS,
@@ -178,6 +208,48 @@ class TestOrchestratorService:
 
         assert "Kenya evaluation complete" in synthesized
         assert "Investor capacity confirmed" in synthesized
+
+    def test_response_synthesizer_empty_responses(self):
+        """Test synthesis with empty responses list"""
+        synthesizer = ResponseSynthesizer(strategy="concatenation")
+
+        decision = RoutingDecision(
+            workflow=WorkflowType.UNKNOWN,
+            entry_agent=AgentType.FIELD_OPERATIONS,
+            optimal_depth=2,
+            reasoning="Test routing"
+        )
+
+        result = synthesizer.synthesize("Test query", decision, [])
+        assert "No successful agent responses" in result
+
+    def test_response_synthesizer_hierarchical_empty(self):
+        """Test hierarchical synthesis with empty responses doesn't crash on division by zero"""
+        synthesizer = ResponseSynthesizer(strategy="hierarchical")
+
+        decision = RoutingDecision(
+            workflow=WorkflowType.UNKNOWN,
+            entry_agent=AgentType.FIELD_OPERATIONS,
+            optimal_depth=2,
+            reasoning="Test routing"
+        )
+
+        # Empty list should not cause division by zero
+        result = synthesizer.synthesize("Test query", decision, [])
+        assert "Success rate: 0%" in result
+
+    def test_orchestrated_response_none_routing_decision(self):
+        """Test OrchestratedResponse accepts None routing_decision (bug 1.1 fix)"""
+        response = OrchestratedResponse(
+            query="Test query",
+            routing_decision=None,
+            agent_responses=[],
+            synthesized_response="Error occurred",
+            total_latency_ms=100,
+            success=False
+        )
+        assert response.routing_decision is None
+        assert not response.success
 
     def test_response_summary(self):
         """Test response summary generation"""

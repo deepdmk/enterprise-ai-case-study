@@ -7,7 +7,7 @@ Enables CopilotKit integration for rapid frontend development.
 
 from typing import Optional
 import structlog
-from agno.team import Team
+from agno.team.team import Team
 
 logger = structlog.get_logger()
 

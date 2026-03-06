@@ -5,10 +5,13 @@ FastAPI service wrapping the SLM orchestrator.
 Supports both legacy routing engine and Agno framework.
 """
 
-from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 import time
+import uuid
 import structlog
 
 from ..shared.routing_schema import RoutingDecision, OrchestratedResponse, AgentResponse
@@ -74,11 +77,31 @@ def create_app(
     Returns:
         FastAPI application
     """
+    # Track closeable resources for lifespan management
+    closeables = []
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        yield
+        for closeable in closeables:
+            if hasattr(closeable, 'close'):
+                await closeable.close()
+
     app = FastAPI(
         title="Phase 5 Orchestrator Service",
         description="SLM-based orchestrator for multi-agent coordination (Legacy + Agno modes)",
-        version="0.1.0"
+        version="0.1.0",
+        lifespan=lifespan,
     )
+
+    # Correlation ID middleware
+    @app.middleware("http")
+    async def add_correlation_id(request: Request, call_next):
+        request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+        with structlog.contextvars.bound_contextvars(request_id=request_id):
+            response = await call_next(request)
+            response.headers["X-Request-ID"] = request_id
+            return response
 
     # Initialize components based on mode
     if use_agno:
@@ -152,6 +175,9 @@ def create_app(
         response_synthesizer = ResponseSynthesizer(
             strategy="hierarchical" if enable_response_synthesis else "concatenation"
         )
+
+        # Register for cleanup on shutdown
+        closeables.extend([routing_engine, agent_client])
 
         logger.info("legacy_mode_enabled")
 
@@ -328,7 +354,6 @@ def create_app(
 
             # Create error response
             if app.state.use_agno:
-                from .agno.legacy_adapter import LegacyAdapter
                 error_response = OrchestratedResponse(
                     query=request.query,
                     routing_decision=None,

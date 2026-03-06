@@ -14,6 +14,7 @@ from ..shared.discovery_backend import DiscoveryBackend, InMemoryDiscoveryBacken
 from ..shared.call_logger import A2ACallLogger
 from ..shared.moe_loader import MoEModelLoader
 from .agent_wrapper import A2AAgent
+from .a2a_adapter import mount_a2a_adapter
 
 
 class HealthResponse(BaseModel):
@@ -174,6 +175,17 @@ def create_agent_app(
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+    # Store agent wrapper for A2A adapter access
+    app.state.agent_wrapper = agent
+
+    # Mount standard A2A adapter for Agno RemoteAgent compatibility
+    mount_a2a_adapter(
+        app=app,
+        agent_id=agent_id,
+        agent_name=capability.name,
+        agent_description=capability.description,
+    )
 
     return app, agent
 

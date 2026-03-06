@@ -38,6 +38,7 @@ class TrainingLogger:
         """
         self.log_dir = Path(log_dir)
         self.enabled = enabled
+        self.log_file = None
 
         if self.enabled:
             self.log_dir.mkdir(parents=True, exist_ok=True)
@@ -258,7 +259,7 @@ class TrainingLogger:
         Returns:
             Statistics dictionary
         """
-        if not self.log_file.exists():
+        if not self.enabled or self.log_file is None or not self.log_file.exists():
             return {
                 "total_logs": 0,
                 "successful": 0,
