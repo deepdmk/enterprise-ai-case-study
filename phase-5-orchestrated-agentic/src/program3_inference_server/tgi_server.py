@@ -5,7 +5,7 @@ Serves fine-tuned orchestrator model using HuggingFace Text Generation Inference
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any
 import subprocess
 import structlog
 
@@ -104,7 +104,7 @@ class TGIServer:
             return {"status": "healthy", "test_mode": True, "server_type": "tgi"}
 
         @app.post("/generate")
-        async def generate(request: Dict[str, Any]):
+        async def generate(request: dict[str, Any]):
             # Mock TGI response format
             return {
                 "generated_text": "Entry agent: field-operations-agent\nOptimal depth: 2\n\nRationale: Mock TGI response",

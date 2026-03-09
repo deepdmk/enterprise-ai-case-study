@@ -10,7 +10,7 @@ Generates synthetic training examples to teach MoE models:
 
 import random
 from dataclasses import dataclass
-from typing import List, Dict, Any, Optional
+from typing import Any
 import json
 
 
@@ -36,7 +36,7 @@ class A2ATrainingExample:
     depth: int = 0
     max_depth: int = 3
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "category": self.category,
@@ -75,7 +75,7 @@ class A2ADataGenerator:
         self,
         num_examples: int = 1000,
         test_mode: bool = False
-    ) -> List[A2ATrainingExample]:
+    ) -> list[A2ATrainingExample]:
         """
         Generate complete training dataset.
 
@@ -110,7 +110,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def generate_direct_task_examples(self, count: int) -> List[A2ATrainingExample]:
+    def generate_direct_task_examples(self, count: int) -> list[A2ATrainingExample]:
         """
         Generate examples where the model should handle the task directly.
 
@@ -136,7 +136,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def generate_single_call_examples(self, count: int) -> List[A2ATrainingExample]:
+    def generate_single_call_examples(self, count: int) -> list[A2ATrainingExample]:
         """
         Generate examples requiring a single A2A call.
 
@@ -174,7 +174,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def generate_multi_call_examples(self, count: int) -> List[A2ATrainingExample]:
+    def generate_multi_call_examples(self, count: int) -> list[A2ATrainingExample]:
         """
         Generate examples requiring coordination of multiple agents.
 
@@ -216,7 +216,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def generate_depth_limit_examples(self, count: int) -> List[A2ATrainingExample]:
+    def generate_depth_limit_examples(self, count: int) -> list[A2ATrainingExample]:
         """
         Generate examples at or near depth limits.
 
@@ -252,7 +252,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def generate_error_handling_examples(self, count: int) -> List[A2ATrainingExample]:
+    def generate_error_handling_examples(self, count: int) -> list[A2ATrainingExample]:
         """
         Generate examples with error scenarios.
 
@@ -283,7 +283,7 @@ class A2ADataGenerator:
 
         return examples
 
-    def _get_unit_configs(self) -> Dict[str, Dict[str, Any]]:
+    def _get_unit_configs(self) -> dict[str, dict[str, Any]]:
         """Get configuration for each unit type"""
         return {
             "fundraising": {
@@ -357,7 +357,7 @@ class A2ADataGenerator:
             }
         }
 
-    def _random_params(self) -> Dict[str, str]:
+    def _random_params(self) -> dict[str, str]:
         """Generate random parameters for query templates"""
         return {
             "investor_id": f"INV-{random.randint(100, 999)}",
@@ -367,7 +367,7 @@ class A2ADataGenerator:
             "region": random.choice(["East Africa", "West Africa", "Southern Africa"])
         }
 
-    def save_dataset(self, examples: List[A2ATrainingExample], output_path: str) -> None:
+    def save_dataset(self, examples: list[A2ATrainingExample], output_path: str) -> None:
         """Save dataset to JSON file"""
         import json
         from pathlib import Path

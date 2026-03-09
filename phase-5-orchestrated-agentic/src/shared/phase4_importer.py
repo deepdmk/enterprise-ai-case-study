@@ -4,12 +4,23 @@ Phase 4 Data Importer
 Imports training data exported from Phase 4 discovery experiments.
 """
 
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 import json
-import structlog
+import os
+from pathlib import Path
+from typing import Any
 
-logger = structlog.get_logger()
+from habitat_logging import get_logger
+
+try:
+    from config.phase_boundary_schemas import (
+        Phase4TrainingExample,
+        validate_phase4_training_examples,
+    )
+    _HAS_SCHEMAS = True
+except ImportError:
+    _HAS_SCHEMAS = False
+
+logger = get_logger(__name__)
 
 
 class Phase4Importer:
@@ -23,7 +34,7 @@ class Phase4Importer:
     - phase5_summary.json: Summary with optimal depths
     """
 
-    def __init__(self, phase4_exports_dir: Optional[Path] = None):
+    def __init__(self, phase4_exports_dir: Path | None = None):
         """
         Initialize importer.
 
@@ -34,23 +45,29 @@ class Phase4Importer:
         self.logger = logger.bind(component="phase4_importer")
         self.exports_dir = self._resolve_exports_dir(phase4_exports_dir)
 
-    def _resolve_exports_dir(self, exports_dir: Optional[Path]) -> Path:
+    def _resolve_exports_dir(self, exports_dir: Path | None) -> Path:
         """
         Resolve Phase 4 exports directory.
 
         Auto-detection strategy:
         1. Use provided path if given
-        2. Check ../phase-4-agentic-discovery/data/exports
-        3. Check ../../phase-4-agentic-discovery/data/exports
+        2. Check PHASE4_EXPORTS_DIR environment variable
+        3. Check relative paths from this file's location
         """
         if exports_dir:
             return Path(exports_dir)
 
-        # Auto-detect
+        # Check environment variable
+        env_path = os.environ.get("PHASE4_EXPORTS_DIR")
+        if env_path:
+            return Path(env_path)
+
+        # Auto-detect relative to this file's location (src/shared/ -> phase root -> repo root)
+        repo_root = Path(__file__).parent.parent.parent.parent
         candidates = [
+            repo_root / "phase-4-agentic-discovery" / "data" / "exports",
             Path("../phase-4-agentic-discovery/data/exports"),
             Path("../../phase-4-agentic-discovery/data/exports"),
-            Path("/Users/shigoto/Projects/GitHub Repos/emergent-enterprise-ai/phase-4-agentic-discovery/data/exports"),
         ]
 
         for candidate in candidates:
@@ -59,9 +76,9 @@ class Phase4Importer:
                 return candidate
 
         # Return default (may not exist yet)
-        return Path("../phase-4-agentic-discovery/data/exports")
+        return repo_root / "phase-4-agentic-discovery" / "data" / "exports"
 
-    def import_training_examples(self) -> List[Dict[str, Any]]:
+    def import_training_examples(self) -> list[dict[str, Any]]:
         """
         Import training examples from Phase 4.
 
@@ -81,10 +98,20 @@ class Phase4Importer:
         with open(training_file) as f:
             examples = json.load(f)
 
+        # Validate against schema if available
+        if _HAS_SCHEMAS and examples:
+            validated, result = validate_phase4_training_examples(examples)
+            if result.records_skipped > 0:
+                self.logger.warning(
+                    "schema_validation_warnings",
+                    skipped=result.records_skipped,
+                    errors=result.errors[:5],
+                )
+
         self.logger.info("imported_training_examples", count=len(examples))
         return examples
 
-    def import_chat_examples(self) -> List[Dict[str, Any]]:
+    def import_chat_examples(self) -> list[dict[str, Any]]:
         """
         Import ChatML format examples from Phase 4.
 
@@ -110,7 +137,7 @@ class Phase4Importer:
         self.logger.info("imported_chat_examples", count=len(examples))
         return examples
 
-    def import_phase5_summary(self) -> Dict[str, Any]:
+    def import_phase5_summary(self) -> dict[str, Any]:
         """
         Import Phase 5 summary (optimal depths, recommendations).
 
@@ -133,7 +160,7 @@ class Phase4Importer:
         self.logger.info("imported_phase5_summary", workflows=len(summary.get("workflows", {})))
         return summary
 
-    def import_all(self) -> Dict[str, Any]:
+    def import_all(self) -> dict[str, Any]:
         """
         Import all Phase 4 data.
 
@@ -181,7 +208,7 @@ class Phase4Importer:
 
         self.logger.info("export_complete", files_copied=copied, total_files=len(files_to_copy))
 
-    def get_optimal_depths(self) -> Dict[str, int]:
+    def get_optimal_depths(self) -> dict[str, int]:
         """
         Get optimal depths for known workflows.
 
@@ -191,7 +218,7 @@ class Phase4Importer:
         summary = self.import_phase5_summary()
         return summary.get("optimal_depths", {})
 
-    def get_workflow_stats(self) -> Dict[str, Dict[str, Any]]:
+    def get_workflow_stats(self) -> dict[str, dict[str, Any]]:
         """
         Get workflow statistics from Phase 4 discovery.
 

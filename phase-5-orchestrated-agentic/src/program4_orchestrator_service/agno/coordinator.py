@@ -5,10 +5,9 @@ Defines the coordinator's system prompt and delegation instructions.
 The coordinator uses the fine-tuned SLM to make routing decisions.
 """
 
-from typing import List
 
 
-def create_coordinator_instructions() -> List[str]:
+def create_coordinator_instructions() -> list[str]:
     """
     Create coordinator instructions for the Agno Team.
 

@@ -6,7 +6,7 @@ Defines core data structures for agent communication and discovery.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class MessageType(str, Enum):
@@ -41,7 +41,7 @@ class A2AMetadata:
     retry_count: int = 0
     trace_id: Optional[str] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {
             "call_id": self.call_id,
@@ -56,7 +56,7 @@ class A2AMetadata:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "A2AMetadata":
+    def from_dict(cls, data: dict[str, Any]) -> "A2AMetadata":
         """Create from dictionary"""
         required_fields = ["call_id", "timestamp", "call_depth", "max_depth",
                            "source_agent", "target_agent"]
@@ -83,11 +83,11 @@ class A2ARequest:
     """
     goal: str
     target: str
-    parameters: Dict[str, Any] = field(default_factory=dict)
+    parameters: dict[str, Any] = field(default_factory=dict)
     metadata: Optional[A2AMetadata] = None
     message_type: MessageType = MessageType.QUERY
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization"""
         return {
             "goal": self.goal,
@@ -98,7 +98,7 @@ class A2ARequest:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "A2ARequest":
+    def from_dict(cls, data: dict[str, Any]) -> "A2ARequest":
         """Create from dictionary"""
         required_fields = ["goal", "target"]
         missing = [f for f in required_fields if f not in data]
@@ -130,10 +130,10 @@ class A2AResponse:
     content: Any
     metadata: Optional[A2AMetadata] = None
     error_message: Optional[str] = None
-    cascaded_calls: List[str] = field(default_factory=list)
+    cascaded_calls: list[str] = field(default_factory=list)
     execution_time_ms: Optional[float] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization"""
         return {
             "status": self.status.value,
@@ -145,7 +145,7 @@ class A2AResponse:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "A2AResponse":
+    def from_dict(cls, data: dict[str, Any]) -> "A2AResponse":
         """Create from dictionary"""
         required_fields = ["status", "content"]
         missing = [f for f in required_fields if f not in data]
@@ -176,12 +176,12 @@ class A2ACapability:
     agent_id: str
     name: str
     description: str
-    domains: List[str]
-    example_queries: List[str] = field(default_factory=list)
-    dependencies: List[str] = field(default_factory=list)
+    domains: list[str]
+    example_queries: list[str] = field(default_factory=list)
+    dependencies: list[str] = field(default_factory=list)
     max_cascade_depth: int = 3
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "agent_id": self.agent_id,
@@ -194,7 +194,7 @@ class A2ACapability:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "A2ACapability":
+    def from_dict(cls, data: dict[str, Any]) -> "A2ACapability":
         """Create from dictionary"""
         required_fields = ["agent_id", "name", "description", "domains"]
         missing = [f for f in required_fields if f not in data]

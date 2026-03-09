@@ -4,11 +4,13 @@ Example: Making an A2A Protocol Call
 This example demonstrates how to make an A2A call to an agent service.
 """
 
-import sys
 from pathlib import Path
 
-# Add parent directory to path
+# Configure paths for cross-phase imports
+import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 import httpx
 from datetime import datetime

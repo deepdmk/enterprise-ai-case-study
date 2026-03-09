@@ -5,11 +5,11 @@ Integrates the fine-tuned orchestrator SLM (served via vLLM or TGI)
 with the Agno framework using built-in VLLM model class.
 """
 
-import structlog
+from habitat_logging import get_logger
 from agno.models.vllm import VLLM
 from agno.models.openai.like import OpenAILike
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def create_vllm_model(

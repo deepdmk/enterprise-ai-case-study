@@ -4,13 +4,12 @@ Intent Generator
 Generates synthetic user intents from workflow patterns to augment training data.
 """
 
-from typing import List, Dict, Any
 import random
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample, AgentType
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class IntentGenerator:
@@ -89,9 +88,9 @@ class IntentGenerator:
 
     def generate_intents(
         self,
-        existing_examples: List[TrainingExample],
+        existing_examples: list[TrainingExample],
         max_per_workflow: int = 5
-    ) -> List[TrainingExample]:
+    ) -> list[TrainingExample]:
         """
         Generate synthetic intents based on existing examples.
 
@@ -137,7 +136,7 @@ class IntentGenerator:
     def _generate_single_intent(
         self,
         agent: AgentType,
-        depth_distribution: Dict[int, float]
+        depth_distribution: dict[int, float]
     ) -> TrainingExample:
         """
         Generate a single synthetic intent.
@@ -202,8 +201,8 @@ class IntentGenerator:
 
     def _analyze_agent_distribution(
         self,
-        examples: List[TrainingExample]
-    ) -> Dict[AgentType, float]:
+        examples: list[TrainingExample]
+    ) -> dict[AgentType, float]:
         """
         Analyze distribution of agents in existing examples.
 
@@ -228,8 +227,8 @@ class IntentGenerator:
 
     def _analyze_depth_distribution(
         self,
-        examples: List[TrainingExample]
-    ) -> Dict[int, float]:
+        examples: list[TrainingExample]
+    ) -> dict[int, float]:
         """
         Analyze distribution of depths in existing examples.
 
@@ -253,7 +252,7 @@ class IntentGenerator:
 
         return distribution
 
-    def _sample_depth(self, distribution: Dict[int, float]) -> int:
+    def _sample_depth(self, distribution: dict[int, float]) -> int:
         """
         Sample a depth based on distribution.
 
@@ -272,7 +271,7 @@ class IntentGenerator:
         self,
         query: str,
         num_paraphrases: int = 3
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Generate paraphrases of a query.
 

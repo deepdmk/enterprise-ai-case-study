@@ -6,14 +6,14 @@ Stores feedback in JSONL format for easy processing.
 """
 
 import json
-import sys
 import uuid
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

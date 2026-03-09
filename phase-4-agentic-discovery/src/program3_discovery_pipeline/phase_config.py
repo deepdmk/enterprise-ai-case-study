@@ -5,7 +5,7 @@ Defines the 7-phase, 90-day adaptive depth discovery experiment.
 """
 
 from dataclasses import dataclass
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional
 
 
 @dataclass
@@ -35,7 +35,7 @@ class PhaseConfig:
         """Calculate phase duration"""
         return self.end_day - self.start_day + 1
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "phase_number": self.phase_number,
@@ -66,7 +66,7 @@ class DiscoveryPhases:
     def __init__(self):
         self.phases = self._initialize_phases()
 
-    def _initialize_phases(self) -> List[PhaseConfig]:
+    def _initialize_phases(self) -> list[PhaseConfig]:
         """Initialize all 7 phases"""
         return [
             PhaseConfig(
@@ -148,11 +148,11 @@ class DiscoveryPhases:
                 return phase
         return None
 
-    def get_all_phases(self) -> List[PhaseConfig]:
+    def get_all_phases(self) -> list[PhaseConfig]:
         """Get all phases"""
         return self.phases
 
-    def get_test_schedule(self) -> List[PhaseConfig]:
+    def get_test_schedule(self) -> list[PhaseConfig]:
         """
         Get compressed test schedule (7 days instead of 90).
 
@@ -257,9 +257,9 @@ class WorkflowConfig:
     description: str
     entry_agent: str  # Which agent starts this workflow
     typical_depth: int  # Expected cascade depth for this workflow
-    queries: List[str]  # Example queries for this workflow
+    queries: list[str]  # Example queries for this workflow
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "workflow_id": self.workflow_id,
@@ -277,7 +277,7 @@ class WorkflowLibrary:
     """
 
     @staticmethod
-    def get_all_workflows() -> List[WorkflowConfig]:
+    def get_all_workflows() -> list[WorkflowConfig]:
         """Get all test workflows"""
         return [
             WorkflowConfig(

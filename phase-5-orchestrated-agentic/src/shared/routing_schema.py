@@ -7,7 +7,7 @@ Defines data structures for:
 - Response synthesis
 """
 
-from typing import List, Dict, Optional, Any
+from typing import Optional, Any
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -38,7 +38,7 @@ class AgentCall(BaseModel):
     agent: AgentType = Field(description="Target agent to call")
     operation: str = Field(description="Operation/goal for this agent")
     expected_depth: int = Field(default=0, description="Expected cascade depth from this call")
-    parameters: Optional[Dict[str, Any]] = Field(
+    parameters: Optional[dict[str, Any]] = Field(
         default=None,
         description="Additional parameters for the agent call"
     )
@@ -60,7 +60,7 @@ class RoutingDecision(BaseModel):
         le=4,
         description="Optimal cascade depth for this query (1-4)"
     )
-    agent_calls: List[AgentCall] = Field(
+    agent_calls: list[AgentCall] = Field(
         default_factory=list,
         description="Planned sequence of agent calls"
     )
@@ -75,7 +75,7 @@ class RoutingDecision(BaseModel):
         le=1.0,
         description="Estimated probability of successful execution"
     )
-    metadata: Optional[Dict[str, Any]] = Field(
+    metadata: Optional[dict[str, Any]] = Field(
         default=None,
         description="Additional metadata"
     )
@@ -91,17 +91,17 @@ class TrainingExample(BaseModel):
     query: str = Field(description="User query")
     entry_agent: AgentType = Field(description="Target entry agent")
     optimal_depth: int = Field(ge=1, le=4, description="Optimal depth")
-    call_sequence: List[Dict[str, Any]] = Field(
+    call_sequence: list[dict[str, Any]] = Field(
         default_factory=list,
         description="Actual call sequence from Phase 4"
     )
     final_response: str = Field(description="Final response from Phase 4")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Metadata")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Metadata")
 
     class Config:
         use_enum_values = True
 
-    def to_chat_format(self) -> Dict[str, Any]:
+    def to_chat_format(self) -> dict[str, Any]:
         """
         Convert to ChatML format for training.
 
@@ -183,7 +183,7 @@ class AgentResponse(BaseModel):
     success: bool = Field(description="Whether the call succeeded")
     response: str = Field(description="Agent's response")
     latency_ms: int = Field(description="Response latency in milliseconds")
-    cascaded_calls: List[str] = Field(
+    cascaded_calls: list[str] = Field(
         default_factory=list,
         description="Agents that were cascaded to"
     )
@@ -198,14 +198,14 @@ class OrchestratedResponse(BaseModel):
     """
     query: str = Field(description="Original user query")
     routing_decision: Optional[RoutingDecision] = Field(default=None, description="Routing decision made")
-    agent_responses: List[AgentResponse] = Field(
+    agent_responses: list[AgentResponse] = Field(
         default_factory=list,
         description="Responses from all agents called"
     )
     synthesized_response: str = Field(description="Final synthesized response")
     total_latency_ms: int = Field(description="Total orchestration latency")
     success: bool = Field(description="Overall success status")
-    metadata: Optional[Dict[str, Any]] = Field(
+    metadata: Optional[dict[str, Any]] = Field(
         default=None,
         description="Additional metadata"
     )

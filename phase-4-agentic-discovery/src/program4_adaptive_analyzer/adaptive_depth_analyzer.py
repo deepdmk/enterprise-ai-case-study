@@ -5,7 +5,7 @@ Analyzes discovery logs to determine optimal cascade depths per workflow.
 """
 
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Any, Optional
 from collections import defaultdict
 import statistics
 
@@ -35,7 +35,7 @@ class AdaptiveDepthAnalyzer:
         self.logger = A2ACallLogger(log_directory)
         self.analysis_results = {}
 
-    def analyze_all_phases(self) -> Dict[str, Any]:
+    def analyze_all_phases(self) -> dict[str, Any]:
         """
         Analyze all discovery phases.
 
@@ -79,7 +79,7 @@ class AdaptiveDepthAnalyzer:
         self.analysis_results = results
         return results
 
-    def _analyze_by_phase(self, logs: List[A2ACallLog]) -> Dict[int, Dict[str, Any]]:
+    def _analyze_by_phase(self, logs: list[A2ACallLog]) -> dict[int, dict[str, Any]]:
         """Analyze performance by discovery phase"""
         print("Analyzing by phase...")
 
@@ -94,7 +94,7 @@ class AdaptiveDepthAnalyzer:
 
         return results
 
-    def _analyze_by_depth(self, logs: List[A2ACallLog]) -> Dict[int, Dict[str, Any]]:
+    def _analyze_by_depth(self, logs: list[A2ACallLog]) -> dict[int, dict[str, Any]]:
         """Analyze performance by cascade depth"""
         print("Analyzing by depth...")
 
@@ -109,7 +109,7 @@ class AdaptiveDepthAnalyzer:
 
         return results
 
-    def _analyze_by_workflow(self, logs: List[A2ACallLog]) -> Dict[str, Dict[str, Any]]:
+    def _analyze_by_workflow(self, logs: list[A2ACallLog]) -> dict[str, dict[str, Any]]:
         """Analyze performance by workflow"""
         print("Analyzing by workflow...")
 
@@ -125,7 +125,7 @@ class AdaptiveDepthAnalyzer:
 
         return results
 
-    def _compare_control_phases(self, logs: List[A2ACallLog]) -> Dict[str, Any]:
+    def _compare_control_phases(self, logs: list[A2ACallLog]) -> dict[str, Any]:
         """
         Compare control phases (2, 4, 6) to validate consistency.
 
@@ -156,7 +156,7 @@ class AdaptiveDepthAnalyzer:
 
         return {"phases": control_data, "insufficient_data": True}
 
-    def _determine_optimal_depths(self, logs: List[A2ACallLog]) -> Dict[str, int]:
+    def _determine_optimal_depths(self, logs: list[A2ACallLog]) -> dict[str, int]:
         """
         Determine optimal cascade depth for each workflow type.
 
@@ -201,7 +201,7 @@ class AdaptiveDepthAnalyzer:
 
         return optimal_depths
 
-    def _generate_recommendations(self, optimal_depths: Dict[str, int]) -> List[str]:
+    def _generate_recommendations(self, optimal_depths: dict[str, int]) -> list[str]:
         """Generate recommendations based on analysis"""
         recommendations = []
 
@@ -233,7 +233,7 @@ class AdaptiveDepthAnalyzer:
 
         return recommendations
 
-    def _compute_phase_stats(self, logs: List[A2ACallLog]) -> Dict[str, Any]:
+    def _compute_phase_stats(self, logs: list[A2ACallLog]) -> dict[str, Any]:
         """Compute statistics for a phase"""
         if not logs:
             return {"error": "No logs"}
@@ -251,11 +251,11 @@ class AdaptiveDepthAnalyzer:
             "max_depth": max([log.max_depth for log in logs])
         }
 
-    def _compute_depth_stats(self, logs: List[A2ACallLog]) -> Dict[str, Any]:
+    def _compute_depth_stats(self, logs: list[A2ACallLog]) -> dict[str, Any]:
         """Compute statistics for a specific depth"""
         return self._compute_phase_stats(logs)
 
-    def _compute_workflow_stats(self, logs: List[A2ACallLog]) -> Dict[str, Any]:
+    def _compute_workflow_stats(self, logs: list[A2ACallLog]) -> dict[str, Any]:
         """Compute statistics for a workflow"""
         stats = self._compute_phase_stats(logs)
 
@@ -269,7 +269,7 @@ class AdaptiveDepthAnalyzer:
 
         return stats
 
-    def print_analysis(self, results: Optional[Dict[str, Any]] = None) -> None:
+    def print_analysis(self, results: Optional[dict[str, Any]] = None) -> None:
         """
         Print analysis results.
 

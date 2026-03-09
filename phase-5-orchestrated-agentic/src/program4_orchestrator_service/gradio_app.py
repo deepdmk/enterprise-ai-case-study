@@ -5,9 +5,9 @@ Provides a web interface for testing orchestrator routing and
 agent coordination without requiring the full service stack.
 """
 
-from typing import Optional, Tuple, Union
+from typing import Optional
 import httpx
-import structlog
+from habitat_logging import get_logger
 
 import gradio as gr
 
@@ -16,11 +16,10 @@ from ..shared.routing_schema import (
     RoutingDecision,
     OrchestratedResponse,
     AgentResponse,
-    AgentType,
 )
 from .mock_orchestrator import MockOrchestratorClient
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class OrchestratorHttpClient:
@@ -169,7 +168,7 @@ class OrchestratorInterfaceApp:
 
     def __init__(
         self,
-        client: Union[MockOrchestratorClient, OrchestratorHttpClient],
+        client: MockOrchestratorClient | OrchestratorHttpClient,
         config: GradioConfig,
         test_mode: bool = False,
     ):
@@ -192,7 +191,7 @@ class OrchestratorInterfaceApp:
             client_type=type(client).__name__,
         )
 
-    def route_query(self, query: str) -> Tuple[str, str]:
+    def route_query(self, query: str) -> tuple[str, str]:
         """
         Get routing decision only (no agent execution).
 
@@ -220,7 +219,7 @@ class OrchestratorInterfaceApp:
 
     def orchestrate_query(
         self, query: str
-    ) -> Tuple[str, str, str, str, str, str]:
+    ) -> tuple[str, str, str, str, str, str]:
         """
         Execute full orchestration.
 

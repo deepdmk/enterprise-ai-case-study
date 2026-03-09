@@ -7,9 +7,9 @@ Provides canned responses and simulated routing decisions.
 
 import random
 import time
-from typing import Dict, Any, Optional
+from typing import Any
 
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import (
     RoutingDecision,
@@ -20,7 +20,7 @@ from ..shared.routing_schema import (
     AgentCall,
 )
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 # Canned responses by agent type
@@ -366,7 +366,7 @@ class MockOrchestratorClient:
 
         return "\n".join(parts)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Return mock stats."""
         return {
             "mode": "mock",

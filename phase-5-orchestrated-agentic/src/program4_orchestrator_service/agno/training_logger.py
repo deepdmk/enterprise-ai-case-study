@@ -5,15 +5,15 @@ Captures orchestration interactions for future SLM fine-tuning.
 Logs routing decisions, agent responses, and user feedback.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 import json
 import time
 from pathlib import Path
-import structlog
+from habitat_logging import get_logger
 
 from ...shared.routing_schema import OrchestratedResponse, TrainingExample
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class TrainingLogger:
@@ -58,7 +58,7 @@ class TrainingLogger:
     def log_orchestration(
         self,
         response: OrchestratedResponse,
-        feedback: Optional[Dict[str, Any]] = None
+        feedback: Optional[dict[str, Any]] = None
     ) -> None:
         """
         Log an orchestration interaction.
@@ -208,7 +208,7 @@ class TrainingLogger:
 
         return output_file
 
-    def _convert_to_training_example(self, log_entry: Dict[str, Any]) -> Optional[TrainingExample]:
+    def _convert_to_training_example(self, log_entry: dict[str, Any]) -> Optional[TrainingExample]:
         """
         Convert log entry to TrainingExample.
 
@@ -252,7 +252,7 @@ class TrainingLogger:
             logger.error("training_example_conversion_failed", error=str(e))
             return None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get logging statistics.
 

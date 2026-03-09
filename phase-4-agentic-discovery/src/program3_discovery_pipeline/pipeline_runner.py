@@ -5,9 +5,8 @@ Executes the 90-day adaptive depth discovery experiment.
 """
 
 import random
-import time
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional
 import httpx
 from datetime import datetime
 import uuid
@@ -28,7 +27,7 @@ class DiscoveryPipelineRunner:
     def __init__(
         self,
         agent_base_url: str = "http://localhost",
-        agent_ports: Optional[Dict[str, int]] = None,
+        agent_ports: Optional[dict[str, int]] = None,
         log_directory: Optional[Path] = None,
         test_mode: bool = False
     ):
@@ -71,7 +70,7 @@ class DiscoveryPipelineRunner:
             "by_phase": {}
         }
 
-    def run(self, queries_per_day: int = 10) -> Dict[str, Any]:
+    def run(self, queries_per_day: int = 10) -> dict[str, Any]:
         """
         Run the full discovery pipeline.
 
@@ -187,7 +186,7 @@ class DiscoveryPipelineRunner:
         query: str,
         max_depth: int,
         phase_number: int
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Execute a single workflow query.
 
@@ -314,7 +313,7 @@ class DiscoveryPipelineRunner:
 
         print()
 
-    def analyze_phase_results(self, phase_number: int) -> Dict[str, Any]:
+    def analyze_phase_results(self, phase_number: int) -> dict[str, Any]:
         """
         Analyze results for a specific phase.
 

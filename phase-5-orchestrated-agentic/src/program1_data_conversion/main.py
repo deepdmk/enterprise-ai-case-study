@@ -7,7 +7,7 @@ Converts Phase 4 discovery logs to training format for orchestrator fine-tuning.
 import argparse
 from pathlib import Path
 import sys
-import structlog
+from habitat_logging import get_logger
 
 from config.settings import get_settings
 from .discovery_converter import DiscoveryConverter
@@ -16,16 +16,7 @@ from .data_augmenter import DataAugmenter
 from .splitter import DataSplitter
 from ..shared.phase0_integration import get_phase0_integration
 
-# Configure logging
-structlog.configure(
-    processors=[
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.add_log_level,
-        structlog.processors.JSONRenderer()
-    ]
-)
-
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def import_phase4_data(args, settings):

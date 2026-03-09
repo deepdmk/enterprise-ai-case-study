@@ -4,12 +4,11 @@ Agent Service Factory
 Creates FastAPI applications for A2A agent services.
 """
 
-from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from ..shared.a2a_protocol import A2ACapability, A2ARequest, A2AResponse
+from ..shared.a2a_protocol import A2ACapability, A2ARequest
 from ..shared.discovery_backend import DiscoveryBackend, InMemoryDiscoveryBackend
 from ..shared.call_logger import A2ACallLogger
 from ..shared.moe_loader import MoEModelLoader
@@ -38,7 +37,7 @@ def create_agent_app(
     capability: A2ACapability,
     discovery_backend: Optional[DiscoveryBackend] = None,
     call_logger: Optional[A2ACallLogger] = None,
-    agent_registry: Optional[Dict[str, str]] = None,
+    agent_registry: Optional[dict[str, str]] = None,
     test_mode: bool = False
 ) -> tuple[FastAPI, A2AAgent]:
     """
@@ -191,12 +190,12 @@ def create_agent_app(
 
 
 def create_multi_agent_system(
-    capabilities: Dict[str, A2ACapability],
+    capabilities: dict[str, A2ACapability],
     base_port: int = 8000,
     discovery_backend: Optional[DiscoveryBackend] = None,
     call_logger: Optional[A2ACallLogger] = None,
     test_mode: bool = False
-) -> Dict[str, tuple[FastAPI, A2AAgent, int]]:
+) -> dict[str, tuple[FastAPI, A2AAgent, int]]:
     """
     Create a multi-agent system with multiple agent services.
 

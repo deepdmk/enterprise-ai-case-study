@@ -10,7 +10,7 @@ import re
 import json
 import uuid
 from datetime import datetime
-from typing import Optional, Any, Dict
+from typing import Optional, Any
 import httpx
 
 from ..shared.a2a_protocol import (
@@ -22,7 +22,7 @@ from ..shared.a2a_protocol import (
 )
 from ..shared.discovery_backend import DiscoveryBackend
 from ..shared.call_logger import A2ACallLogger
-from ..shared.moe_loader import MoEModelLoader, MockMoEModel, MockTokenizer
+from ..shared.moe_loader import MockMoEModel, MockTokenizer
 
 
 class A2AAgent:
@@ -45,7 +45,7 @@ class A2AAgent:
         tokenizer: Optional[Any] = None,
         discovery_backend: Optional[DiscoveryBackend] = None,
         call_logger: Optional[A2ACallLogger] = None,
-        agent_registry: Optional[Dict[str, str]] = None,
+        agent_registry: Optional[dict[str, str]] = None,
         test_mode: bool = False
     ):
         """
@@ -340,7 +340,7 @@ To call another agent, use:
         self,
         target_agent: str,
         goal: str,
-        parameters: Dict[str, Any],
+        parameters: dict[str, Any],
         parent_metadata: A2AMetadata
     ) -> str:
         """

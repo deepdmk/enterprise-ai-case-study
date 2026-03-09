@@ -5,13 +5,13 @@ Manages model checkpoints during training.
 """
 
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Optional
 import json
 import shutil
 from datetime import datetime
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class Checkpointer:
@@ -48,7 +48,7 @@ class Checkpointer:
         model: Any,
         tokenizer: Any,
         step: int,
-        metrics: Dict[str, Any],
+        metrics: dict[str, Any],
         checkpoint_name: Optional[str] = None
     ) -> Path:
         """
@@ -102,7 +102,7 @@ class Checkpointer:
 
         return checkpoint_path
 
-    def load_checkpoint(self, checkpoint_name: str) -> Dict[str, Any]:
+    def load_checkpoint(self, checkpoint_name: str) -> dict[str, Any]:
         """
         Load checkpoint metadata.
 
@@ -196,7 +196,7 @@ class Checkpointer:
 
         return latest["name"]
 
-    def list_checkpoints(self) -> List[Dict[str, Any]]:
+    def list_checkpoints(self) -> list[dict[str, Any]]:
         """
         List all checkpoints.
 
@@ -232,7 +232,7 @@ class Checkpointer:
         self,
         checkpoint_name: str,
         step: int,
-        metrics: Dict[str, Any]
+        metrics: dict[str, Any]
     ) -> None:
         """Update checkpoint metadata"""
         metadata = self._load_metadata()
@@ -281,7 +281,7 @@ class Checkpointer:
             kept=len(to_keep)
         )
 
-    def _load_metadata(self) -> Dict[str, Any]:
+    def _load_metadata(self) -> dict[str, Any]:
         """Load checkpoint metadata"""
         if self.metadata_file.exists():
             with open(self.metadata_file) as f:
@@ -289,7 +289,7 @@ class Checkpointer:
         else:
             return {"checkpoints": []}
 
-    def _save_metadata(self, metadata: Dict[str, Any]) -> None:
+    def _save_metadata(self, metadata: dict[str, Any]) -> None:
         """Save checkpoint metadata"""
         with open(self.metadata_file, "w") as f:
             json.dump(metadata, f, indent=2)

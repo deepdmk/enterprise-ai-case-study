@@ -7,19 +7,19 @@ Supports both legacy routing engine and Agno framework.
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 import time
 import uuid
 import structlog
+from habitat_logging import get_logger
 
-from ..shared.routing_schema import RoutingDecision, OrchestratedResponse, AgentResponse
+from ..shared.routing_schema import RoutingDecision, OrchestratedResponse
 from .routing_engine import RoutingEngine
 from .agent_client import AgentClient
 from .response_synthesizer import ResponseSynthesizer
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 # Request/Response models
@@ -48,7 +48,7 @@ class OrchestrateResponse(BaseModel):
 # Create FastAPI app
 def create_app(
     inference_server_url: str,
-    agent_registry: Dict[str, str],
+    agent_registry: dict[str, str],
     routing_timeout_ms: int = 500,
     agent_timeout_ms: int = 10000,
     max_concurrent_agents: int = 5,
@@ -56,7 +56,7 @@ def create_app(
     test_mode: bool = False,
     # Agno Framework parameters
     use_agno: bool = False,
-    agno_config: Optional[Dict[str, Any]] = None
+    agno_config: Optional[dict[str, Any]] = None
 ) -> FastAPI:
     """
     Create orchestrator FastAPI application.
@@ -82,7 +82,28 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        # Startup: check agent health
+        if agent_registry and not test_mode:
+            client = AgentClient(agent_registry, timeout_ms=5000)
+            health = await client.check_all_agents_health()
+            healthy = sum(1 for v in health.values() if v)
+            total = len(health)
+            logger.info(
+                "agent_health_check",
+                healthy=healthy,
+                total=total,
+                status=health,
+            )
+            if healthy == 0:
+                logger.warning(
+                    "no_agents_available",
+                    message="No agents responded to health check. Service may not function correctly.",
+                )
+            await client.close()
+
         yield
+
+        # Shutdown: close resources
         for closeable in closeables:
             if hasattr(closeable, 'close'):
                 await closeable.close()

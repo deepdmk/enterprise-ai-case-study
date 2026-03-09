@@ -13,8 +13,10 @@ from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from pathlib import Path
 from typing import Dict, Any
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Configure paths for cross-phase imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from shared.routing_schema import (
     OrchestratedResponse,

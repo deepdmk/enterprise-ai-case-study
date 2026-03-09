@@ -5,11 +5,11 @@ Serves fine-tuned orchestrator model using vLLM for fast inference.
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any
 import asyncio
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class vLLMServer:
@@ -111,7 +111,7 @@ class vLLMServer:
             return {"status": "healthy", "test_mode": True}
 
         @app.post("/generate")
-        async def generate(request: Dict[str, Any]):
+        async def generate(request: dict[str, Any]):
             # Mock response
             return {
                 "generated_text": "Entry agent: field-operations-agent\nOptimal depth: 2\n\nRationale: Mock response",
@@ -130,7 +130,7 @@ class vLLMServer:
         max_tokens: int = 256,
         temperature: float = 0.1,
         top_p: float = 0.95
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate text from prompt.
 

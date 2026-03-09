@@ -4,11 +4,10 @@ Remote Agent Members for Agno Team
 Creates RemoteAgent wrappers for Phase 4 A2A agents (MoE-powered).
 """
 
-from typing import List, Dict
-import structlog
+from habitat_logging import get_logger
 from agno.agent import RemoteAgent
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def create_fundraising_member(base_url: str = "http://localhost:8001") -> RemoteAgent:
@@ -86,7 +85,7 @@ def create_field_ops_member(base_url: str = "http://localhost:8003") -> RemoteAg
     )
 
 
-def create_all_members(agent_registry: Dict[str, str]) -> List[RemoteAgent]:
+def create_all_members(agent_registry: dict[str, str]) -> list[RemoteAgent]:
     """
     Create all RemoteAgent members from agent registry.
 

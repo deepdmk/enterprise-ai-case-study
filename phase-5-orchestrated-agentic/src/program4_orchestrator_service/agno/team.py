@@ -4,13 +4,10 @@ Agno Team Orchestration
 Creates the coordinator team that delegates to Phase 4 agents.
 """
 
-from typing import Dict, Optional
-import structlog
+from habitat_logging import get_logger
 from agno.team.team import Team
 from agno.team.mode import TeamMode
-from agno.agent import Agent
 from agno.models.vllm import VLLM
-from agno.models.openai.like import OpenAILike
 
 from .model_provider import create_vllm_model
 from .members import create_all_members
@@ -19,12 +16,12 @@ from .coordinator import (
     create_coordinator_description
 )
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def create_orchestrator_team(
     inference_server_url: str,
-    agent_registry: Dict[str, str],
+    agent_registry: dict[str, str],
     show_members_responses: bool = True,
     respond_directly: bool = True,
     model_timeout: float = 30.0,
@@ -126,7 +123,7 @@ async def run_orchestration(
     team: Team,
     query: str,
     stream: bool = False
-) -> Dict:
+) -> dict:
     """
     Run orchestration with the Agno team.
 

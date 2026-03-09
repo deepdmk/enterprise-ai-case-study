@@ -5,7 +5,7 @@ Formats A2A training examples into ChatML format.
 Extends Phase 2's data formatting with A2A-specific system prompts.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional
 from .data_generator import A2ATrainingExample
 
 
@@ -53,8 +53,8 @@ class A2ADataFormatter:
 
     def format_examples(
         self,
-        examples: List[A2ATrainingExample]
-    ) -> List[Dict[str, Any]]:
+        examples: list[A2ATrainingExample]
+    ) -> list[dict[str, Any]]:
         """
         Format training examples into ChatML format.
 
@@ -75,7 +75,7 @@ class A2ADataFormatter:
     def format_single_example(
         self,
         example: A2ATrainingExample
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Format a single example into ChatML format.
 
@@ -134,7 +134,7 @@ class A2ADataFormatter:
 
         return "\n\n".join(parts)
 
-    def _format_available_agents(self, dependencies: List[str]) -> str:
+    def _format_available_agents(self, dependencies: list[str]) -> str:
         """Format the list of available agents"""
         if not dependencies:
             return "- No other agents available (handle all queries directly)"
@@ -152,7 +152,7 @@ class A2ADataFormatter:
 
         return "\n".join(lines)
 
-    def _get_unit_configs(self) -> Dict[str, Dict[str, Any]]:
+    def _get_unit_configs(self) -> dict[str, dict[str, Any]]:
         """Get unit configurations"""
         return {
             "fundraising": {
@@ -187,7 +187,7 @@ class A2ADataFormatter:
             }
         }
 
-    def to_jsonl(self, formatted_examples: List[Dict[str, Any]], output_path: str) -> None:
+    def to_jsonl(self, formatted_examples: list[dict[str, Any]], output_path: str) -> None:
         """
         Save formatted examples to JSONL file.
 
@@ -207,7 +207,7 @@ class A2ADataFormatter:
 
         print(f"Saved {len(formatted_examples)} formatted examples to {output_path}")
 
-    def to_hf_dataset(self, formatted_examples: List[Dict[str, Any]]) -> Any:
+    def to_hf_dataset(self, formatted_examples: list[dict[str, Any]]) -> Any:
         """
         Convert formatted examples to HuggingFace dataset.
 
@@ -235,7 +235,7 @@ def format_a2a_response(
     is_agent_call: bool = False,
     target_agent: Optional[str] = None,
     goal: Optional[str] = None,
-    parameters: Optional[Dict[str, Any]] = None
+    parameters: Optional[dict[str, Any]] = None
 ) -> str:
     """
     Helper function to format A2A responses during inference.

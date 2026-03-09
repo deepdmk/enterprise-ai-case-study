@@ -9,23 +9,13 @@ import argparse
 from pathlib import Path
 import sys
 import uvicorn
-import structlog
+from habitat_logging import get_logger
 
 from config.settings import get_settings
 from .service import create_app
 from .gradio_app import create_orchestrator_interface
-from .mock_orchestrator import MockOrchestratorClient
 
-# Configure logging
-structlog.configure(
-    processors=[
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.add_log_level,
-        structlog.processors.JSONRenderer()
-    ]
-)
-
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def start_ui(args, settings):

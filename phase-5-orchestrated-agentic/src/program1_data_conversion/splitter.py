@@ -5,14 +5,14 @@ Splits training data into train/validation/test sets with stratification.
 """
 
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import Any
 import json
 import random
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class DataSplitter:
@@ -55,9 +55,9 @@ class DataSplitter:
 
     def split(
         self,
-        examples: List[TrainingExample],
+        examples: list[TrainingExample],
         stratify_by: str = "agent"
-    ) -> Tuple[List[TrainingExample], List[TrainingExample], List[TrainingExample]]:
+    ) -> tuple[list[TrainingExample], list[TrainingExample], list[TrainingExample]]:
         """
         Split examples into train/val/test sets.
 
@@ -88,8 +88,8 @@ class DataSplitter:
 
     def _split_by_agent(
         self,
-        examples: List[TrainingExample]
-    ) -> Tuple[List[TrainingExample], List[TrainingExample], List[TrainingExample]]:
+        examples: list[TrainingExample]
+    ) -> tuple[list[TrainingExample], list[TrainingExample], list[TrainingExample]]:
         """Split stratified by agent type"""
         from collections import defaultdict
 
@@ -122,8 +122,8 @@ class DataSplitter:
 
     def _split_by_depth(
         self,
-        examples: List[TrainingExample]
-    ) -> Tuple[List[TrainingExample], List[TrainingExample], List[TrainingExample]]:
+        examples: list[TrainingExample]
+    ) -> tuple[list[TrainingExample], list[TrainingExample], list[TrainingExample]]:
         """Split stratified by depth level"""
         from collections import defaultdict
 
@@ -156,8 +156,8 @@ class DataSplitter:
 
     def _split_by_agent_and_depth(
         self,
-        examples: List[TrainingExample]
-    ) -> Tuple[List[TrainingExample], List[TrainingExample], List[TrainingExample]]:
+        examples: list[TrainingExample]
+    ) -> tuple[list[TrainingExample], list[TrainingExample], list[TrainingExample]]:
         """Split stratified by both agent and depth"""
         from collections import defaultdict
 
@@ -191,8 +191,8 @@ class DataSplitter:
 
     def _split_random(
         self,
-        examples: List[TrainingExample]
-    ) -> Tuple[List[TrainingExample], List[TrainingExample], List[TrainingExample]]:
+        examples: list[TrainingExample]
+    ) -> tuple[list[TrainingExample], list[TrainingExample], list[TrainingExample]]:
         """Random split (no stratification)"""
         shuffled = list(examples)
         random.shuffle(shuffled)
@@ -210,9 +210,9 @@ class DataSplitter:
 
     def export_splits(
         self,
-        train: List[TrainingExample],
-        val: List[TrainingExample],
-        test: List[TrainingExample],
+        train: list[TrainingExample],
+        val: list[TrainingExample],
+        test: list[TrainingExample],
         output_dir: Path
     ) -> None:
         """
@@ -265,9 +265,9 @@ class DataSplitter:
 
     def _log_split_stats(
         self,
-        train: List[TrainingExample],
-        val: List[TrainingExample],
-        test: List[TrainingExample]
+        train: list[TrainingExample],
+        val: list[TrainingExample],
+        test: list[TrainingExample]
     ) -> None:
         """Log split statistics"""
         self.logger.info(
@@ -280,10 +280,10 @@ class DataSplitter:
 
     def _compute_split_statistics(
         self,
-        train: List[TrainingExample],
-        val: List[TrainingExample],
-        test: List[TrainingExample]
-    ) -> Dict[str, Any]:
+        train: list[TrainingExample],
+        val: list[TrainingExample],
+        test: list[TrainingExample]
+    ) -> dict[str, Any]:
         """Compute detailed split statistics"""
         stats = {
             "counts": {

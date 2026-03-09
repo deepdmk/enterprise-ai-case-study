@@ -5,16 +5,13 @@ Retrieves full parent documents from source PostgreSQL databases
 based on chunk metadata from search results.
 """
 
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import Settings
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import Settings
 from habitat_logging import get_logger
 
 from src.shared.database import DatabaseConnectionManager

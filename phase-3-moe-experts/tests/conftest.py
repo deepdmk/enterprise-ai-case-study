@@ -1,13 +1,12 @@
 """Shared test fixtures for Phase 3 MoE tests."""
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from config.settings import Settings
 from src.shared.phase2_importer import AdapterInfo

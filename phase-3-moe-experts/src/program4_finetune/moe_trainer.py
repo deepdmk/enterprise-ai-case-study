@@ -1,14 +1,14 @@
 """Optional MoE fine-tuning to improve routing."""
 
 import json
-import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 from config.settings import Settings

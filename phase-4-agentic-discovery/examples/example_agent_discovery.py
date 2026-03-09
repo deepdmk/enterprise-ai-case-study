@@ -5,11 +5,13 @@ This example demonstrates how to use the discovery backend to find agents
 based on semantic queries.
 """
 
-import sys
 from pathlib import Path
 
-# Add parent directory to path
+# Configure paths for cross-phase imports
+import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from src.shared.discovery_backend import InMemoryDiscoveryBackend
 from src.shared.a2a_protocol import A2ACapability

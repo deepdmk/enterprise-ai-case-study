@@ -47,7 +47,7 @@ class MergeConfig(BaseModel):
     use_cuda: bool = True
     lazy_unpickle: bool = True
     allow_crimes: bool = False
-    trust_remote_code: bool = True
+    trust_remote_code: bool = False
     timeout_minutes: int = 60  # Per-unit merge time
     copy_tokenizer: bool = True
     out_shard_size: int = Field(default=5_000_000_000, description="Output shard size in bytes")

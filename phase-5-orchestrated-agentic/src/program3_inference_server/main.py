@@ -8,23 +8,14 @@ import argparse
 from pathlib import Path
 import sys
 import asyncio
-import structlog
+from habitat_logging import get_logger
 
 from config.settings import get_settings
 from .vllm_server import vLLMServer
 from .tgi_server import TGIServer
 from .health_monitor import HealthMonitor
 
-# Configure logging
-structlog.configure(
-    processors=[
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.add_log_level,
-        structlog.processors.JSONRenderer()
-    ]
-)
-
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def start_server(args, settings):

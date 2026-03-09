@@ -14,10 +14,8 @@ Usage:
 """
 
 import argparse
-import asyncio
 from pathlib import Path
 import uvicorn
-from typing import Dict
 
 from .agents import fundraising, business_development, field_operations
 from .service_factory import create_multi_agent_system
@@ -25,7 +23,7 @@ from ..shared.discovery_backend import InMemoryDiscoveryBackend
 from ..shared.call_logger import A2ACallLogger
 
 
-def get_all_capabilities() -> Dict:
+def get_all_capabilities() -> dict:
     """Get capabilities for all agents"""
     return {
         "fundraising-agent": fundraising.get_capability(),

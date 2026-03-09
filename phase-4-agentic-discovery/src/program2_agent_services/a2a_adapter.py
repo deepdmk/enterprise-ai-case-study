@@ -8,11 +8,9 @@ A2A protocol, enabling Agno RemoteAgent compatibility.
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
 import uuid
-import time
 
-from ..shared.a2a_protocol import A2ARequest, A2AResponse
+from ..shared.a2a_protocol import A2ARequest
 
 
 class AgentCard(BaseModel):
@@ -104,7 +102,6 @@ def mount_a2a_adapter(
 
             # Find the agent wrapper from app state or call /a2a directly
             # We import the process function from the app's routes
-            from starlette.testclient import TestClient
             # Instead of importing test client, route through the app directly
             # by accessing the agent stored during app creation
             agent_wrapper = getattr(app.state, "agent_wrapper", None)

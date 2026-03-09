@@ -5,7 +5,7 @@ Exports discovery logs as training data for Phase 5 orchestrator models.
 """
 
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any
 import json
 from datetime import datetime
 
@@ -29,9 +29,9 @@ class OrchestratorTrainingExample:
         query: str,
         entry_agent: str,
         optimal_depth: int,
-        call_sequence: List[Dict[str, Any]],
+        call_sequence: list[dict[str, Any]],
         final_response: str,
-        metadata: Dict[str, Any]
+        metadata: dict[str, Any]
     ):
         """
         Initialize training example.
@@ -51,7 +51,7 @@ class OrchestratorTrainingExample:
         self.final_response = final_response
         self.metadata = metadata
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         return {
             "query": self.query,
@@ -62,7 +62,7 @@ class OrchestratorTrainingExample:
             "metadata": self.metadata
         }
 
-    def to_chat_format(self) -> Dict[str, Any]:
+    def to_chat_format(self) -> dict[str, Any]:
         """
         Convert to chat/instruction format for training.
 
@@ -158,7 +158,7 @@ class OrchestratorExporter:
     def export_training_data(
         self,
         output_dir: Path,
-        optimal_depths: Dict[str, int],
+        optimal_depths: dict[str, int],
         min_success_rate: float = 0.8
     ) -> int:
         """
@@ -225,8 +225,8 @@ class OrchestratorExporter:
 
     def _group_by_workflow(
         self,
-        logs: List[A2ACallLog]
-    ) -> Dict[str, List[A2ACallLog]]:
+        logs: list[A2ACallLog]
+    ) -> dict[str, list[A2ACallLog]]:
         """Group logs by workflow ID"""
         from collections import defaultdict
 
@@ -239,10 +239,10 @@ class OrchestratorExporter:
 
     def _generate_examples(
         self,
-        logs: List[A2ACallLog],
+        logs: list[A2ACallLog],
         workflow_id: str,
         optimal_depth: int
-    ) -> List[OrchestratorTrainingExample]:
+    ) -> list[OrchestratorTrainingExample]:
         """
         Generate training examples from logs.
 
@@ -290,7 +290,7 @@ class OrchestratorExporter:
 
         return examples
 
-    def _export_json(self, examples: List[OrchestratorTrainingExample], output_file: Path) -> None:
+    def _export_json(self, examples: list[OrchestratorTrainingExample], output_file: Path) -> None:
         """Export examples as JSON"""
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -301,7 +301,7 @@ class OrchestratorExporter:
 
         print(f"  Exported JSON: {output_file}")
 
-    def _export_jsonl(self, examples: List[OrchestratorTrainingExample], output_file: Path) -> None:
+    def _export_jsonl(self, examples: list[OrchestratorTrainingExample], output_file: Path) -> None:
         """Export examples as JSONL"""
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -311,7 +311,7 @@ class OrchestratorExporter:
 
         print(f"  Exported JSONL: {output_file}")
 
-    def _export_chat_format(self, examples: List[OrchestratorTrainingExample], output_file: Path) -> None:
+    def _export_chat_format(self, examples: list[OrchestratorTrainingExample], output_file: Path) -> None:
         """Export examples in chat/instruction format"""
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -322,7 +322,7 @@ class OrchestratorExporter:
 
         print(f"  Exported Chat Format: {output_file}")
 
-    def export_summary(self, output_file: Path, optimal_depths: Dict[str, int]) -> None:
+    def export_summary(self, output_file: Path, optimal_depths: dict[str, int]) -> None:
         """
         Export summary of discovery experiment.
 
@@ -357,7 +357,7 @@ class OrchestratorExporter:
 
         print(f"\nSummary exported: {output_file}")
 
-    def _generate_phase5_recommendations(self, optimal_depths: Dict[str, int]) -> List[str]:
+    def _generate_phase5_recommendations(self, optimal_depths: dict[str, int]) -> list[str]:
         """Generate recommendations for Phase 5"""
         recommendations = [
             "Use exported orchestrator_chat.jsonl for instruction fine-tuning",

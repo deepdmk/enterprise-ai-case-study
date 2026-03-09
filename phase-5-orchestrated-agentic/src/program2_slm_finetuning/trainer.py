@@ -5,7 +5,7 @@ Handles LoRA fine-tuning of orchestrator models using SFTTrainer.
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 import torch
 from transformers import (
     AutoModelForCausalLM,
@@ -15,9 +15,9 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer
 from datasets import load_dataset
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class OrchestratorTrainer:
@@ -62,7 +62,7 @@ class OrchestratorTrainer:
 
     def load_model_and_tokenizer(
         self,
-        lora_config: Dict[str, Any],
+        lora_config: dict[str, Any],
         load_in_8bit: bool = False,
         load_in_4bit: bool = False
     ) -> None:
@@ -122,8 +122,8 @@ class OrchestratorTrainer:
         self,
         train_dataset_path: Path,
         val_dataset_path: Optional[Path] = None,
-        training_args: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        training_args: Optional[dict[str, Any]] = None
+    ) -> dict[str, Any]:
         """
         Train the model.
 

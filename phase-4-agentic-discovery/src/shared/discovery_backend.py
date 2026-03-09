@@ -5,9 +5,10 @@ Integrates with Phase 1 ChromaDB for semantic agent matching.
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import Optional
 import sys
 
+from src.shared.path_config import configure_paths, PHASE1_ROOT
 from .a2a_protocol import A2ACapability
 
 
@@ -25,7 +26,7 @@ class DiscoveryBackend(ABC):
         query: str,
         top_k: int = 3,
         min_score: float = 0.5
-    ) -> List[tuple[A2ACapability, float]]:
+    ) -> list[tuple[A2ACapability, float]]:
         """
         Discover agents that can handle a query.
 
@@ -45,7 +46,7 @@ class DiscoveryBackend(ABC):
         pass
 
     @abstractmethod
-    def list_agents(self) -> List[A2ACapability]:
+    def list_agents(self) -> list[A2ACapability]:
         """List all registered agents"""
         pass
 
@@ -74,9 +75,16 @@ class ChromaDBDiscoveryBackend(DiscoveryBackend):
         self.persist_directory = persist_directory or Path.cwd() / "data" / "chromadb"
         self.persist_directory.mkdir(parents=True, exist_ok=True)
 
-        # Import ChromaDB client from Phase 1
+        # Configure paths for cross-phase imports (Phase 1 for ChromaDB)
+        configure_paths()
         if phase1_path:
-            sys.path.insert(0, str(phase1_path / "src"))
+            phase1_src = str(phase1_path / "src")
+            if phase1_src not in sys.path:
+                sys.path.insert(0, phase1_src)
+        elif PHASE1_ROOT.exists():
+            phase1_src = str(PHASE1_ROOT / "src")
+            if phase1_src not in sys.path:
+                sys.path.insert(0, phase1_src)
 
         try:
             import chromadb
@@ -99,7 +107,7 @@ class ChromaDBDiscoveryBackend(DiscoveryBackend):
         )
 
         # In-memory cache for quick lookups
-        self._agent_cache: Dict[str, A2ACapability] = {}
+        self._agent_cache: dict[str, A2ACapability] = {}
 
     def register_agent(self, capability: A2ACapability) -> None:
         """Register an agent's capabilities in ChromaDB"""
@@ -121,7 +129,7 @@ class ChromaDBDiscoveryBackend(DiscoveryBackend):
         query: str,
         top_k: int = 3,
         min_score: float = 0.5
-    ) -> List[tuple[A2ACapability, float]]:
+    ) -> list[tuple[A2ACapability, float]]:
         """
         Discover agents using semantic search in ChromaDB.
 
@@ -169,7 +177,7 @@ class ChromaDBDiscoveryBackend(DiscoveryBackend):
 
         return None
 
-    def list_agents(self) -> List[A2ACapability]:
+    def list_agents(self) -> list[A2ACapability]:
         """List all registered agents"""
         result = self.collection.get()
         agents = []
@@ -198,7 +206,7 @@ class InMemoryDiscoveryBackend(DiscoveryBackend):
     """
 
     def __init__(self):
-        self._agents: Dict[str, A2ACapability] = {}
+        self._agents: dict[str, A2ACapability] = {}
 
     def register_agent(self, capability: A2ACapability) -> None:
         """Register an agent in memory"""
@@ -209,7 +217,7 @@ class InMemoryDiscoveryBackend(DiscoveryBackend):
         query: str,
         top_k: int = 3,
         min_score: float = 0.5
-    ) -> List[tuple[A2ACapability, float]]:
+    ) -> list[tuple[A2ACapability, float]]:
         """Discover agents using basic string matching"""
         query_lower = query.lower()
         scored_agents = []
@@ -238,6 +246,6 @@ class InMemoryDiscoveryBackend(DiscoveryBackend):
         """Get agent by ID"""
         return self._agents.get(agent_id)
 
-    def list_agents(self) -> List[A2ACapability]:
+    def list_agents(self) -> list[A2ACapability]:
         """List all agents"""
         return list(self._agents.values())

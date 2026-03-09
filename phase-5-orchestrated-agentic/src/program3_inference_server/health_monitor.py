@@ -4,14 +4,13 @@ Health Monitor
 Monitors inference server health and performance.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 import time
 import asyncio
 import httpx
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class HealthMonitor:
@@ -56,7 +55,7 @@ class HealthMonitor:
             "last_check_status": None
         }
 
-    async def check_health(self) -> Dict[str, Any]:
+    async def check_health(self) -> dict[str, Any]:
         """
         Check server health.
 
@@ -150,7 +149,7 @@ class HealthMonitor:
 
         self.print_summary()
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         """Get current metrics"""
         return self.metrics.copy()
 
@@ -173,7 +172,7 @@ class HealthMonitor:
 
         print("="*80 + "\n")
 
-    async def test_inference(self, test_query: str = "Evaluate funding opportunity in Kenya") -> Dict[str, Any]:
+    async def test_inference(self, test_query: str = "Evaluate funding opportunity in Kenya") -> dict[str, Any]:
         """
         Test inference endpoint.
 

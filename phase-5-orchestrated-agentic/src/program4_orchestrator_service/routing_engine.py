@@ -4,14 +4,14 @@ Routing Engine
 SLM-based routing logic for orchestrator.
 """
 
-from typing import Dict, Any, Optional
+from typing import Any
 import time
 import httpx
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import RoutingDecision, AgentType, WorkflowType, AgentCall
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class RoutingEngine:
@@ -305,7 +305,7 @@ Query: {query}<|end|>
         """Close the HTTP client and release resources."""
         await self._client.aclose()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get routing statistics"""
         return self.stats.copy()
 

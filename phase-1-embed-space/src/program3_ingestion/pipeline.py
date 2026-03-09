@@ -10,7 +10,6 @@ Orchestrates the full ingestion workflow:
 """
 
 import json
-import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -18,11 +17,10 @@ from typing import Any
 
 from tqdm import tqdm
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import DatabaseConfig, IngestionConfig
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import DatabaseConfig, IngestionConfig
 from habitat_logging import get_logger
 
 from src.shared.chromadb_client import ChromaDBClient

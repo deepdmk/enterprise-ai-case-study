@@ -5,16 +5,15 @@ Provides evaluation metrics for assessing embedding quality including
 cosine similarity, retrieval metrics (NDCG, MRR), and comparison tools.
 """
 
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

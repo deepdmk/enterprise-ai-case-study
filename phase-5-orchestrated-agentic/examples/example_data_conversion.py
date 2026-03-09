@@ -5,8 +5,12 @@ Demonstrates how to convert Phase 4 discovery logs to training data.
 """
 
 from pathlib import Path
+
+# Configure paths for cross-phase imports
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from src.program1_data_conversion.discovery_converter import DiscoveryConverter
 from src.program1_data_conversion.intent_generator import IntentGenerator

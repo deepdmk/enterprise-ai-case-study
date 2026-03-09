@@ -8,7 +8,8 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, Optional
+from collections.abc import Iterator
 
 from .a2a_protocol import A2ARequest, A2AResponse, ResponseStatus
 
@@ -30,12 +31,12 @@ class A2ACallLog:
     max_depth: int
     status: ResponseStatus
     execution_time_ms: float
-    cascaded_calls: List[str] = field(default_factory=list)
+    cascaded_calls: list[str] = field(default_factory=list)
     error_message: Optional[str] = None
     phase: int = 1  # Which discovery phase (1-7)
     workflow_id: Optional[str] = None  # Optional workflow tracking
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
         return {
             "call_id": self.call_id,
@@ -54,7 +55,7 @@ class A2ACallLog:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "A2ACallLog":
+    def from_dict(cls, data: dict[str, Any]) -> "A2ACallLog":
         """Create from dictionary"""
         data = data.copy()
         data["timestamp"] = datetime.fromisoformat(data["timestamp"])
@@ -168,7 +169,7 @@ class A2ACallLogger:
                         if line.strip():
                             yield A2ACallLog.from_dict(json.loads(line))
 
-    def load_logs(self, phase: Optional[int] = None) -> List[A2ACallLog]:
+    def load_logs(self, phase: Optional[int] = None) -> list[A2ACallLog]:
         """
         Load call logs from disk.
 
@@ -180,7 +181,7 @@ class A2ACallLogger:
         """
         return list(self.iter_logs(phase))
 
-    def get_phase_stats(self, phase: int) -> Dict[str, Any]:
+    def get_phase_stats(self, phase: int) -> dict[str, Any]:
         """
         Get statistics for a specific phase.
 
@@ -219,7 +220,7 @@ class A2ACallLogger:
         """Get log file path for a phase"""
         return self.log_directory / f"phase_{phase}.jsonl"
 
-    def _get_status_breakdown(self, logs: List[A2ACallLog]) -> Dict[str, int]:
+    def _get_status_breakdown(self, logs: list[A2ACallLog]) -> dict[str, int]:
         """Get breakdown of response statuses"""
         breakdown = {}
         for log in logs:

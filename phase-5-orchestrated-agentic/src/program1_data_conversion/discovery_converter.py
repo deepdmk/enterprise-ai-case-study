@@ -5,13 +5,13 @@ Converts Phase 4 discovery logs to training format for orchestrator fine-tuning.
 """
 
 from pathlib import Path
-from typing import List, Dict, Any
-import structlog
+from typing import Any
+from habitat_logging import get_logger
 
 from ..shared.phase4_importer import Phase4Importer
 from ..shared.routing_schema import TrainingExample, AgentType
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class DiscoveryConverter:
@@ -32,7 +32,7 @@ class DiscoveryConverter:
     def convert_training_examples(
         self,
         test_mode: bool = False
-    ) -> List[TrainingExample]:
+    ) -> list[TrainingExample]:
         """
         Convert Phase 4 training examples to TrainingExample objects.
 
@@ -75,7 +75,7 @@ class DiscoveryConverter:
         self.logger.info("conversion_complete", count=len(training_examples))
         return training_examples
 
-    def _convert_single_example(self, raw: Dict[str, Any]) -> TrainingExample:
+    def _convert_single_example(self, raw: dict[str, Any]) -> TrainingExample:
         """
         Convert a single raw example to TrainingExample.
 
@@ -110,8 +110,8 @@ class DiscoveryConverter:
 
     def convert_to_chat_format(
         self,
-        training_examples: List[TrainingExample]
-    ) -> List[Dict[str, Any]]:
+        training_examples: list[TrainingExample]
+    ) -> list[dict[str, Any]]:
         """
         Convert training examples to ChatML format.
 
@@ -141,7 +141,7 @@ class DiscoveryConverter:
 
     def export_training_data(
         self,
-        training_examples: List[TrainingExample],
+        training_examples: list[TrainingExample],
         output_dir: Path
     ) -> None:
         """
@@ -183,8 +183,8 @@ class DiscoveryConverter:
 
     def validate_conversion(
         self,
-        training_examples: List[TrainingExample]
-    ) -> Dict[str, Any]:
+        training_examples: list[TrainingExample]
+    ) -> dict[str, Any]:
         """
         Validate converted training examples.
 
@@ -220,7 +220,7 @@ class DiscoveryConverter:
         self.logger.info("validation_complete", stats=stats)
         return stats
 
-    def create_mock_data(self, count: int = 100) -> List[TrainingExample]:
+    def create_mock_data(self, count: int = 100) -> list[TrainingExample]:
         """
         Create mock training data for testing.
 

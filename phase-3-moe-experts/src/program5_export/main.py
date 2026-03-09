@@ -4,14 +4,10 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Import local config BEFORE adding phase-0 to path to avoid conflicts
 from config.settings import Settings, get_settings
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import configure_logging, get_logger
 from registries.model_registry import ModelRegistry
 from registries.schemas import ModelStatus

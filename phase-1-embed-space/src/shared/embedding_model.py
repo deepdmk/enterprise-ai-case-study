@@ -5,18 +5,16 @@ Handles loading and inference for embedding models (base and fine-tuned).
 Uses Sentence-Transformers library for model management.
 """
 
-import sys
 from pathlib import Path
 
 import numpy as np
 import torch
 from sentence_transformers import SentenceTransformer
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import EmbeddingConfig
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import EmbeddingConfig
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

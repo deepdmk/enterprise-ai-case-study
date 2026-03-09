@@ -3,10 +3,18 @@ Phase 4 Configuration Settings
 Pydantic-based settings for all programs.
 """
 
+import importlib.util
 from pathlib import Path
-from typing import Dict, List, Optional
+
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Import HabitatBaseSettings from phase-0-infrastructure
+_phase0_config_path = Path(__file__).parent.parent.parent / "phase-0-infrastructure" / "config" / "base_settings.py"
+_spec = importlib.util.spec_from_file_location("phase0_base_settings", _phase0_config_path)
+_phase0_module = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_phase0_module)
+HabitatBaseSettings = _phase0_module.HabitatBaseSettings
 
 
 class A2AProtocolSettings(BaseModel):
@@ -32,7 +40,7 @@ class AgentServiceSettings(BaseModel):
     """Program 2: Agent Services configuration"""
     base_port: int = Field(default=8000, description="Base port for agent services")
     host: str = Field(default="0.0.0.0", description="Host to bind to")
-    agent_ports: Dict[str, int] = Field(
+    agent_ports: dict[str, int] = Field(
         default={
             "fundraising-agent": 8001,
             "business-development-agent": 8002,
@@ -62,11 +70,11 @@ class PathSettings(BaseModel):
     training_dir: Path = Field(default=Path("data/training"), description="Training data directory")
     logs_dir: Path = Field(default=Path("data/logs"), description="Logs directory")
     exports_dir: Path = Field(default=Path("data/exports"), description="Exports directory")
-    phase3_path: Optional[Path] = Field(default=None, description="Path to phase-3-moe-experts")
-    phase1_path: Optional[Path] = Field(default=None, description="Path to phase-1-embed-space")
+    phase3_path: Path | None = Field(default=None, description="Path to phase-3-moe-experts")
+    phase1_path: Path | None = Field(default=None, description="Path to phase-1-embed-space")
 
 
-class Settings(BaseSettings):
+class Settings(HabitatBaseSettings):
     """
     Main settings for Phase 4.
 
@@ -74,7 +82,17 @@ class Settings(BaseSettings):
     1. config.yaml file
     2. Environment variables (prefixed with PHASE4_)
     3. Direct instantiation
+
+    Inherits test_mode, log_level, log_format from HabitatBaseSettings.
     """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        env_prefix="PHASE4_",
+        env_nested_delimiter="__",
+    )
 
     # Sub-settings
     a2a_protocol: A2AProtocolSettings = Field(default_factory=A2AProtocolSettings)
@@ -84,16 +102,11 @@ class Settings(BaseSettings):
     adaptive_analyzer: AdaptiveAnalyzerSettings = Field(default_factory=AdaptiveAnalyzerSettings)
     paths: PathSettings = Field(default_factory=PathSettings)
 
-    # General settings
-    test_mode: bool = Field(default=False, description="Global test mode flag")
-    device: Optional[str] = Field(default=None, description="Device for training (cuda/cpu/mps)")
-
-    class Config:
-        env_prefix = "PHASE4_"
-        env_nested_delimiter = "__"
+    # General settings (test_mode inherited from HabitatBaseSettings)
+    device: str | None = Field(default=None, description="Device for training (cuda/cpu/mps)")
 
 
-def load_settings(config_file: Optional[Path] = None) -> Settings:
+def load_settings(config_file: Path | None = None) -> Settings:
     """
     Load settings from config file and environment.
 
@@ -115,10 +128,10 @@ def load_settings(config_file: Optional[Path] = None) -> Settings:
 
 
 # Global settings instance (lazy loaded)
-_settings: Optional[Settings] = None
+_settings: Settings | None = None
 
 
-def get_settings(config_file: Optional[Path] = None) -> Settings:
+def get_settings(config_file: Path | None = None) -> Settings:
     """
     Get global settings instance.
 

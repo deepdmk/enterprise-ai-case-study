@@ -5,10 +5,10 @@ Adapts Agno Team responses to the legacy OrchestratedResponse format,
 ensuring backward compatibility with existing API contracts.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any
 import time
 import re
-import structlog
+from habitat_logging import get_logger
 from agno.team.team import Team
 
 from ...shared.routing_schema import (
@@ -20,7 +20,7 @@ from ...shared.routing_schema import (
     AgentCall
 )
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class LegacyAdapter:
@@ -193,7 +193,7 @@ class LegacyAdapter:
             }
         )
 
-    def _extract_agent_responses(self, result: Any) -> List[AgentResponse]:
+    def _extract_agent_responses(self, result: Any) -> list[AgentResponse]:
         """
         Extract agent responses from Agno result.
 

@@ -5,15 +5,12 @@ Extracts text samples from PostgreSQL databases for training dataset generation.
 Uses the placeholder pattern for unknown schemas.
 """
 
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 
-# Import local config BEFORE adding phase-0 to path
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from config.settings import DatabaseConfig, TableConfig
-
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent.parent / "phase-0-infrastructure"))
 from habitat_logging import get_logger
 
 from src.shared.database import DatabaseConnectionManager, ExtractedRecord

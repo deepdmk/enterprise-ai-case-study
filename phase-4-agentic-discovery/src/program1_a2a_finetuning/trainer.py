@@ -5,10 +5,10 @@ Fine-tunes Phase 3 MoE models with LoRA to add A2A protocol capabilities.
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    import torch
+    pass
 
 from ..shared.phase0_integration import get_phase0_integration
 
@@ -72,7 +72,7 @@ class A2AFineTuner:
         self,
         dataset_path: Path,
         test_mode: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Train A2A adapter on the dataset.
 
@@ -260,7 +260,7 @@ class A2AFineTuner:
 
         return final_metrics
 
-    def _train_mock(self, dataset_path: Path) -> Dict[str, Any]:
+    def _train_mock(self, dataset_path: Path) -> dict[str, Any]:
         """Mock training for testing"""
         print(f"\n{'='*60}")
         print(f"MOCK A2A Fine-Tuning for {self.unit_name}")
@@ -309,7 +309,7 @@ class A2AFineTuner:
             }
         }
 
-    def validate(self, test_queries: Optional[list] = None) -> Dict[str, Any]:
+    def validate(self, test_queries: Optional[list] = None) -> dict[str, Any]:
         """
         Validate the fine-tuned model on test queries.
 

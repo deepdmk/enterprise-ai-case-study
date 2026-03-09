@@ -5,10 +5,12 @@ Loads Phase 3 Mixture-of-Experts models for use in A2A agents.
 
 import sys
 from pathlib import Path
-from typing import Optional, Dict, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING
+
+from src.shared.path_config import configure_paths, PHASE3_ROOT
 
 if TYPE_CHECKING:
-    import torch
+    pass
 
 
 class MoEModelLoader:
@@ -33,9 +35,16 @@ class MoEModelLoader:
         self.phase3_path = phase3_path or self._find_phase3_path()
         self.device = device or self._get_default_device()
 
-        # Import Phase 3 utilities
+        # Configure paths for cross-phase imports (Phase 3 for MoE utilities)
+        configure_paths()
         if self.phase3_path:
-            sys.path.insert(0, str(self.phase3_path / "src"))
+            phase3_src = str(self.phase3_path / "src")
+            if phase3_src not in sys.path:
+                sys.path.insert(0, phase3_src)
+        elif PHASE3_ROOT.exists():
+            phase3_src = str(PHASE3_ROOT / "src")
+            if phase3_src not in sys.path:
+                sys.path.insert(0, phase3_src)
 
     def load_unit_model(
         self,
@@ -117,7 +126,7 @@ class MoEModelLoader:
 
         return tokenizer
 
-    def get_model_info(self, unit_name: str) -> Dict[str, Any]:
+    def get_model_info(self, unit_name: str) -> dict[str, Any]:
         """
         Get information about a model without loading it.
 

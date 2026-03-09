@@ -19,7 +19,6 @@ Usage:
 import argparse
 from pathlib import Path
 import sys
-import json
 
 from .pipeline_runner import DiscoveryPipelineRunner
 from .phase_config import DiscoveryPhases, WorkflowLibrary

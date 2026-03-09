@@ -1,13 +1,13 @@
 """Routing metadata utilities for Phase 4 integration."""
 
 import json
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 from src.shared.phase2_importer import AdapterInfo

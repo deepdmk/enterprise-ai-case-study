@@ -5,13 +5,11 @@ Reranks initial retrieval results using a more expensive but more accurate
 CrossEncoder model for improved search quality.
 """
 
-import sys
-from pathlib import Path
-
 from sentence_transformers import CrossEncoder
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)

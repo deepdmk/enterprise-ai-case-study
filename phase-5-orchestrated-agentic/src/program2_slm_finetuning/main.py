@@ -7,24 +7,14 @@ Fine-tunes orchestrator models using LoRA.
 import argparse
 from pathlib import Path
 import sys
-import structlog
+from habitat_logging import get_logger
 
 from config.settings import get_settings
 from .trainer import OrchestratorTrainer
 from .evaluator import OrchestratorEvaluator
-from .checkpointer import Checkpointer
 from ..shared.phase0_integration import get_phase0_integration
 
-# Configure logging
-structlog.configure(
-    processors=[
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.add_log_level,
-        structlog.processors.JSONRenderer()
-    ]
-)
-
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def train_model(args, settings):

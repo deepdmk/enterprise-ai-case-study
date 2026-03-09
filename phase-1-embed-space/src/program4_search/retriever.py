@@ -4,13 +4,12 @@ Semantic Retriever.
 Core retrieval logic using fine-tuned embeddings and ChromaDB.
 """
 
-import sys
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 
 from config.settings import RerankingConfig
@@ -231,7 +230,16 @@ class SemanticRetriever:
         Returns:
             List of unique source database names.
         """
-        # This would ideally query ChromaDB metadata, but for now
-        # we'll return from config or a simple query
-        # TODO: Implement proper metadata query when ChromaDB supports it
-        return []
+        try:
+            results = self.chroma_client.collection.get(
+                limit=1000,
+                include=["metadatas"],
+            )
+            databases = set()
+            for metadata in (results.get("metadatas") or []):
+                if metadata and "source_database" in metadata:
+                    databases.add(metadata["source_database"])
+            return sorted(databases)
+        except Exception as e:
+            logger.warning("failed_to_get_databases", error=str(e))
+            return []

@@ -5,19 +5,16 @@ Provides async connection pooling and query execution for multiple PostgreSQL da
 Supports the placeholder pattern for unknown schemas with schema discovery capabilities.
 """
 
-import sys
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, AsyncIterator
 
 import asyncpg
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import DatabaseConfig, TableConfig
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import DatabaseConfig, TableConfig
 from habitat_logging import get_logger
 
 logger = get_logger(__name__)
@@ -78,27 +75,54 @@ class DatabaseConnectionManager:
         self._pools: dict[str, asyncpg.Pool] = {}
         self._initialized = False
 
-    async def initialize(self) -> None:
-        """Initialize connection pools for all configured databases."""
+    async def initialize(self, max_retries: int = 3, base_delay: float = 2.0) -> None:
+        """Initialize connection pools for all configured databases.
+
+        Args:
+            max_retries: Maximum retry attempts per database connection
+            base_delay: Base delay in seconds between retries (exponential backoff)
+        """
         if self._initialized:
             return
 
         for db_name, config in self.configs.items():
-            try:
-                pool = await asyncpg.create_pool(
-                    host=config.host,
-                    port=int(config.port),
-                    database=config.name,
-                    user=config.user,
-                    password=config.password,
-                    min_size=1,
-                    max_size=config.pool_size,
-                )
-                self._pools[db_name] = pool
-                logger.info("database_pool_created", db_name=db_name, pool_size=config.pool_size)
-            except Exception as e:
-                logger.error("database_pool_creation_failed", db_name=db_name, error=str(e))
-                raise
+            last_error = None
+            for attempt in range(1, max_retries + 1):
+                try:
+                    pool = await asyncpg.create_pool(
+                        host=config.host,
+                        port=int(config.port),
+                        database=config.name,
+                        user=config.user,
+                        password=config.password,
+                        min_size=1,
+                        max_size=config.pool_size,
+                    )
+                    self._pools[db_name] = pool
+                    logger.info("database_pool_created", db_name=db_name, pool_size=config.pool_size)
+                    break
+                except (OSError, ConnectionError, asyncpg.PostgresError) as e:
+                    last_error = e
+                    if attempt < max_retries:
+                        import asyncio
+                        delay = base_delay * (2 ** (attempt - 1))
+                        logger.warning(
+                            "database_connection_retry",
+                            db_name=db_name,
+                            attempt=attempt,
+                            max_retries=max_retries,
+                            delay=delay,
+                            error=str(e),
+                        )
+                        await asyncio.sleep(delay)
+                    else:
+                        logger.error(
+                            "database_pool_creation_failed",
+                            db_name=db_name,
+                            attempts=max_retries,
+                            error=str(e),
+                        )
+                        raise
 
         self._initialized = True
 

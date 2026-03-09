@@ -4,14 +4,13 @@ Data Augmenter
 Augments training data through paraphrasing and variations.
 """
 
-from typing import List
 import random
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample
 from .intent_generator import IntentGenerator
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class DataAugmenter:
@@ -41,10 +40,10 @@ class DataAugmenter:
 
     def augment_examples(
         self,
-        examples: List[TrainingExample],
+        examples: list[TrainingExample],
         augmentation_factor: int = 3,
         test_mode: bool = False
-    ) -> List[TrainingExample]:
+    ) -> list[TrainingExample]:
         """
         Augment training examples.
 
@@ -81,7 +80,7 @@ class DataAugmenter:
         self,
         example: TrainingExample,
         count: int
-    ) -> List[TrainingExample]:
+    ) -> list[TrainingExample]:
         """
         Create augmented variants of an example.
 
@@ -212,9 +211,9 @@ class DataAugmenter:
 
     def balance_dataset(
         self,
-        examples: List[TrainingExample],
+        examples: list[TrainingExample],
         target_per_agent: int = None
-    ) -> List[TrainingExample]:
+    ) -> list[TrainingExample]:
         """
         Balance dataset across agents.
 

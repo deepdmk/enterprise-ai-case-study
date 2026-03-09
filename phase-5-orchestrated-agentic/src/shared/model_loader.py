@@ -5,13 +5,13 @@ Utilities for loading fine-tuned orchestrator models with LoRA adapters.
 """
 
 from pathlib import Path
-from typing import Optional, Tuple, Any
+from typing import Optional, Any
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel, PeftConfig
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class OrchestratorModelLoader:
@@ -50,7 +50,7 @@ class OrchestratorModelLoader:
         load_in_8bit: bool = False,
         load_in_4bit: bool = False,
         use_flash_attention: bool = False
-    ) -> Tuple[Any, Any]:
+    ) -> tuple[Any, Any]:
         """
         Load model and tokenizer.
 
@@ -92,7 +92,7 @@ class OrchestratorModelLoader:
         load_in_8bit: bool = False,
         load_in_4bit: bool = False,
         use_flash_attention: bool = False
-    ) -> Tuple[Any, Any]:
+    ) -> tuple[Any, Any]:
         """Load base model with LoRA adapter"""
         self.logger.info("loading_with_adapter")
 
@@ -140,7 +140,7 @@ class OrchestratorModelLoader:
         load_in_8bit: bool = False,
         load_in_4bit: bool = False,
         use_flash_attention: bool = False
-    ) -> Tuple[Any, Any]:
+    ) -> tuple[Any, Any]:
         """Load merged model (no adapter)"""
         self.logger.info("loading_merged_model")
 
@@ -172,7 +172,7 @@ class OrchestratorModelLoader:
 
         return model, tokenizer
 
-    def load_for_inference(self) -> Tuple[Any, Any]:
+    def load_for_inference(self) -> tuple[Any, Any]:
         """
         Load model optimized for inference.
 

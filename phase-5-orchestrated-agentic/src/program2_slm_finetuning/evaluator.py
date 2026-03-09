@@ -5,15 +5,13 @@ Evaluates fine-tuned orchestrator models against baselines.
 """
 
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Any, Optional
 import json
 import time
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import PeftModel
-import structlog
+from habitat_logging import get_logger
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class OrchestratorEvaluator:
@@ -66,7 +64,7 @@ class OrchestratorEvaluator:
         self,
         test_dataset_path: Path,
         max_samples: Optional[int] = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Evaluate model on test dataset.
 
@@ -225,7 +223,7 @@ Query: {query}<|end|>
 
         return prediction
 
-    def _extract_agent_from_messages(self, messages: List[Dict]) -> str:
+    def _extract_agent_from_messages(self, messages: list[dict]) -> str:
         """Extract ground truth agent from messages"""
         for msg in messages:
             if msg.get("role") == "assistant":
@@ -239,7 +237,7 @@ Query: {query}<|end|>
 
         return "unknown"
 
-    def _extract_query_from_messages(self, messages: List[Dict]) -> str:
+    def _extract_query_from_messages(self, messages: list[dict]) -> str:
         """Extract user query from messages"""
         for msg in messages:
             if msg.get("role") == "user":
@@ -274,7 +272,7 @@ Query: {query}<|end|>
 
         return 2  # Default
 
-    def export_results(self, results: Dict[str, Any], output_path: Path) -> None:
+    def export_results(self, results: dict[str, Any], output_path: Path) -> None:
         """
         Export evaluation results.
 
@@ -292,10 +290,10 @@ Query: {query}<|end|>
 
     def compare_with_baseline(
         self,
-        results: Dict[str, Any],
+        results: dict[str, Any],
         baseline_accuracy: float = 0.8,
         baseline_latency_ms: float = 200
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Compare results with baseline.
 

@@ -6,10 +6,10 @@ Enables CopilotKit integration for rapid frontend development.
 """
 
 from typing import Optional
-import structlog
+from habitat_logging import get_logger
 from agno.team.team import Team
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 def create_agui_interface(

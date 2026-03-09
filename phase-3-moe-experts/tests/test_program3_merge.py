@@ -1,15 +1,14 @@
 """Tests for Program 3: MoE Merge functionality."""
 
 import json
-import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
 
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from config.settings import Settings
 from src.program3_merge.merger import MergeResult, MockMerger, MoEMerger, check_mergekit_available

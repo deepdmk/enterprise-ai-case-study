@@ -4,15 +4,15 @@ Agent Client
 Client for communicating with Phase 4 agents via A2A protocol.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Optional
 import time
 import asyncio
 import httpx
-import structlog
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import AgentResponse, AgentType
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class AgentClient:
@@ -28,9 +28,11 @@ class AgentClient:
 
     def __init__(
         self,
-        agent_registry: Dict[str, str],
+        agent_registry: dict[str, str],
         timeout_ms: int = 10000,
-        max_concurrent: int = 5
+        max_concurrent: int = 5,
+        max_retries: int = 3,
+        retry_base_delay: float = 1.0,
     ):
         """
         Initialize agent client.
@@ -39,10 +41,14 @@ class AgentClient:
             agent_registry: Mapping of agent name to URL
             timeout_ms: Request timeout in milliseconds
             max_concurrent: Maximum concurrent agent calls
+            max_retries: Maximum retries for transient failures
+            retry_base_delay: Base delay in seconds between retries
         """
         self.agent_registry = agent_registry
         self.timeout_ms = timeout_ms
         self.max_concurrent = max_concurrent
+        self.max_retries = max_retries
+        self.retry_base_delay = retry_base_delay
 
         self.logger = logger.bind(component="agent_client")
 
@@ -56,7 +62,7 @@ class AgentClient:
         self,
         agent: AgentType,
         operation: str,
-        parameters: Optional[Dict[str, Any]] = None,
+        parameters: Optional[dict[str, Any]] = None,
         max_depth: int = 3
     ) -> AgentResponse:
         """
@@ -93,63 +99,123 @@ class AgentClient:
         }
 
         start_time = time.time()
+        last_error = None
 
-        try:
-            async with self.semaphore:
-                response = await self._client.post(
-                    f"{agent_url}/process",
-                    json=request_payload,
+        for attempt in range(1, self.max_retries + 1):
+            try:
+                async with self.semaphore:
+                    response = await self._client.post(
+                        f"{agent_url}/process",
+                        json=request_payload,
+                    )
+
+                latency_ms = (time.time() - start_time) * 1000
+
+                if response.status_code == 200:
+                    result = response.json()
+
+                    agent_response = AgentResponse(
+                        agent=agent,
+                        operation=operation,
+                        success=True,
+                        response=result.get("response", ""),
+                        latency_ms=int(latency_ms),
+                        cascaded_calls=result.get("cascaded_to", [])
+                    )
+
+                    self.logger.info(
+                        "agent_call_successful",
+                        agent=agent_name,
+                        latency_ms=f"{latency_ms:.0f}ms",
+                        attempt=attempt,
+                    )
+
+                    return agent_response
+
+                elif response.status_code >= 500:
+                    # Server error — retryable
+                    last_error = Exception(f"Agent returned HTTP {response.status_code}")
+                    if attempt < self.max_retries:
+                        delay = self.retry_base_delay * (2 ** (attempt - 1))
+                        self.logger.warning(
+                            "agent_call_retry",
+                            agent=agent_name,
+                            attempt=attempt,
+                            delay=delay,
+                            status_code=response.status_code,
+                        )
+                        await asyncio.sleep(delay)
+                        continue
+                    raise last_error
+
+                else:
+                    # Client error (4xx) — not retryable
+                    raise Exception(f"Agent returned HTTP {response.status_code}")
+
+            except (httpx.ConnectError, httpx.TimeoutException, ConnectionError, OSError) as e:
+                last_error = e
+                if attempt < self.max_retries:
+                    delay = self.retry_base_delay * (2 ** (attempt - 1))
+                    self.logger.warning(
+                        "agent_call_retry",
+                        agent=agent_name,
+                        attempt=attempt,
+                        max_retries=self.max_retries,
+                        delay=delay,
+                        error=str(e),
+                    )
+                    await asyncio.sleep(delay)
+                    continue
+
+                latency_ms = (time.time() - start_time) * 1000
+                self.logger.error(
+                    "agent_call_failed",
+                    agent=agent_name,
+                    operation=operation,
+                    attempts=self.max_retries,
+                    error=str(e),
                 )
-
-            latency_ms = (time.time() - start_time) * 1000
-
-            if response.status_code == 200:
-                result = response.json()
-
-                agent_response = AgentResponse(
+                return AgentResponse(
                     agent=agent,
                     operation=operation,
-                    success=True,
-                    response=result.get("response", ""),
+                    success=False,
+                    response=f"Error after {self.max_retries} attempts: {e}",
                     latency_ms=int(latency_ms),
-                    cascaded_calls=result.get("cascaded_to", [])
+                    cascaded_calls=[],
                 )
 
-                self.logger.info(
-                    "agent_call_successful",
+            except Exception as e:
+                latency_ms = (time.time() - start_time) * 1000
+                self.logger.error(
+                    "agent_call_failed",
                     agent=agent_name,
-                    latency_ms=f"{latency_ms:.0f}ms"
+                    operation=operation,
+                    error=str(e),
+                )
+                return AgentResponse(
+                    agent=agent,
+                    operation=operation,
+                    success=False,
+                    response=f"Error: {e}",
+                    latency_ms=int(latency_ms),
+                    cascaded_calls=[],
                 )
 
-                return agent_response
-
-            else:
-                raise Exception(f"Agent returned HTTP {response.status_code}")
-
-        except Exception as e:
-            latency_ms = (time.time() - start_time) * 1000
-
-            self.logger.error(
-                "agent_call_failed",
-                agent=agent_name,
-                operation=operation,
-                error=str(e)
-            )
-
-            # Return error response
-            return AgentResponse(
-                agent=agent,
-                operation=operation,
-                success=False,
-                response=f"Error: {str(e)}",
-                latency_ms=int(latency_ms),
-                cascaded_calls=[]
-            )
+        # Should not reach here, but just in case
+        latency_ms = (time.time() - start_time) * 1000
+        return AgentResponse(
+            agent=agent,
+            operation=operation,
+            success=False,
+            response=f"Error: {last_error}",
+            latency_ms=int(latency_ms),
+            cascaded_calls=[],
+        )
 
     async def call_multiple_agents(
         self,
-        calls: List[Dict[str, Any]]
-    ) -> List[AgentResponse]:
+        calls: list[dict[str, Any]]
+    ) -> list[AgentResponse]:
         """
         Call multiple agents concurrently.
 
@@ -228,7 +294,7 @@ class AgentClient:
             self.logger.warning("agent_health_check_failed", agent=agent_name, error=str(e))
             return False
 
-    async def check_all_agents_health(self) -> Dict[str, bool]:
+    async def check_all_agents_health(self) -> dict[str, bool]:
         """
         Check health of all agents in registry.
 

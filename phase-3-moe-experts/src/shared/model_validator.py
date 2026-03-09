@@ -1,12 +1,12 @@
 """Validate MoE models and adapter compatibility."""
 
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from src.shared.path_config import configure_paths
+configure_paths()
+
 from habitat_logging import get_logger
 from registries.schemas import ValidationResult
 

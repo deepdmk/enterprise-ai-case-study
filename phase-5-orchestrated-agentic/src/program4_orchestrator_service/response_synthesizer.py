@@ -4,12 +4,12 @@ Response Synthesizer
 Synthesizes responses from multiple agent calls.
 """
 
-from typing import List, Dict, Any
-import structlog
+from typing import Any
+from habitat_logging import get_logger
 
 from ..shared.routing_schema import AgentResponse, RoutingDecision
 
-logger = structlog.get_logger()
+logger = get_logger(__name__)
 
 
 class ResponseSynthesizer:
@@ -36,7 +36,7 @@ class ResponseSynthesizer:
         self,
         query: str,
         routing_decision: RoutingDecision,
-        agent_responses: List[AgentResponse]
+        agent_responses: list[AgentResponse]
     ) -> str:
         """
         Synthesize final response from agent responses.
@@ -67,7 +67,7 @@ class ResponseSynthesizer:
     def _concatenate_responses(
         self,
         query: str,
-        agent_responses: List[AgentResponse]
+        agent_responses: list[AgentResponse]
     ) -> str:
         """
         Simple concatenation of responses.
@@ -113,7 +113,7 @@ class ResponseSynthesizer:
         self,
         query: str,
         routing_decision: RoutingDecision,
-        agent_responses: List[AgentResponse]
+        agent_responses: list[AgentResponse]
     ) -> str:
         """
         Hierarchical synthesis based on routing structure.
@@ -193,8 +193,8 @@ The orchestrator was unable to process this query. Please try again or contact s
 
     def summarize_responses(
         self,
-        agent_responses: List[AgentResponse]
-    ) -> Dict[str, Any]:
+        agent_responses: list[AgentResponse]
+    ) -> dict[str, Any]:
         """
         Create summary of agent responses.
 

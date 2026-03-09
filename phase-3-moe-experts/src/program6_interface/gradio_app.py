@@ -5,17 +5,15 @@ Provides a web interface for staff to interact with organizational
 unit MoE models, view expert activations, and provide feedback.
 """
 
-import sys
 from pathlib import Path
 from typing import Any
 
 import gradio as gr
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import InterfaceConfig, Settings
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import InterfaceConfig, Settings
 from habitat_logging import get_logger
 
 from .feedback import InterfaceFeedbackCollector

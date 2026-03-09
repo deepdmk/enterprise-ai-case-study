@@ -1,13 +1,12 @@
 """Tests for the Phase 3 MoE merge pipeline."""
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
 
-# Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.shared.path_config import configure_paths
+configure_paths()
 
 from config.settings import Settings, get_settings
 from src.shared.config_generator import MoEConfigGenerator, validate_mergekit_config

@@ -53,9 +53,9 @@ class ModelConfig(BaseModel):
     max_seq_length: int = 2048
     dtype: str | None = None
     load_in_4bit: bool = True
-    # SECURITY: Set to False if loading models from untrusted sources
+    # SECURITY: Only enable for trusted model sources (e.g., official HuggingFace repos)
     trust_remote_code: bool = Field(
-        default=True,
+        default=False,
         description="Allow executing custom code from model repos. SECURITY RISK - only enable for trusted sources."
     )
 

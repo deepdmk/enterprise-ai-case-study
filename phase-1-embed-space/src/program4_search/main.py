@@ -11,14 +11,12 @@ Usage:
 """
 
 import argparse
-import sys
 from pathlib import Path
 
-# Import local config BEFORE adding phase-0 to path
-from config.settings import Settings, load_settings
+from src.shared.path_config import configure_paths
+configure_paths()
 
-# Add phase-0-infrastructure to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "phase-0-infrastructure"))
+from config.settings import Settings, load_settings
 from habitat_logging import configure_logging, get_logger
 
 from src.shared.chromadb_client import ChromaDBClient
