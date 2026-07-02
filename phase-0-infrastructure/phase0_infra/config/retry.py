@@ -29,11 +29,14 @@ logger = structlog.get_logger(__name__)
 
 T = TypeVar("T")
 
-# Default retryable exceptions
+# Default retryable exceptions.
+# Deliberately narrow: OSError is NOT included — it is the superclass of
+# both ConnectionError and TimeoutError, and would also match errors that
+# should never be retried (FileNotFoundError, PermissionError, ...).
+# Pass retryable_exceptions=... explicitly for broader behavior.
 RETRYABLE_EXCEPTIONS: tuple[type[Exception], ...] = (
     ConnectionError,
     TimeoutError,
-    OSError,
 )
 
 

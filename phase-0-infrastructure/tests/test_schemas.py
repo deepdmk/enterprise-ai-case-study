@@ -4,7 +4,7 @@
 import pytest
 from pydantic import ValidationError
 
-from registries.schemas import (
+from phase0_infra.registries.schemas import (
     DataCharacteristics,
     DatasetStatus,
     DataType,
@@ -210,8 +210,9 @@ class TestRegisteredModel:
             base_model="meta-llama/Llama-3.1-8B",
         )
         assert model.status == ModelStatus.REGISTERED
-        assert model.schema_version == "1.0"
+        assert model.schema_version == "1.1"
         assert model.tags == []
+        assert model.metrics == {}
         assert model.positive_prompts == []
         assert model.negative_prompts == []
         assert model.created_at is not None

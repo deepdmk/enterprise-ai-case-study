@@ -3,7 +3,7 @@
 
 import pytest
 
-from registries.schemas import (
+from phase0_infra.registries.schemas import (
     DataCharacteristics,
     DatasetStatus,
     DataType,

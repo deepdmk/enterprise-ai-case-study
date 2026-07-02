@@ -12,7 +12,7 @@ configure_paths()
 
 # Now import from both local config and phase-0-infrastructure
 from config.settings import Settings
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from datasets import Dataset
 from src.program2_fine_tuning.callbacks import get_training_callbacks
@@ -309,7 +309,7 @@ def train_with_transformers(
 
     # Calculate actual token lengths now that tokenizer is available
     if experiment_tracker and experiment_id:
-        from registries.schemas import DataCharacteristics
+        from phase0_infra.registries.schemas import DataCharacteristics
 
         avg_input, avg_output, avg_total = calculate_token_lengths(
             train_dataset,

@@ -9,7 +9,7 @@ from typing import Optional, Any
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel, PeftConfig
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

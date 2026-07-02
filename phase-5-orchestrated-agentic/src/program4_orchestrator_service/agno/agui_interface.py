@@ -6,7 +6,7 @@ Enables CopilotKit integration for rapid frontend development.
 """
 
 from typing import Optional
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from agno.team.team import Team
 
 logger = get_logger(__name__)

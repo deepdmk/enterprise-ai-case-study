@@ -8,7 +8,7 @@ import yaml
 from src.shared.path_config import configure_paths
 configure_paths()
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from src.shared.phase2_importer import AdapterInfo, ImportResult
 

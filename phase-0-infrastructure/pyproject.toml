@@ -26,7 +26,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["registries*", "evaluation*", "config*", "habitat_logging*"]
+include = ["phase0_infra*"]
 
 [tool.ruff]
 line-length = 100
@@ -42,5 +42,11 @@ strict = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+python_classes = "Test*"
 python_functions = "test_*"
-addopts = "-v"
+addopts = "-v --tb=short --strict-markers --color=yes"
+markers = [
+    "unit: Unit tests for individual components",
+    "integration: Integration tests for cross-component workflows",
+    "slow: Tests that take longer to run",
+]

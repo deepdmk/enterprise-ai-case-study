@@ -6,7 +6,7 @@ Converts Phase 4 discovery logs to training format for orchestrator fine-tuning.
 
 from pathlib import Path
 from typing import Any
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.phase4_importer import Phase4Importer
 from ..shared.routing_schema import TrainingExample, AgentType

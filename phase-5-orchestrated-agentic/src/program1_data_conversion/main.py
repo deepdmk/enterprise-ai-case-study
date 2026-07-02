@@ -7,7 +7,7 @@ Converts Phase 4 discovery logs to training format for orchestrator fine-tuning.
 import argparse
 from pathlib import Path
 import sys
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from config.settings import get_settings
 from .discovery_converter import DiscoveryConverter

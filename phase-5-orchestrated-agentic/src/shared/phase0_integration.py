@@ -12,13 +12,13 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 try:
-    from registries.phase_integration import (
+    from phase0_infra.registries.phase_integration import (
         BasePhaseDataRegistry,
         BasePhaseExperimentTracker,
         BasePhaseModelRegistry,
         PHASE0_AVAILABLE,
     )
-    from registries.schemas import (
+    from phase0_infra.registries.schemas import (
         DatasetStatus,
         DataType,
         ModelStatus,
@@ -33,7 +33,7 @@ except ImportError:
     BasePhaseModelRegistry = object  # type: ignore[assignment, misc]
     BasePhaseExperimentTracker = object  # type: ignore[assignment, misc]
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

@@ -16,9 +16,9 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 # Import from Phase 0
-from habitat_logging import get_logger
-from registries import ModelRegistry as Phase0ModelRegistry
-from registries.schemas import Phase, ModelType, ModelStatus, RegisteredModel
+from phase0_infra.habitat_logging import get_logger
+from phase0_infra.registries import ModelRegistry as Phase0ModelRegistry
+from phase0_infra.registries.schemas import Phase, ModelType, ModelStatus, RegisteredModel
 
 logger = get_logger(__name__)
 

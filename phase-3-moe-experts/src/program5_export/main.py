@@ -8,9 +8,9 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import Settings, get_settings
-from habitat_logging import configure_logging, get_logger
-from registries.model_registry import ModelRegistry
-from registries.schemas import ModelStatus
+from phase0_infra.habitat_logging import configure_logging, get_logger
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.schemas import ModelStatus
 from src.program5_export.phase4_exporter import ExportResult, Phase4Exporter
 from src.program5_export.routing_metadata import (
     RoutingMetadata,

@@ -25,7 +25,7 @@ class TestPhase0Conventions:
 
     def test_agent_name_mapping_roundtrip(self):
         """Test unit_to_agent_id and agent_id_to_unit are inverses."""
-        from config.conventions import agent_id_to_unit, unit_to_agent_id, UNIT_IDS, AGENT_IDS
+        from phase0_infra.config.conventions import agent_id_to_unit, unit_to_agent_id, UNIT_IDS, AGENT_IDS
 
         for unit_id in UNIT_IDS:
             agent_id = unit_to_agent_id(unit_id)
@@ -34,7 +34,7 @@ class TestPhase0Conventions:
 
     def test_agent_name_mapping_known_values(self):
         """Test specific mappings are correct."""
-        from config.conventions import agent_id_to_unit, unit_to_agent_id
+        from phase0_infra.config.conventions import agent_id_to_unit, unit_to_agent_id
 
         assert unit_to_agent_id("fundraising") == "fundraising-agent"
         assert unit_to_agent_id("business_development") == "business-development-agent"
@@ -46,7 +46,7 @@ class TestPhase0Conventions:
 
     def test_invalid_agent_name_raises(self):
         """Test that invalid names raise ValueError."""
-        from config.conventions import agent_id_to_unit, unit_to_agent_id
+        from phase0_infra.config.conventions import agent_id_to_unit, unit_to_agent_id
 
         with pytest.raises(ValueError):
             unit_to_agent_id("invalid_unit")
@@ -56,7 +56,7 @@ class TestPhase0Conventions:
 
     def test_agent_ports(self):
         """Test agent port assignments."""
-        from config.conventions import AGENT_PORTS, get_agent_url
+        from phase0_infra.config.conventions import AGENT_PORTS, get_agent_url
 
         assert AGENT_PORTS["fundraising-agent"] == 8001
         assert AGENT_PORTS["business-development-agent"] == 8002
@@ -70,7 +70,7 @@ class TestPhaseBoundarySchemas:
 
     def test_phase4_training_example_valid(self):
         """Test valid Phase 4 training example passes validation."""
-        from config.phase_boundary_schemas import Phase4TrainingExample
+        from phase0_infra.config.phase_boundary_schemas import Phase4TrainingExample
 
         example = Phase4TrainingExample(
             query="What is the investment capacity?",
@@ -85,7 +85,7 @@ class TestPhaseBoundarySchemas:
 
     def test_phase4_training_example_invalid_agent(self):
         """Test invalid agent name is rejected."""
-        from config.phase_boundary_schemas import Phase4TrainingExample
+        from phase0_infra.config.phase_boundary_schemas import Phase4TrainingExample
 
         with pytest.raises(Exception):
             Phase4TrainingExample(
@@ -96,7 +96,7 @@ class TestPhaseBoundarySchemas:
 
     def test_phase4_training_example_invalid_depth(self):
         """Test invalid depth is rejected."""
-        from config.phase_boundary_schemas import Phase4TrainingExample
+        from phase0_infra.config.phase_boundary_schemas import Phase4TrainingExample
 
         with pytest.raises(Exception):
             Phase4TrainingExample(
@@ -107,7 +107,7 @@ class TestPhaseBoundarySchemas:
 
     def test_validate_phase4_training_examples(self):
         """Test batch validation of Phase 4 training examples."""
-        from config.phase_boundary_schemas import validate_phase4_training_examples
+        from phase0_infra.config.phase_boundary_schemas import validate_phase4_training_examples
 
         examples = [
             {
@@ -141,7 +141,7 @@ class TestPhaseBoundarySchemas:
 
     def test_phase3_agent_export_schema(self):
         """Test Phase 3 agent export config schema."""
-        from config.phase_boundary_schemas import Phase3AgentExport, ExpertInfo
+        from phase0_infra.config.phase_boundary_schemas import Phase3AgentExport, ExpertInfo
 
         export = Phase3AgentExport(
             agent={"id": "fundraising_agent", "name": "Fundraising Agent", "description": "test"},
@@ -167,7 +167,7 @@ class TestPhaseBoundarySchemas:
 
     def test_phase4_export_summary_schema(self):
         """Test Phase 4 export summary schema."""
-        from config.phase_boundary_schemas import Phase4ExportSummary
+        from phase0_infra.config.phase_boundary_schemas import Phase4ExportSummary
 
         summary = Phase4ExportSummary(
             optimal_depths={"workflow_1": 2, "workflow_2": 3},
@@ -196,7 +196,7 @@ class TestPhase3ToPhase4Boundary:
     def test_phase3_agent_config_schema(self):
         """Validate Phase 3 agent configs against schema."""
         import yaml
-        from config.phase_boundary_schemas import Phase3AgentExport
+        from phase0_infra.config.phase_boundary_schemas import Phase3AgentExport
 
         exports_dir = REPO_ROOT / "phase-3-moe-experts" / "data" / "exports" / "phase4_test"
 
@@ -222,7 +222,7 @@ class TestRetryUtility:
 
     def test_sync_retry_succeeds_eventually(self):
         """Test that retry eventually succeeds."""
-        from config.retry import with_retry
+        from phase0_infra.config.retry import with_retry
 
         call_count = 0
 
@@ -240,7 +240,7 @@ class TestRetryUtility:
 
     def test_sync_retry_exhausted(self):
         """Test that retry raises after exhausting attempts."""
-        from config.retry import with_retry
+        from phase0_infra.config.retry import with_retry
 
         @with_retry(max_attempts=2, base_delay=0.01, jitter=False)
         def always_fails():
@@ -251,7 +251,7 @@ class TestRetryUtility:
 
     def test_sync_retry_non_retryable(self):
         """Test that non-retryable exceptions are not retried."""
-        from config.retry import with_retry
+        from phase0_infra.config.retry import with_retry
 
         call_count = 0
 

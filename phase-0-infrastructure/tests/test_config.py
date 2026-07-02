@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from config.conventions import ID_FORMAT, make_id, parse_id
-from config.base_settings import HabitatBaseSettings, PhaseSettings
+from phase0_infra.config.base_settings import HabitatBaseSettings, PhaseSettings
+from phase0_infra.config.conventions import ID_FORMAT, make_id, parse_id
 
 
 class TestConventions:

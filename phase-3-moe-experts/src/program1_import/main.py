@@ -11,7 +11,7 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import Settings, get_settings
-from habitat_logging import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 from src.program1_import.importer import MockAdapterGenerator, Phase2AdapterImporter
 from src.program1_import.validator import ImportValidator, print_validation_report
 

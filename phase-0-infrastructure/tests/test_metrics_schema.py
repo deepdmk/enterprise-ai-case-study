@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from evaluation.metrics_schema import (
+from phase0_infra.evaluation.metrics_schema import (
     CostMetrics,
     EvaluationReport,
     LoadMetrics,

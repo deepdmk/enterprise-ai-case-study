@@ -9,10 +9,10 @@ import os
 from pathlib import Path
 from typing import Any
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 try:
-    from config.phase_boundary_schemas import (
+    from phase0_infra.config.phase_boundary_schemas import (
         Phase4TrainingExample,
         validate_phase4_training_examples,
     )

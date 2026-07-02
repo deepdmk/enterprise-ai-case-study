@@ -5,7 +5,7 @@ Generates synthetic user intents from workflow patterns to augment training data
 """
 
 import random
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample, AgentType
 

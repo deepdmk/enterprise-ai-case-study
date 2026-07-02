@@ -175,7 +175,7 @@ def test_json_serialization(phase0_report):
     print("...")
 
     # Validate can be deserialized
-    from evaluation.metrics_schema import EvaluationReport as Phase0EvaluationReport
+    from phase0_infra.evaluation.metrics_schema import EvaluationReport as Phase0EvaluationReport
 
     reloaded = Phase0EvaluationReport.model_validate(report_dict)
     print(f"\n✓ Successfully deserialized")

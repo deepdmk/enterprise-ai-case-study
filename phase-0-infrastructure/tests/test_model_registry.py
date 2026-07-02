@@ -3,8 +3,8 @@
 
 import pytest
 
-from registries.model_registry import ModelRegistry
-from registries.schemas import (
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.schemas import (
     ModelStatus,
     ModelType,
     Phase,
@@ -311,10 +311,10 @@ class TestModelRegistry:
         registry.update_metrics(sample_model.model_id, metrics)
 
         updated = registry.get(sample_model.model_id)
-        # Metrics are stored as tags with "metric:" prefix
-        assert "metric:accuracy=0.95" in updated.tags
-        assert "metric:f1_score=0.92" in updated.tags
-        assert "metric:loss=0.15" in updated.tags
+        # Metrics are stored in the dedicated metrics field (schema 1.1+)
+        assert updated.metrics == {"accuracy": 0.95, "f1_score": 0.92, "loss": 0.15}
+        # Tags are untouched by metric updates
+        assert not any(tag.startswith("metric:") for tag in updated.tags)
 
     def test_update_metrics_replaces_old_metrics(self, registry, sample_model):
         """Test that updating metrics replaces old metrics."""
@@ -329,11 +329,8 @@ class TestModelRegistry:
         registry.update_metrics(sample_model.model_id, metrics2)
 
         updated = registry.get(sample_model.model_id)
-        # Should only have new metrics
-        assert "metric:accuracy=0.95" in updated.tags
-        assert "metric:loss=0.15" in updated.tags
-        # Old metric should be replaced
-        assert "metric:accuracy=0.90" not in updated.tags
+        # Should only have new metrics; old accuracy value replaced
+        assert updated.metrics == {"accuracy": 0.95, "loss": 0.15}
 
     def test_update_metrics_nonexistent_model_raises_error(self, registry):
         """Test updating metrics of nonexistent model raises KeyError."""

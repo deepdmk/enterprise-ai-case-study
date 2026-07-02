@@ -11,7 +11,7 @@ Usage:
     configure_paths()
 
     # Then import from phase-0-infrastructure
-    from habitat_logging import get_logger
+    from phase0_infra.habitat_logging import get_logger
 """
 
 import sys

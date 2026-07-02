@@ -7,7 +7,7 @@ agent coordination without requiring the full service stack.
 
 from typing import Optional
 import httpx
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 import gradio as gr
 

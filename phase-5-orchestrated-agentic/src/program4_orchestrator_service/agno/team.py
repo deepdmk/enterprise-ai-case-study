@@ -4,7 +4,7 @@ Agno Team Orchestration
 Creates the coordinator team that delegates to Phase 4 agents.
 """
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from agno.team.team import Team
 from agno.team.mode import TeamMode
 from agno.models.vllm import VLLM

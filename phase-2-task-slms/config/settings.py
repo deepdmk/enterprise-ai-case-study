@@ -1,21 +1,19 @@
 """Pydantic settings for Phase 2 Task SLMs."""
 
-import importlib.util
 import sys
 from pathlib import Path
 from typing import Literal
 
 import yaml
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import SettingsConfigDict
 
-# Import HabitatBaseSettings from phase-0-infrastructure using direct file import
-# This avoids namespace conflicts with the local config package
-_phase0_config_path = Path(__file__).parent.parent.parent / "phase-0-infrastructure" / "config" / "base_settings.py"
-_spec = importlib.util.spec_from_file_location("phase0_base_settings", _phase0_config_path)
-_phase0_module = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_phase0_module)
-HabitatBaseSettings = _phase0_module.HabitatBaseSettings
+# Import HabitatBaseSettings from phase-0-infrastructure's phase0_infra package
+# (namespaced, so it no longer conflicts with this local config package)
+_phase0_root = Path(__file__).parent.parent.parent / "phase-0-infrastructure"
+if str(_phase0_root) not in sys.path:
+    sys.path.insert(0, str(_phase0_root))
+from phase0_infra.config.base_settings import HabitatBaseSettings  # noqa: E402
 
 
 class LoRAConfig(BaseModel):

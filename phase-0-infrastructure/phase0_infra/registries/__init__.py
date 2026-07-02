@@ -9,14 +9,14 @@ This module provides centralized tracking and management of:
 The registries use JSON file storage with file locking for thread-safe operations.
 
 Basic usage:
-    >>> from phase_0_infrastructure.registries import DataRegistry, ModelRegistry
+    >>> from phase0_infra.registries import DataRegistry, ModelRegistry
     >>>
     >>> # Initialize registries
     >>> data_registry = DataRegistry(data_dir="./data")
     >>> model_registry = ModelRegistry(data_dir="./data")
     >>>
     >>> # Register a dataset
-    >>> from phase_0_infrastructure.registries import RegisteredDataset, Phase, DataType
+    >>> from phase0_infra.registries import RegisteredDataset, Phase, DataType
     >>> dataset = RegisteredDataset(
     ...     dataset_id="train_001",
     ...     phase=Phase.PHASE_2,

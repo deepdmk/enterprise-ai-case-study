@@ -9,7 +9,7 @@ import random
 import time
 from typing import Any
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import (
     RoutingDecision,

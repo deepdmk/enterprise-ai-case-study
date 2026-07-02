@@ -9,7 +9,7 @@ from typing import Any, Optional
 import json
 import shutil
 from datetime import datetime
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

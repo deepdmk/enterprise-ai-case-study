@@ -9,7 +9,7 @@ This module provides standardized schemas for capturing evaluation metrics:
 - Comprehensive evaluation reports
 
 Basic usage:
-    >>> from phase_0_infrastructure.evaluation import TokenMetrics, QualityMetrics, EvaluationReport
+    >>> from phase0_infra.evaluation import TokenMetrics, QualityMetrics, EvaluationReport
     >>>
     >>> # Create token metrics
     >>> token_metrics = TokenMetrics(

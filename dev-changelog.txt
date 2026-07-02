@@ -1,0 +1,61 @@
+## 2026-07-01 — Phase 0 review: bug fixes + phase0_infra namespace refactor
+
+Full review of phase-0-infrastructure; fixed behavioral bugs, stale docs, and
+restructured the package namespace. Cross-phase change (user opted in).
+
+Environment:
+- Recreated ./venv with /opt/homebrew/bin/python3.14 (old venv pointed at a
+  removed /usr/local/opt/python@3.14 interpreter).
+
+Behavioral fixes (phase-0):
+- habitat_logging: removed ExceptionRenderer from console chain (was defeating
+  ConsoleRenderer's own traceback rendering); basicConfig(force=True) so
+  reconfiguration takes effect; logs to stderr; clear ValueError on bad level;
+  new _HabitatBoundLogger proxies .exception() to stdlib .error() to kill a
+  pre-existing double-traceback (stdlib Logger.exception re-rendered exc_info).
+- base_settings: test_mode uses AliasChoices("test_mode", "PHASE0_TEST_MODE") —
+  bare validation_alias silently dropped Settings(test_mode=True).
+- model_registry: version parsing now supports both `_vN` suffix and canonical
+  `{phase}/{unit}/{task}/vX.Y.Z` IDs (_extract_version); export filenames are
+  filesystem-safe (never derived from raw model_id containing "/").
+- storage (JSONStorage): atomic writes (temp file + os.replace); parent dir
+  created on save even with auto_create=False; new set_if_absent() and
+  mutate() primitives (single-lock read-modify-write).
+- data/model registries: register/update_status/update_metrics now mutate
+  under one lock and refresh cache from disk — fixes lost updates between
+  concurrent registry instances. ExperimentTracker.start_experiment uses
+  set_if_absent (TOCTOU fix).
+- retry: RETRYABLE_EXCEPTIONS no longer includes OSError (superclass of both
+  others; matched FileNotFoundError/PermissionError).
+- phase_boundary_schemas: count validators no longer skip empty lists;
+  ValidationResult renamed SchemaValidationResult (clashed with the
+  registries dataclass of the same name).
+- phase_integration: dead try/except ImportError fallback replaced with
+  relative imports; PHASE0_AVAILABLE kept for API compat.
+- RegisteredModel: new metrics dict field (schema_version 1.1); update_metrics
+  no longer abuses tags with "metric:k=v" strings.
+
+Namespace refactor:
+- phase-0 packages moved under a single top-level package: phase0_infra/
+  {registries,config,evaluation,habitat_logging}. Eliminates the generic
+  top-level names (config, registries, ...) that shadowed each phase's own
+  config package and forced importlib.spec_from_file_location hacks.
+- All downstream imports updated (~110 files, phases 1-5 + root tests):
+  from phase0_infra.<pkg>... ; importlib hacks in phase-{1,2,3,4}
+  config/settings.py replaced with a normal import after sys.path insert.
+- pyproject ships only phase0_infra*; pytest config merged into pyproject
+  (pytest.ini deleted); run_tests.sh logging-rename workaround removed;
+  README/USAGE.md stale `from logging.config import ...` instructions fixed.
+
+Verification:
+- phase-0: 251 passed (229 baseline + 22 new regression tests in
+  tests/test_regressions.py covering the fixes above).
+- root tests/test_phase_boundaries.py: 15 passed.
+- downstream suites: phase-1 46 passed, phase-2 81 passed/1 skipped,
+  phase-3 58 passed, phase-4 73 passed (httpx/fastapi/uvicorn installed).
+- phase-5 test collection fails at HEAD too (pre-existing "shared" path +
+  missing-dep issues, unrelated); its phase0_integration imports verified OK.
+
+Deferred (documented in phase-0 README "Known Inconsistencies"):
+- Phase StrEnum vs int in PhaseSettings/parse_id; EvaluationReport.created_at
+  datetime vs ISO strings elsewhere.

@@ -75,14 +75,6 @@ class ExperimentTracker:
         if experiment_id is None:
             experiment_id = str(uuid.uuid4())
 
-        # Check if experiment already exists
-        if self.storage.exists(experiment_id):
-            logger.error(
-                "experiment_already_exists",
-                experiment_id=experiment_id,
-            )
-            raise ValueError(f"Experiment {experiment_id} already exists")
-
         # Create experiment record (Pydantic Field defaults handle optional args)
         experiment = ExperimentResult(  # type: ignore[call-arg]
             experiment_id=experiment_id,
@@ -94,8 +86,13 @@ class ExperimentTracker:
             notes=notes,
         )
 
-        # Save to storage
-        self.storage.update(experiment_id, experiment.model_dump())
+        # Existence check + write under a single lock (no TOCTOU window)
+        if not self.storage.set_if_absent(experiment_id, experiment.model_dump()):
+            logger.error(
+                "experiment_already_exists",
+                experiment_id=experiment_id,
+            )
+            raise ValueError(f"Experiment {experiment_id} already exists")
 
         logger.info(
             "started_experiment",

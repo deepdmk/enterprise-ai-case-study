@@ -12,7 +12,7 @@ from typing import Optional, Any
 import time
 import uuid
 import structlog
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import RoutingDecision, OrchestratedResponse
 from .routing_engine import RoutingEngine

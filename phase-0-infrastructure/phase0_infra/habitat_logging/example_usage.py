@@ -8,7 +8,7 @@ To run this example:
     2. Run: python -m logging.example_usage
 """
 
-from habitat_logging import (
+from phase0_infra.habitat_logging import (
     LOG_EVENTS,
     configure_logging,
     format_experiment_event,

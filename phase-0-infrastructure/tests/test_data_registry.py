@@ -3,8 +3,8 @@
 
 import pytest
 
-from registries.data_registry import DataRegistry
-from registries.schemas import (
+from phase0_infra.registries.data_registry import DataRegistry
+from phase0_infra.registries.schemas import (
     DatasetStatus,
     DataType,
     Phase,

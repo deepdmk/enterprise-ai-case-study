@@ -22,7 +22,7 @@ configure_paths()
 
 # Now import from both local config and phase-0-infrastructure
 from config.settings import TaskDefinition
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

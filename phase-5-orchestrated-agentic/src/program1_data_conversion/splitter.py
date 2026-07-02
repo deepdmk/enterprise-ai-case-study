@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 import json
 import random
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample
 

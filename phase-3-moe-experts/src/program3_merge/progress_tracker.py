@@ -11,7 +11,7 @@ from typing import Any, Callable
 from src.shared.path_config import configure_paths
 configure_paths()
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

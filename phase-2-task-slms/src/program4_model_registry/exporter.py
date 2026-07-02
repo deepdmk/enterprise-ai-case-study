@@ -13,7 +13,7 @@ configure_paths()
 
 # Now import from both local config and phase-0-infrastructure
 from config.settings import Settings
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from src.shared.model_loader import ModelLoader
 from src.shared.model_registry import ModelEntry, ModelRegistry
 

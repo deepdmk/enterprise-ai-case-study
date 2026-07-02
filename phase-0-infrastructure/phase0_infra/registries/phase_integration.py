@@ -19,29 +19,22 @@ from typing import Any
 
 import structlog
 
+from .data_registry import DataRegistry
+from .experiment_tracker import ExperimentTracker
+from .model_registry import ModelRegistry
+from .schemas import (
+    RegisteredDataset,
+    RegisteredModel,
+)
+
 logger = structlog.get_logger(__name__)
 
-# Try to import Phase 0 registries
-try:
-    from registries.data_registry import DataRegistry
-    from registries.experiment_tracker import ExperimentTracker
-    from registries.model_registry import ModelRegistry
-    from registries.schemas import (
-        DatasetStatus,
-        DataType,
-        ModelStatus,
-        ModelType,
-        Phase,
-        RegisteredDataset,
-        RegisteredModel,
-    )
-
-    PHASE0_AVAILABLE = True
-except ImportError:
-    PHASE0_AVAILABLE = False
-    DataRegistry = None  # type: ignore[assignment, misc]
-    ModelRegistry = None  # type: ignore[assignment, misc]
-    ExperimentTracker = None  # type: ignore[assignment, misc]
+# Kept for API compatibility with downstream wrappers: if this module
+# imports at all, Phase 0 is available (the previous try/except fallback
+# was dead code — this module lives inside the registries package itself,
+# and downstream phases already guard `import phase_integration` with
+# their own try/except ImportError).
+PHASE0_AVAILABLE = True
 
 
 def get_phase0_availability() -> bool:
@@ -57,17 +50,12 @@ class BasePhaseDataRegistry:
         self.test_mode = test_mode
         self.logger = logger.bind(component=component)
 
-        if PHASE0_AVAILABLE:
-            self.registry = DataRegistry(data_dir=data_dir, test_mode=test_mode)
-            self.logger.info("phase0_data_registry_initialized")
-        else:
-            self.registry = None
-            self.logger.warning(
-                "phase0_not_available",
-                message="Phase 0 infrastructure not found. Install from ../phase-0-infrastructure",
-            )
+        self.registry: DataRegistry | None = DataRegistry(
+            data_dir=data_dir, test_mode=test_mode
+        )
+        self.logger.info("phase0_data_registry_initialized")
 
-    def _register_dataset(self, dataset: "RegisteredDataset") -> bool:
+    def _register_dataset(self, dataset: RegisteredDataset) -> bool:
         """Register a dataset with error handling."""
         if not self.registry:
             self.logger.warning("phase0_unavailable", action="register_dataset")
@@ -91,14 +79,12 @@ class BasePhaseModelRegistry:
         self.test_mode = test_mode
         self.logger = logger.bind(component=component)
 
-        if PHASE0_AVAILABLE:
-            self.registry = ModelRegistry(data_dir=data_dir, test_mode=test_mode)
-            self.logger.info("phase0_model_registry_initialized")
-        else:
-            self.registry = None
-            self.logger.warning("phase0_not_available")
+        self.registry: ModelRegistry | None = ModelRegistry(
+            data_dir=data_dir, test_mode=test_mode
+        )
+        self.logger.info("phase0_model_registry_initialized")
 
-    def _register_model(self, model: "RegisteredModel") -> bool:
+    def _register_model(self, model: RegisteredModel) -> bool:
         """Register a model with error handling."""
         if not self.registry:
             self.logger.warning("phase0_unavailable", action="register_model")
@@ -124,12 +110,10 @@ class BasePhaseExperimentTracker:
         self.test_mode = test_mode
         self.logger = logger.bind(component=component)
 
-        if PHASE0_AVAILABLE:
-            self.tracker = ExperimentTracker(data_dir=data_dir, test_mode=test_mode)
-            self.logger.info("phase0_experiment_tracker_initialized")
-        else:
-            self.tracker = None
-            self.logger.warning("phase0_not_available")
+        self.tracker: ExperimentTracker | None = ExperimentTracker(
+            data_dir=data_dir, test_mode=test_mode
+        )
+        self.logger.info("phase0_experiment_tracker_initialized")
 
     def complete_experiment(self, experiment_id: str, **kwargs: Any) -> bool:
         """Mark an experiment as complete."""

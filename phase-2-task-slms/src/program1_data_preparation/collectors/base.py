@@ -12,7 +12,7 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 # Now import from phase-0-infrastructure
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

@@ -21,7 +21,7 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import DatabaseConfig, IngestionConfig
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from src.shared.chromadb_client import ChromaDBClient
 from src.shared.chunking import TextChunker

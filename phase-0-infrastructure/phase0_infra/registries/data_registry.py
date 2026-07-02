@@ -43,28 +43,24 @@ class DataRegistry:
         self._datasets: dict[str, RegisteredDataset] = {}
         self._load()
 
-    def _load(self) -> None:
-        """Load registry from disk using thread-safe storage."""
-        data = self._storage.load()
+    def _refresh_cache(self, data: dict[str, Any]) -> None:
+        """Rebuild the in-memory cache from a storage-level data dict."""
         self._datasets = {
             dataset_id: RegisteredDataset(**entry)
             for dataset_id, entry in data.get("datasets", {}).items()
         }
-        logger.info("registry_loaded", count=len(self._datasets))
 
-    def _save(self) -> None:
-        """Save registry to disk using thread-safe storage."""
-        self._storage.save({
-            "datasets": {
-                dataset_id: entry.model_dump()
-                for dataset_id, entry in self._datasets.items()
-            }
-        })
-        logger.info("registry_saved", count=len(self._datasets))
+    def _load(self) -> None:
+        """Load registry from disk using thread-safe storage."""
+        self._refresh_cache(self._storage.load())
+        logger.info("registry_loaded", count=len(self._datasets))
 
     def register(self, dataset: RegisteredDataset) -> RegisteredDataset:
         """
         Register a new dataset.
+
+        The existence check and write happen atomically under the storage
+        lock, so concurrent registry instances cannot clobber each other.
 
         Args:
             dataset: Dataset to register
@@ -75,11 +71,14 @@ class DataRegistry:
         Raises:
             ValueError: If dataset_id already exists
         """
-        if dataset.dataset_id in self._datasets:
-            raise ValueError(f"Dataset already exists: {dataset.dataset_id}")
+        def _do(data: dict[str, Any]) -> dict[str, Any]:
+            datasets = data.setdefault("datasets", {})
+            if dataset.dataset_id in datasets:
+                raise ValueError(f"Dataset already exists: {dataset.dataset_id}")
+            datasets[dataset.dataset_id] = dataset.model_dump()
+            return data
 
-        self._datasets[dataset.dataset_id] = dataset
-        self._save()
+        self._refresh_cache(self._storage.mutate(_do))
 
         logger.info(
             "dataset_registered",
@@ -147,12 +146,17 @@ class DataRegistry:
         Raises:
             KeyError: If dataset not found
         """
-        if dataset_id not in self._datasets:
-            raise KeyError(f"Dataset not found: {dataset_id}")
+        now = datetime.now(UTC).isoformat()
 
-        self._datasets[dataset_id].status = status
-        self._datasets[dataset_id].updated_at = datetime.now(UTC).isoformat()
-        self._save()
+        def _do(data: dict[str, Any]) -> dict[str, Any]:
+            datasets = data.setdefault("datasets", {})
+            if dataset_id not in datasets:
+                raise KeyError(f"Dataset not found: {dataset_id}")
+            datasets[dataset_id]["status"] = status
+            datasets[dataset_id]["updated_at"] = now
+            return data
+
+        self._refresh_cache(self._storage.mutate(_do))
 
         logger.info("status_updated", dataset_id=dataset_id, status=status)
 

@@ -8,7 +8,7 @@ ensuring backward compatibility with existing API contracts.
 from typing import Any
 import time
 import re
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from agno.team.team import Team
 
 from ...shared.routing_schema import (

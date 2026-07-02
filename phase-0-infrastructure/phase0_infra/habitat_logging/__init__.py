@@ -4,13 +4,13 @@ This module provides structured logging capabilities using structlog,
 supporting both human-readable console output and machine-parseable JSON formatting.
 
 Basic usage:
-    >>> from phase_0_infrastructure.logging import configure_logging, get_logger
+    >>> from phase0_infra.habitat_logging import configure_logging, get_logger
     >>> configure_logging(level="INFO", format="console")
     >>> logger = get_logger(__name__)
     >>> logger.info("registry_loaded", registry_type="dataset", path="/path/to/file.json")
 
 Using standard events:
-    >>> from phase_0_infrastructure.logging import LOG_EVENTS
+    >>> from phase0_infra.habitat_logging import LOG_EVENTS
     >>> logger.info(
     ...     "dataset_registered",
     ...     dataset_id="train_001",

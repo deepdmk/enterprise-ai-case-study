@@ -11,7 +11,7 @@ configure_paths()
 
 # Now import from both local config and phase-0-infrastructure
 from config.settings import Settings, get_settings, load_task_definitions
-from habitat_logging import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 from src.program3_evaluation.evaluators.metrics import TaskSLMEvaluator
 from src.program3_evaluation.reporters.report_generator import generate_evaluation_report
 from src.shared.data_formatter import load_jsonl

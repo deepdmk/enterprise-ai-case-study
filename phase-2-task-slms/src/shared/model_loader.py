@@ -12,7 +12,7 @@ configure_paths()
 
 # Now import from both local config and phase-0-infrastructure
 from config.settings import LoRAConfig, ModelConfig, Settings
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from src.shared.environment_detector import detect_environment, get_device, get_dtype
 
 logger = get_logger(__name__)

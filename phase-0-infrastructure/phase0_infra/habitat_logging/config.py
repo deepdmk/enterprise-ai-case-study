@@ -7,10 +7,26 @@ and machine-parseable JSON formatting.
 
 import logging
 import sys
-from typing import cast
+from typing import Any, cast
 
 import structlog
 from structlog.types import Processor
+
+
+class _HabitatBoundLogger(structlog.stdlib.BoundLogger):
+    """BoundLogger that avoids double-rendered tracebacks.
+
+    ``structlog.stdlib.BoundLogger.exception`` proxies to the stdlib's
+    ``Logger.exception``, which sets ``exc_info=True`` on the stdlib side —
+    so the handler appends the traceback a second time after structlog's
+    renderer already rendered it. Proxy to ``error`` instead: structlog's
+    processor chain (ConsoleRenderer / format_exc_info) is the single
+    source of exception rendering.
+    """
+
+    def exception(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
+        kw.setdefault("exc_info", True)
+        return self._proxy_to_logger("error", event, *args, **kw)
 
 
 def configure_logging(level: str = "INFO", format: str = "console") -> None:
@@ -26,11 +42,20 @@ def configure_logging(level: str = "INFO", format: str = "console") -> None:
     if format not in ("console", "json"):
         raise ValueError(f"Invalid format: {format}. Must be 'console' or 'json'")
 
-    # Set standard library logging level
+    numeric_level = logging.getLevelName(level.upper())
+    if not isinstance(numeric_level, int):
+        raise ValueError(
+            f"Invalid level: {level}. Must be one of DEBUG, INFO, WARNING, ERROR, CRITICAL"
+        )
+
+    # Set standard library logging level.
+    # force=True so repeated configure_logging() calls take effect
+    # (basicConfig is otherwise a no-op once handlers exist).
     logging.basicConfig(
         format="%(message)s",
-        stream=sys.stdout,
-        level=getattr(logging, level.upper()),
+        stream=sys.stderr,
+        level=numeric_level,
+        force=True,
     )
 
     # Common processors for both formats
@@ -44,9 +69,10 @@ def configure_logging(level: str = "INFO", format: str = "console") -> None:
     ]
 
     if format == "console":
-        # Console format: colored and human-readable
+        # Console format: colored and human-readable.
+        # NOTE: no ExceptionRenderer/format_exc_info here — ConsoleRenderer
+        # renders pretty tracebacks itself only when exc_info is still present.
         processors: list[Processor] = shared_processors + [
-            structlog.processors.ExceptionRenderer(),
             structlog.dev.ConsoleRenderer(colors=True),
         ]
     else:
@@ -58,7 +84,7 @@ def configure_logging(level: str = "INFO", format: str = "console") -> None:
 
     structlog.configure(
         processors=processors,
-        wrapper_class=structlog.stdlib.BoundLogger,
+        wrapper_class=_HabitatBoundLogger,
         context_class=dict,
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,

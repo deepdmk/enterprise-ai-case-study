@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -45,16 +48,30 @@ class JSONStorage:
         )
 
     def _write_data(self, data: dict[str, Any]) -> None:
-        """Write data to file with metadata."""
+        """Write data to file with metadata, atomically.
+
+        Writes to a temporary file in the same directory and then replaces
+        the target via os.replace(), so a crash mid-write can never leave a
+        truncated/corrupt registry file.
+        """
         storage_data = {
             "version": "1.0",
             "updated_at": datetime.now(UTC).isoformat(),
             "data": data,
         }
 
+        # Ensure parent dir exists even when auto_create=False
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        tmp_fd, tmp_path = tempfile.mkstemp(
+            dir=self.file_path.parent,
+            prefix=self.file_path.name + ".",
+            suffix=".tmp",
+        )
         try:
-            with open(self.file_path, "w") as f:
+            with os.fdopen(tmp_fd, "w") as f:
                 json.dump(storage_data, f, indent=2, ensure_ascii=False)
+            os.replace(tmp_path, self.file_path)
         except (TypeError, ValueError) as e:
             logger.error(
                 "json_encoding_error",
@@ -62,6 +79,10 @@ class JSONStorage:
                 file_path=str(self.file_path),
             )
             raise ValueError(f"Failed to encode data as JSON: {e}") from e
+        finally:
+            # Remove the temp file if the replace never happened
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
 
     def _read_data(self) -> dict[str, Any]:
         """Read data from file, extracting the data section."""
@@ -174,6 +195,87 @@ class JSONStorage:
                 error=str(e),
                 file_path=str(self.file_path),
                 key=key,
+            )
+            raise
+
+    def set_if_absent(self, key: str, value: Any) -> bool:
+        """
+        Set a key only if it does not already exist, atomically.
+
+        The existence check and the write happen under a single lock
+        acquisition, so two processes cannot both "create" the same key.
+
+        Args:
+            key: Key to set
+            value: Value to set
+
+        Returns:
+            True if the key was set, False if it already existed
+        """
+        lock = FileLock(self.lock_path, timeout=self.LOCK_TIMEOUT)
+
+        try:
+            with lock:
+                data = self._read_data()
+                if key in data:
+                    logger.debug(
+                        "key_already_exists",
+                        file_path=str(self.file_path),
+                        key=key,
+                    )
+                    return False
+                data[key] = value
+                self._write_data(data)
+                logger.debug(
+                    "set_absent_key",
+                    file_path=str(self.file_path),
+                    key=key,
+                )
+                return True
+        except Exception as e:
+            logger.error(
+                "set_if_absent_failed",
+                error=str(e),
+                file_path=str(self.file_path),
+                key=key,
+            )
+            raise
+
+    def mutate(self, fn: Callable[[dict[str, Any]], dict[str, Any]]) -> dict[str, Any]:
+        """
+        Apply a read-modify-write transformation under a single lock.
+
+        Reloads the current data, passes it to ``fn``, and persists whatever
+        ``fn`` returns — all while holding the file lock. This is the safe
+        way for multiple registry instances to mutate shared state without
+        clobbering each other's writes.
+
+        Args:
+            fn: Callable receiving the current data dict and returning the
+                new data dict to persist. May mutate its argument in place
+                and return it.
+
+        Returns:
+            The data dict that was persisted
+        """
+        lock = FileLock(self.lock_path, timeout=self.LOCK_TIMEOUT)
+
+        try:
+            with lock:
+                data = self._read_data()
+                new_data = fn(data)
+                self._write_data(new_data)
+                logger.debug(
+                    "mutated_data",
+                    file_path=str(self.file_path),
+                    num_keys=len(new_data),
+                )
+                return new_data
+        except Exception as e:
+            logger.error(
+                "mutate_failed",
+                error=str(e),
+                file_path=str(self.file_path),
             )
             raise
 

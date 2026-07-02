@@ -13,7 +13,7 @@ pip install -e .
 ## Quick Start
 
 ```python
-from logging import configure_logging, get_logger, LOG_EVENTS
+from phase0_infra.habitat_logging import configure_logging, get_logger, LOG_EVENTS
 
 # Configure logging (do this once at application startup)
 configure_logging(level="INFO", format="console")
@@ -62,7 +62,7 @@ configure_logging(level="DEBUG", format="console")
 Use `LOG_EVENTS` to ensure consistency across the codebase:
 
 ```python
-from logging import LOG_EVENTS
+from phase0_infra.habitat_logging import LOG_EVENTS
 
 # View all available events
 print(LOG_EVENTS.keys())
@@ -100,7 +100,7 @@ The module provides helper functions for common logging patterns:
 #### Registry Events
 
 ```python
-from logging import format_registry_event
+from phase0_infra.habitat_logging import format_registry_event
 
 logger.info(**format_registry_event(
     "dataset_registered",
@@ -114,7 +114,7 @@ logger.info(**format_registry_event(
 #### Validation Events
 
 ```python
-from logging import format_validation_event
+from phase0_infra.habitat_logging import format_validation_event
 
 logger.warning(**format_validation_event(
     "validation_failed",
@@ -134,7 +134,7 @@ logger.info(**format_validation_event(
 #### Experiment Events
 
 ```python
-from logging import format_experiment_event
+from phase0_infra.habitat_logging import format_experiment_event
 
 # Starting an experiment
 logger.info(**format_experiment_event(
@@ -208,7 +208,7 @@ structlog.contextvars.clear_contextvars()
 ### Registry Module
 
 ```python
-from logging import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 
 class DatasetRegistry:
     def __init__(self):
@@ -235,7 +235,7 @@ class DatasetRegistry:
 ### Validation Module
 
 ```python
-from logging import get_logger, format_validation_event
+from phase0_infra.habitat_logging import get_logger, format_validation_event
 
 class DatasetValidator:
     def __init__(self):
@@ -265,7 +265,7 @@ class DatasetValidator:
 ### Experiment Tracking
 
 ```python
-from logging import get_logger, format_experiment_event
+from phase0_infra.habitat_logging import get_logger, format_experiment_event
 import time
 
 class ExperimentRunner:
@@ -359,7 +359,7 @@ logger.info(f"Loaded registry from {path} with {count} items")
 
 **After:**
 ```python
-from logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 logger = get_logger(__name__)
 logger.info("registry_loaded", path=path, count=count)
 ```

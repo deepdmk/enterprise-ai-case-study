@@ -14,7 +14,7 @@ import yaml
 from src.shared.path_config import configure_paths
 configure_paths()
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from config.settings import Settings
 from src.shared.config_generator import MoEConfigGenerator, validate_mergekit_config

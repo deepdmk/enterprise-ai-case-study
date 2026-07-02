@@ -25,7 +25,7 @@ Phase 0 provides the core infrastructure that all downstream phases (1-5) depend
 ```python
 import sys
 sys.path.insert(0, "../phase-0-infrastructure")
-from registries import DataRegistry, ModelRegistry, ExperimentTracker
+from phase0_infra.registries import DataRegistry, ModelRegistry, ExperimentTracker
 ```
 
 ## Quick Start
@@ -41,10 +41,10 @@ pip install -e ".[dev]"
 
 ```bash
 # Test basic imports
-python -c "from registries.data_registry import DataRegistry; from registries.model_registry import ModelRegistry; print('OK')"
+python -c "from phase0_infra.registries.data_registry import DataRegistry; from phase0_infra.registries.model_registry import ModelRegistry; print('OK')"
 
 # Check logging configuration
-python -c "from logging.config import configure_logging; configure_logging(); print('Logging configured')"
+python -c "from phase0_infra.habitat_logging import configure_logging; configure_logging(); print('Logging configured')"
 ```
 
 ### Environment Configuration
@@ -60,8 +60,8 @@ cp .env.example .env
 ### DataRegistry: Track Datasets Across Phases
 
 ```python
-from registries.data_registry import DataRegistry
-from registries.schemas import RegisteredDataset, Phase, DataType, DatasetStatus
+from phase0_infra.registries.data_registry import DataRegistry
+from phase0_infra.registries.schemas import RegisteredDataset, Phase, DataType, DatasetStatus
 
 # Initialize registry
 registry = DataRegistry(data_dir="./data", test_mode=False)
@@ -114,8 +114,8 @@ print(f"By phase: {summary['by_phase']}")
 ### ModelRegistry: Track Models and Versions
 
 ```python
-from registries.model_registry import ModelRegistry
-from registries.schemas import RegisteredModel, Phase, ModelType, ModelStatus
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.schemas import RegisteredModel, Phase, ModelType, ModelStatus
 
 # Initialize registry
 registry = ModelRegistry(data_dir="./data", test_mode=False)
@@ -155,7 +155,7 @@ phase2_models = registry.list(
 # Update status
 registry.update_status("phase-2/fundraising/portfolio-analysis_v1", ModelStatus.TRAINED)
 
-# Update metrics (stored as tags)
+# Update metrics (stored in the dedicated metrics field, schema 1.1+)
 registry.update_metrics(
     model_id="phase-2/fundraising/portfolio-analysis_v1",
     metrics={"eval_loss": 0.42, "format_compliance": 0.95}
@@ -182,8 +182,8 @@ print(f"By status: {summary['by_status']}")
 ### ExperimentTracker: Log Training Experiments
 
 ```python
-from registries.experiment_tracker import ExperimentTracker
-from registries.schemas import (
+from phase0_infra.registries.experiment_tracker import ExperimentTracker
+from phase0_infra.registries.schemas import (
     Phase,
     DataCharacteristics,
     HyperparameterConfig,
@@ -291,23 +291,23 @@ phase0_path = Path(__file__).parent.parent / "phase-0-infrastructure"
 sys.path.insert(0, str(phase0_path))
 
 # Now import registries and schemas
-from registries.data_registry import DataRegistry
-from registries.model_registry import ModelRegistry
-from registries.experiment_tracker import ExperimentTracker
-from registries.schemas import (
+from phase0_infra.registries.data_registry import DataRegistry
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.experiment_tracker import ExperimentTracker
+from phase0_infra.registries.schemas import (
     Phase, DataType, ModelType, DatasetStatus, ModelStatus,
     RegisteredDataset, RegisteredModel, ExperimentResult
 )
 
 # Import configuration utilities
-from config.base_settings import HabitatBaseSettings, PhaseSettings
-from config.conventions import make_id, parse_id
+from phase0_infra.config.base_settings import HabitatBaseSettings, PhaseSettings
+from phase0_infra.config.conventions import make_id, parse_id
 
 # Import logging
-from logging.config import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 
 # Import evaluation schemas
-from evaluation.metrics_schema import (
+from phase0_infra.evaluation.metrics_schema import (
     TokenMetrics, CostMetrics, LoadMetrics,
     QualityMetrics, EvaluationReport
 )
@@ -317,43 +317,47 @@ from evaluation.metrics_schema import (
 
 ```
 phase-0-infrastructure/
-├── config/                    # Configuration management
+├── phase0_infra/              # Single namespace package (importable root)
 │   ├── __init__.py
-│   ├── base_settings.py      # Pydantic base settings classes
-│   └── conventions.py        # ID format conventions and utilities
+│   │
+│   ├── config/                # Configuration management
+│   │   ├── base_settings.py  # Pydantic base settings classes
+│   │   ├── conventions.py    # ID format conventions and utilities
+│   │   ├── retry.py          # Retry decorators with exponential backoff
+│   │   └── phase_boundary_schemas.py  # Cross-phase contract schemas
+│   │
+│   ├── registries/            # Core registry implementations
+│   │   ├── data_registry.py  # Dataset tracking and lineage
+│   │   ├── model_registry.py # Model versioning and routing
+│   │   ├── experiment_tracker.py # Experiment logging
+│   │   ├── phase_integration.py  # Base classes for downstream phases
+│   │   ├── schemas.py        # Pydantic schemas for all registries
+│   │   └── storage.py        # Thread-safe, atomic JSON storage with file locking
+│   │
+│   ├── habitat_logging/       # Structured logging infrastructure
+│   │   ├── config.py         # Logging configuration (console/JSON)
+│   │   ├── formatters.py     # Custom log formatters
+│   │   └── USAGE.md          # Logging usage guide
+│   │
+│   └── evaluation/            # Evaluation metrics schemas
+│       └── metrics_schema.py # Token, cost, load, quality metrics
 │
-├── registries/               # Core registry implementations
-│   ├── data_registry.py     # Dataset tracking and lineage
-│   ├── model_registry.py    # Model versioning and routing
-│   ├── experiment_tracker.py # Experiment logging
-│   ├── schemas.py           # Pydantic schemas for all registries
-│   └── storage.py           # Thread-safe JSON storage with file locking
-│
-├── logging/                 # Structured logging infrastructure
-│   ├── __init__.py
-│   ├── config.py           # Logging configuration (console/JSON)
-│   ├── formatters.py       # Custom log formatters
-│   └── USAGE.md           # Logging usage guide
-│
-├── evaluation/             # Evaluation metrics schemas
-│   └── metrics_schema.py  # Token, cost, load, quality metrics
-│
-├── templates/              # Templates for new phases
+├── templates/                 # Templates for new phases
 │   ├── README_TEMPLATE.md
 │   ├── gitignore_template
 │   └── pyproject_template.toml
 │
-├── tests/                  # Unit tests
+├── tests/                     # Unit tests
 │
-├── data/                   # Runtime data storage
-│   ├── data_registry.json  # Dataset registry (auto-created)
-│   ├── model_registry.json # Model registry (auto-created)
-│   └── experiments.json    # Experiment tracker (auto-created)
+├── data/                      # Runtime data storage
+│   ├── data_registry.json     # Dataset registry (auto-created)
+│   ├── model_registry.json    # Model registry (auto-created)
+│   └── experiments.json       # Experiment tracker (auto-created)
 │
-├── .env.example           # Environment variable template
+├── .env.example               # Environment variable template
 ├── .gitignore
-├── pyproject.toml         # Package configuration
-└── README.md             # This file
+├── pyproject.toml             # Package configuration
+└── README.md                  # This file
 ```
 
 ## API Reference
@@ -421,6 +425,8 @@ phase-0-infrastructure/
 - `load()` → Load all data from file
 - `save(data)` → Save all data to file
 - `update(key, value)` → Update single key
+- `set_if_absent(key, value)` → Set key only if missing (atomic check+write)
+- `mutate(fn)` → Read-modify-write under a single lock
 - `delete(key)` → Delete key
 - `get(key, default)` → Get single key
 - `exists(key)` → Check if key exists
@@ -429,6 +435,7 @@ phase-0-infrastructure/
 
 **Features**:
 - Thread-safe file locking (10s timeout)
+- Atomic writes (temp file + `os.replace`; crash-safe)
 - Automatic parent directory creation
 - Metadata wrapper (version, updated_at)
 - Legacy format support
@@ -443,7 +450,7 @@ phase-0-infrastructure/
 
 **Usage**:
 ```python
-from logging.config import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 
 configure_logging(level="INFO", format="console")
 logger = get_logger(__name__)
@@ -542,7 +549,7 @@ pip install -e ".[dev]"
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ -v --cov=registries --cov=logging --cov=config --cov=evaluation
+pytest tests/ -v --cov=phase0_infra
 
 # Run specific test file
 pytest tests/test_data_registry.py -v
@@ -568,8 +575,8 @@ tests/
 
 ```python
 import pytest
-from registries.data_registry import DataRegistry
-from registries.schemas import RegisteredDataset, Phase, DataType
+from phase0_infra.registries.data_registry import DataRegistry
+from phase0_infra.registries.schemas import RegisteredDataset, Phase, DataType
 
 def test_register_dataset():
     # Use test mode
@@ -629,17 +636,25 @@ dev = [
 
 ## Schema Versioning
 
-All schemas include a `schema_version` field (default: "1.0") to support backward compatibility:
+All schemas include a `schema_version` field to support backward compatibility:
 
-- `RegisteredDataset.schema_version`
-- `RegisteredModel.schema_version`
-- `ExperimentResult.schema_version`
-- `EvaluationReport.schema_version`
+- `RegisteredDataset.schema_version` (current: "1.0")
+- `RegisteredModel.schema_version` (current: "1.1" — adds the `metrics` field;
+  1.0 records stored metrics as `metric:<key>=<value>` tags)
+- `ExperimentResult.schema_version` (current: "1.0")
+- `EvaluationReport.schema_version` (current: "1.0")
 
 When schemas change:
 1. Increment version number
 2. Add migration logic in registry loaders
 3. Document breaking changes
+
+### Known Inconsistencies (deliberate, low priority)
+
+- Phase is represented three ways: `Phase` StrEnum (`"1"`–`"5"`),
+  `PhaseSettings.phase` (`int` 1–5), and `parse_id()` (returns `int`).
+- `EvaluationReport.created_at` is a `datetime`; other schemas use ISO-format
+  strings for timestamps.
 
 ## Lineage Tracking
 
@@ -739,7 +754,7 @@ tracker.complete_experiment(experiment_id, model_id=model.model_id)
 ### 5. Use Consistent ID Conventions
 
 ```python
-from config.conventions import make_id, parse_id
+from phase0_infra.config.conventions import make_id, parse_id
 
 # Create IDs consistently
 model_id = make_id(
@@ -786,7 +801,7 @@ export_data = registry.export_for_deployment(
 
 ### Issue: Import Errors
 
-**Error**: `ModuleNotFoundError: No module named 'registries'`
+**Error**: `ModuleNotFoundError: No module named 'phase0_infra'`
 
 **Solution**:
 ```python
@@ -832,7 +847,7 @@ class ModelRegistry:
 # New Phase 0 approach (import)
 import sys
 sys.path.insert(0, "../phase-0-infrastructure")
-from registries import ModelRegistry
+from phase0_infra.registries import ModelRegistry
 
 registry = ModelRegistry(data_dir="./data")
 ```

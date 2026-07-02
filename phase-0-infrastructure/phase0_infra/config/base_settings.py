@@ -6,7 +6,7 @@ across all phases of the emergent-enterprise-ai project.
 
 from pathlib import Path
 
-from pydantic import Field, computed_field
+from pydantic import AliasChoices, Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,7 +26,9 @@ class HabitatBaseSettings(BaseSettings):
     test_mode: bool = Field(
         default=False,
         description="Enable test mode",
-        validation_alias="PHASE0_TEST_MODE"
+        # Accept both the field name (constructor kwarg) and the env var:
+        # a bare validation_alias would silently drop Settings(test_mode=True).
+        validation_alias=AliasChoices("test_mode", "PHASE0_TEST_MODE"),
     )
     data_dir: Path = Field(
         default=Path("./data"),

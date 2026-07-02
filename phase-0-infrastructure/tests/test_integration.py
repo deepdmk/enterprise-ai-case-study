@@ -3,10 +3,10 @@
 
 import pytest
 
-from registries.data_registry import DataRegistry
-from registries.experiment_tracker import ExperimentTracker
-from registries.model_registry import ModelRegistry
-from registries.schemas import (
+from phase0_infra.registries.data_registry import DataRegistry
+from phase0_infra.registries.experiment_tracker import ExperimentTracker
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.schemas import (
     DataCharacteristics,
     DatasetStatus,
     DataType,
@@ -224,9 +224,9 @@ class TestCrossRegistryIntegration:
         assert final_model.status == ModelStatus.TRAINED
         assert final_model.source_dataset_id == dataset.dataset_id
 
-        # 4. Model has metrics
-        assert "metric:eval_loss=0.52" in final_model.tags
-        assert "metric:format_compliance=0.95" in final_model.tags
+        # 4. Model has metrics (dedicated field, schema 1.1+)
+        assert final_model.metrics["eval_loss"] == 0.52
+        assert final_model.metrics["format_compliance"] == 0.95
 
         # 5. Lineage is traceable
         model_lineage = model_registry.get_lineage(model.model_id)

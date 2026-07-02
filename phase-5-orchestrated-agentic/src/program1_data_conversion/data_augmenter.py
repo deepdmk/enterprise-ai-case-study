@@ -5,7 +5,7 @@ Augments training data through paraphrasing and variations.
 """
 
 import random
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import TrainingExample
 from .intent_generator import IntentGenerator

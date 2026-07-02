@@ -7,7 +7,7 @@ Fine-tunes orchestrator models using LoRA.
 import argparse
 from pathlib import Path
 import sys
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from config.settings import get_settings
 from .trainer import OrchestratorTrainer

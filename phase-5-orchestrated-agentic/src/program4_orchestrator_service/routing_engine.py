@@ -7,7 +7,7 @@ SLM-based routing logic for orchestrator.
 from typing import Any
 import time
 import httpx
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from ..shared.routing_schema import RoutingDecision, AgentType, WorkflowType, AgentCall
 

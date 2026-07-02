@@ -13,7 +13,7 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import Settings, get_settings
-from habitat_logging import configure_logging, get_logger
+from phase0_infra.habitat_logging import configure_logging, get_logger
 from src.program2_config_gen.mergekit_config import PerUnitMergekitConfigBuilder
 from src.program2_config_gen.routing_config import RoutingConfigBuilder
 from src.shared.phase2_importer import load_import_manifest

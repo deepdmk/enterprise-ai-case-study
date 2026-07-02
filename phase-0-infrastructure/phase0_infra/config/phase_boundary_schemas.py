@@ -9,12 +9,10 @@ Phase boundaries:
 - Phase 4 → Phase 5: Discovery logs (training data + summaries)
 """
 
-from enum import Enum
 from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
-
 
 # --- Phase 2 → Phase 3: Task SLM Adapter Export ---
 
@@ -48,9 +46,14 @@ class Phase2ExportManifest(BaseModel):
     @field_validator("total_adapters")
     @classmethod
     def validate_count(cls, v: int, info) -> int:
-        adapters = info.data.get("adapters", [])
-        if adapters and v != len(adapters):
-            raise ValueError(f"total_adapters ({v}) doesn't match adapters list length ({len(adapters)})")
+        # Only skip when "adapters" itself failed validation (absent from
+        # info.data) — an empty list must still be checked.
+        if "adapters" in info.data:
+            adapters = info.data["adapters"]
+            if v != len(adapters):
+                raise ValueError(
+                    f"total_adapters ({v}) doesn't match adapters list length ({len(adapters)})"
+                )
         return v
 
 
@@ -161,19 +164,27 @@ class Phase4ExportBundle(BaseModel):
     @field_validator("total_examples")
     @classmethod
     def validate_count(cls, v: int, info) -> int:
-        examples = info.data.get("training_examples", [])
-        if examples and v != len(examples):
-            raise ValueError(
-                f"total_examples ({v}) doesn't match training_examples length ({len(examples)})"
-            )
+        # Only skip when "training_examples" itself failed validation
+        # (absent from info.data) — an empty list must still be checked.
+        if "training_examples" in info.data:
+            examples = info.data["training_examples"]
+            if v != len(examples):
+                raise ValueError(
+                    f"total_examples ({v}) doesn't match training_examples length ({len(examples)})"
+                )
         return v
 
 
 # --- Validation helpers ---
 
 
-class ValidationResult(BaseModel):
-    """Result of schema validation."""
+class SchemaValidationResult(BaseModel):
+    """Result of schema validation.
+
+    Distinct from ``registries.schemas.ValidationResult`` (a mutable
+    dataclass used for dataset path validation) — this model reports the
+    outcome of validating records against phase-boundary schemas.
+    """
 
     valid: bool = Field(description="Whether validation passed")
     errors: list[str] = Field(default_factory=list, description="Validation errors")
@@ -184,7 +195,7 @@ class ValidationResult(BaseModel):
 
 def validate_phase4_training_examples(
     examples: list[dict[str, Any]],
-) -> tuple[list[Phase4TrainingExample], ValidationResult]:
+) -> tuple[list[Phase4TrainingExample], SchemaValidationResult]:
     """Validate Phase 4 training examples against the schema.
 
     Args:
@@ -205,7 +216,7 @@ def validate_phase4_training_examples(
             errors.append(f"Example {i}: {e}")
             skipped += 1
 
-    result = ValidationResult(
+    result = SchemaValidationResult(
         valid=len(errors) == 0,
         errors=errors,
         records_validated=len(validated),

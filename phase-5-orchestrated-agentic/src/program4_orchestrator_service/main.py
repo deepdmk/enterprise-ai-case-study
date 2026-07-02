@@ -9,7 +9,7 @@ import argparse
 from pathlib import Path
 import sys
 import uvicorn
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from config.settings import get_settings
 from .service import create_app

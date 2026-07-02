@@ -3,8 +3,8 @@
 
 import pytest
 
-from registries.experiment_tracker import ExperimentTracker
-from registries.schemas import (
+from phase0_infra.registries.experiment_tracker import ExperimentTracker
+from phase0_infra.registries.schemas import (
     ExperimentStatus,
     Phase,
     TrainingMetrics,

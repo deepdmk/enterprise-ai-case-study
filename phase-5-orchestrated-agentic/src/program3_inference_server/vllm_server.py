@@ -7,7 +7,7 @@ Serves fine-tuned orchestrator model using vLLM for fast inference.
 from pathlib import Path
 from typing import Any
 import asyncio
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
 

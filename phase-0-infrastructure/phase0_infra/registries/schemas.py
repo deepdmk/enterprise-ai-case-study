@@ -127,8 +127,12 @@ class RegisteredModel(BaseModel):
     status: ModelStatus = Field(default=ModelStatus.REGISTERED, description="Current model status")
     created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat(), description="Creation timestamp")
     updated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat(), description="Last update timestamp")
-    schema_version: str = Field(default="1.0", description="Schema version")
+    schema_version: str = Field(default="1.1", description="Schema version")
     tags: list[str] = Field(default_factory=list, description="Searchable tags")
+
+    # Evaluation metrics (schema 1.1+; older records stored these as
+    # "metric:<key>=<value>" entries in tags)
+    metrics: dict[str, float] = Field(default_factory=dict, description="Evaluation metrics")
 
     # Lineage
     source_dataset_id: str | None = Field(None, description="Source dataset for lineage tracking")

@@ -14,7 +14,7 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import InterfaceConfig, Settings
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 
 from .feedback import InterfaceFeedbackCollector
 from .mock_inference import ExpertActivation as MockExpertActivation

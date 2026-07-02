@@ -13,9 +13,9 @@ from src.shared.path_config import configure_paths
 configure_paths()
 
 from config.settings import Settings, get_settings
-from habitat_logging import configure_logging, get_logger
-from registries.model_registry import ModelRegistry
-from registries.schemas import Phase, ModelType, ModelStatus
+from phase0_infra.habitat_logging import configure_logging, get_logger
+from phase0_infra.registries.model_registry import ModelRegistry
+from phase0_infra.registries.schemas import Phase, ModelType, ModelStatus
 from src.program3_merge.merger import (
     MergeResult,
     MockMerger,
@@ -45,7 +45,7 @@ def _register_moe_model(
         config: Loaded mergekit config
         settings: Application settings
     """
-    from registries.schemas import RegisteredModel
+    from phase0_infra.registries.schemas import RegisteredModel
 
     # Extract expert names and architecture info for tags
     experts = config.get("experts", [])

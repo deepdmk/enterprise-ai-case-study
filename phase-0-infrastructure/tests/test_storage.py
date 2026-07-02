@@ -5,7 +5,7 @@ import threading
 
 import pytest
 
-from registries.storage import JSONStorage
+from phase0_infra.registries.storage import JSONStorage
 
 
 class TestJSONStorage:

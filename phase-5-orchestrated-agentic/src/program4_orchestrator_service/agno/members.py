@@ -4,7 +4,7 @@ Remote Agent Members for Agno Team
 Creates RemoteAgent wrappers for Phase 4 A2A agents (MoE-powered).
 """
 
-from habitat_logging import get_logger
+from phase0_infra.habitat_logging import get_logger
 from agno.agent import RemoteAgent
 
 logger = get_logger(__name__)

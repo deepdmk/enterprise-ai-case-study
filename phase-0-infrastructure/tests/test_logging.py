@@ -2,8 +2,8 @@
 
 import pytest
 
-from habitat_logging.config import configure_logging, get_logger
-from habitat_logging.formatters import (
+from phase0_infra.habitat_logging.config import configure_logging, get_logger
+from phase0_infra.habitat_logging.formatters import (
     LOG_EVENTS,
     format_experiment_event,
     format_registry_event,
