@@ -6,7 +6,7 @@ Handles collection management, embedding storage, and querying.
 """
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Iterator
 
 import chromadb
 from chromadb.config import Settings as ChromaSettings
@@ -124,8 +124,8 @@ class ChromaDBClient:
         if self._client is None:
             self.connect()
 
-        # Assert client is connected after connect() call
-        assert self._client is not None, "ChromaDB client failed to connect"
+        if self._client is None:
+            raise RuntimeError("ChromaDB client failed to connect")
 
         name = name or self.config.collection_name
         metadata = metadata or {
@@ -264,6 +264,32 @@ class ChromaDBClient:
 
         return len(ids)
 
+    def iter_metadata(
+        self, where: dict[str, Any] | None = None, page_size: int = 500
+    ) -> Iterator[tuple[str, dict[str, Any]]]:
+        """
+        Iterate over (id, metadata) pairs matching a filter, paging through
+        the collection to bound memory use.
+
+        Args:
+            where: Optional metadata filter.
+            page_size: Number of records per page.
+
+        Yields:
+            (chunk_id, metadata) tuples.
+        """
+        offset = 0
+        while True:
+            results = self.collection.get(
+                where=where, include=["metadatas"], limit=page_size, offset=offset
+            )
+            ids = results["ids"]
+            if not ids:
+                break
+            metadatas = results["metadatas"] or [{} for _ in ids]
+            yield from zip(ids, metadatas)
+            offset += len(ids)
+
     def get_by_ids(
         self, ids: list[str], include_embeddings: bool = False
     ) -> list[dict[str, Any]]:
@@ -317,7 +343,8 @@ class ChromaDBClient:
         """
         if self._client is None:
             self.connect()
-        assert self._client is not None, "ChromaDB client failed to connect"
+        if self._client is None:
+            raise RuntimeError("ChromaDB client failed to connect")
         collections = self._client.list_collections()
         return [c.name for c in collections]
 
@@ -330,7 +357,8 @@ class ChromaDBClient:
         """
         if self._client is None:
             self.connect()
-        assert self._client is not None, "ChromaDB client failed to connect"
+        if self._client is None:
+            raise RuntimeError("ChromaDB client failed to connect")
 
         name = name or self.config.collection_name
         self._client.delete_collection(name=name)

@@ -5,6 +5,7 @@ Retrieves full parent documents from source PostgreSQL databases
 based on chunk metadata from search results.
 """
 
+import asyncio
 from dataclasses import dataclass
 from typing import Any
 
@@ -128,12 +129,14 @@ class ParentDocumentFetcher:
                 )
                 return None
 
-            # Combine text columns
-            text_parts = []
-            for col in table_config.text_columns:
-                if col in record and record[col]:
-                    text_parts.append(str(record[col]))
-            content = " ".join(text_parts)
+            # Combine text columns exactly like ingestion's SQL expression
+            # (COALESCE(col::text, '') joined with ' '): every configured
+            # column contributes, NULLs become empty strings. Anything else
+            # drifts the stored char_start/char_end offsets.
+            content = " ".join(
+                "" if record.get(col) is None else str(record.get(col))
+                for col in table_config.text_columns
+            )
 
             # Extract additional metadata
             metadata = {}
@@ -173,28 +176,26 @@ class ParentDocumentFetcher:
         Returns:
             List of SearchResultWithDocument with fetched documents.
         """
-        results = []
+        # Lazy pool init: no-op after the first call. Lets the app construct
+        # the fetcher synchronously and connect on first search. The mock
+        # fetcher has no db_manager.
+        if self.db_manager is not None:
+            await self.db_manager.initialize()
 
-        for search_result in search_results:
-            try:
-                parent_doc = await self.fetch_document(search_result)
-                results.append(
-                    SearchResultWithDocument(
-                        search_result=search_result,
-                        parent_document=parent_doc,
-                        error=None if parent_doc else "Document not found",
-                    )
-                )
-            except Exception as e:
-                results.append(
-                    SearchResultWithDocument(
-                        search_result=search_result,
-                        parent_document=None,
-                        error=str(e),
-                    )
-                )
+        # fetch_document isolates per-fetch errors (returns None), so a
+        # failed fetch never cancels its siblings
+        parent_docs = await asyncio.gather(
+            *(self.fetch_document(sr) for sr in search_results)
+        )
 
-        return results
+        return [
+            SearchResultWithDocument(
+                search_result=search_result,
+                parent_document=parent_doc,
+                error=None if parent_doc else "Document not found",
+            )
+            for search_result, parent_doc in zip(search_results, parent_docs)
+        ]
 
 
 class MockParentDocumentFetcher(ParentDocumentFetcher):
@@ -202,6 +203,7 @@ class MockParentDocumentFetcher(ParentDocumentFetcher):
 
     def __init__(self):
         """Initialize mock fetcher."""
+        self.db_manager = None
         self._mock_documents: dict[str, str] = {}
 
     def add_mock_document(self, doc_id: str, content: str) -> None:

@@ -1,56 +1,32 @@
-"""Tests for semantic retriever.
+"""Tests for the semantic retriever (candidate flow, no reranking)."""
 
-These tests are self-contained and define necessary dataclasses locally
-to avoid import dependency issues.
-"""
-
-from dataclasses import dataclass
-from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
 
-
-# Local copies of dataclasses for testing (avoid import issues)
-@dataclass
-class QueryResult:
-    """Result from a ChromaDB query."""
-
-    ids: list[str]
-    distances: list[float]
-    metadatas: list[dict[str, Any]]
-    embeddings: list[list[float]] | None = None
-    documents: list[str] | None = None
-
-    def __len__(self):
-        return len(self.ids)
+from src.program4_search.retriever import SearchResult, SemanticRetriever
+from src.shared.chromadb_client import QueryResult
 
 
-@dataclass
-class SearchResult:
-    """A single search result."""
+def make_retriever(query_result: QueryResult | None = None) -> SemanticRetriever:
+    """Build a retriever with mocked embedding manager and chromadb client."""
+    embedding_manager = MagicMock()
+    embedding_manager.encode_single.return_value = [0.1, 0.2, 0.3]
 
-    chunk_id: str
-    similarity_score: float
-    parent_doc_id: str
-    chunk_index: int
-    source_db: str
-    source_table: str
-    metadata: dict[str, Any]
+    chromadb_client = MagicMock()
+    if query_result is not None:
+        chromadb_client.query.return_value = query_result
 
-    def __repr__(self) -> str:
-        return (
-            f"SearchResult(doc={self.parent_doc_id}, "
-            f"chunk={self.chunk_index}, "
-            f"score={self.similarity_score:.4f})"
-        )
+    return SemanticRetriever(
+        embedding_manager=embedding_manager,
+        chromadb_client=chromadb_client,
+    )
 
 
 class TestSearchResult:
     """Tests for SearchResult dataclass."""
 
     def test_basic_creation(self):
-        """Test basic SearchResult creation."""
         result = SearchResult(
             chunk_id="chunk_001",
             similarity_score=0.95,
@@ -62,14 +38,9 @@ class TestSearchResult:
         )
         assert result.chunk_id == "chunk_001"
         assert result.similarity_score == 0.95
-        assert result.parent_doc_id == "doc_001"
-        assert result.chunk_index == 0
-        assert result.source_db == "test_db"
-        assert result.source_table == "test_table"
         assert result.metadata == {"key": "value"}
 
     def test_repr(self):
-        """Test string representation."""
         result = SearchResult(
             chunk_id="chunk_001",
             similarity_score=0.9512,
@@ -84,235 +55,117 @@ class TestSearchResult:
         assert "chunk=2" in repr_str
         assert "0.9512" in repr_str
 
-    def test_empty_metadata(self):
-        """Test SearchResult with empty metadata."""
-        result = SearchResult(
-            chunk_id="chunk_002",
-            similarity_score=0.8,
-            parent_doc_id="doc_002",
-            chunk_index=1,
-            source_db="db",
-            source_table="table",
-            metadata={},
-        )
-        assert result.metadata == {}
 
-    def test_high_similarity_score(self):
-        """Test SearchResult with high similarity."""
-        result = SearchResult(
-            chunk_id="chunk_003",
-            similarity_score=0.999,
-            parent_doc_id="doc_003",
-            chunk_index=0,
-            source_db="db",
-            source_table="table",
-            metadata={},
-        )
-        assert result.similarity_score == pytest.approx(0.999)
+class TestSearchCandidates:
+    """Tests for the raw candidate search."""
 
-    def test_low_similarity_score(self):
-        """Test SearchResult with low similarity."""
-        result = SearchResult(
-            chunk_id="chunk_004",
-            similarity_score=0.1,
-            parent_doc_id="doc_004",
-            chunk_index=5,
-            source_db="db",
-            source_table="table",
-            metadata={},
-        )
-        assert result.similarity_score == pytest.approx(0.1)
-
-
-class TestQueryResult:
-    """Tests for QueryResult used in retriever context."""
-
-    def test_query_result_length(self):
-        """Test QueryResult length calculation."""
-        result = QueryResult(
-            ids=["id1", "id2", "id3"],
-            distances=[0.1, 0.2, 0.3],
-            metadatas=[{}, {}, {}],
-        )
-        assert len(result) == 3
-
-    def test_query_result_empty(self):
-        """Test empty QueryResult."""
-        result = QueryResult(ids=[], distances=[], metadatas=[])
-        assert len(result) == 0
-
-    def test_query_result_with_documents(self):
-        """Test QueryResult with documents field (for reranking)."""
-        result = QueryResult(
-            ids=["id1"],
-            distances=[0.1],
-            metadatas=[{"source": "test"}],
-            documents=["Document content here"],
-        )
-        assert result.documents == ["Document content here"]
-
-
-class TestSimilarityCalculation:
-    """Tests for similarity score calculation from distance."""
-
-    def test_cosine_distance_to_similarity(self):
-        """Test converting cosine distance to similarity score."""
-        # For cosine space: similarity = 1 - distance/2
-        distance = 0.2
-        similarity = 1 - distance / 2
-        assert similarity == pytest.approx(0.9)
-
-    def test_zero_distance(self):
-        """Test perfect match (zero distance)."""
-        distance = 0.0
-        similarity = 1 - distance / 2
-        assert similarity == pytest.approx(1.0)
-
-    def test_max_distance(self):
-        """Test maximum distance (opposite vectors)."""
-        distance = 2.0  # Max cosine distance
-        similarity = 1 - distance / 2
-        assert similarity == pytest.approx(0.0)
-
-
-class TestSearchDeduplication:
-    """Tests for search result deduplication logic."""
-
-    def test_deduplication_by_parent_doc(self):
-        """Test deduplication keeps one result per parent document."""
-        results = [
-            SearchResult(
-                chunk_id="chunk_001",
-                similarity_score=0.95,
-                parent_doc_id="doc_001",
-                chunk_index=0,
-                source_db="db",
-                source_table="table",
-                metadata={},
-            ),
-            SearchResult(
-                chunk_id="chunk_002",
-                similarity_score=0.90,
-                parent_doc_id="doc_001",  # Same document
-                chunk_index=1,
-                source_db="db",
-                source_table="table",
-                metadata={},
-            ),
-            SearchResult(
-                chunk_id="chunk_003",
-                similarity_score=0.85,
-                parent_doc_id="doc_002",  # Different document
-                chunk_index=0,
-                source_db="db",
-                source_table="table",
-                metadata={},
-            ),
-        ]
-
-        # Simulate deduplication logic
-        seen_docs = set()
-        deduplicated = []
-        for result in results:
-            doc_key = f"{result.source_db}_{result.parent_doc_id}"
-            if doc_key not in seen_docs:
-                seen_docs.add(doc_key)
-                deduplicated.append(result)
-
-        assert len(deduplicated) == 2
-        assert deduplicated[0].parent_doc_id == "doc_001"
-        assert deduplicated[1].parent_doc_id == "doc_002"
-
-    def test_deduplication_preserves_order(self):
-        """Test that deduplication preserves similarity order."""
-        results = [
-            SearchResult(
-                chunk_id="c1", similarity_score=0.99, parent_doc_id="d1",
-                chunk_index=0, source_db="db", source_table="t", metadata={}
-            ),
-            SearchResult(
-                chunk_id="c2", similarity_score=0.95, parent_doc_id="d2",
-                chunk_index=0, source_db="db", source_table="t", metadata={}
-            ),
-            SearchResult(
-                chunk_id="c3", similarity_score=0.90, parent_doc_id="d1",  # Duplicate
-                chunk_index=1, source_db="db", source_table="t", metadata={}
-            ),
-        ]
-
-        seen_docs = set()
-        deduplicated = []
-        for result in results:
-            doc_key = f"{result.source_db}_{result.parent_doc_id}"
-            if doc_key not in seen_docs:
-                seen_docs.add(doc_key)
-                deduplicated.append(result)
-
-        # First result should have highest score
-        assert deduplicated[0].similarity_score > deduplicated[1].similarity_score
-
-
-class TestMockedRetriever:
-    """Tests for retriever with mocked dependencies."""
-
-    def test_mock_embedding_manager(self):
-        """Test mock embedding manager returns expected embedding."""
-        mock_manager = MagicMock()
-        mock_manager.encode_single.return_value = [0.1, 0.2, 0.3]
-
-        embedding = mock_manager.encode_single("test query")
-
-        assert embedding == [0.1, 0.2, 0.3]
-        mock_manager.encode_single.assert_called_once_with("test query")
-
-    def test_mock_chromadb_query(self):
-        """Test mock ChromaDB client query."""
-        mock_client = MagicMock()
-        mock_client.query.return_value = QueryResult(
-            ids=["chunk_001", "chunk_002"],
-            distances=[0.2, 0.4],
-            metadatas=[
-                {"parent_doc_id": "doc_001", "chunk_index": 0},
-                {"parent_doc_id": "doc_002", "chunk_index": 1},
-            ],
+    def test_similarity_is_one_minus_distance(self):
+        """ChromaDB cosine distance is 1 - cos_sim, so similarity = 1 - distance."""
+        retriever = make_retriever(
+            QueryResult(
+                ids=["c1", "c2", "c3"],
+                distances=[0.0, 0.2, 1.0],
+                metadatas=[{}, {}, {}],
+            )
         )
 
-        results = mock_client.query(
-            query_embeddings=[[0.1, 0.2, 0.3]],
-            n_results=5,
+        results = retriever.search_candidates("query", n_results=3)
+
+        assert results[0].similarity_score == pytest.approx(1.0)
+        assert results[1].similarity_score == pytest.approx(0.8)
+        assert results[2].similarity_score == pytest.approx(0.0)
+
+    def test_metadata_passthrough(self):
+        retriever = make_retriever(
+            QueryResult(
+                ids=["c1"],
+                distances=[0.1],
+                metadatas=[
+                    {
+                        "parent_doc_id": "doc_001",
+                        "chunk_index": 3,
+                        "source_db": "db_a",
+                        "source_table": "projects",
+                        "char_start": 10,
+                        "char_end": 200,
+                    }
+                ],
+            )
         )
 
-        assert len(results) == 2
-        assert results.ids == ["chunk_001", "chunk_002"]
+        results = retriever.search_candidates("query", n_results=1)
 
-    def test_search_flow_integration(self):
-        """Test full search flow with mocked components."""
-        # Mock embedding manager
-        mock_embedding = MagicMock()
-        mock_embedding.encode_single.return_value = [0.1, 0.2, 0.3]
-
-        # Mock ChromaDB client
-        mock_chromadb = MagicMock()
-        mock_chromadb.query.return_value = QueryResult(
-            ids=["chunk_001"],
-            distances=[0.2],
-            metadatas=[{
-                "parent_doc_id": "doc_001",
-                "chunk_index": 0,
-                "source_db": "test_db",
-                "source_table": "test_table",
-            }],
-        )
-
-        # Simulate search
-        query = "test query"
-        query_embedding = mock_embedding.encode_single(query)
-        results = mock_chromadb.query(
-            query_embeddings=[query_embedding],
-            n_results=5,
-        )
-
-        # Verify results
         assert len(results) == 1
-        assert results.ids[0] == "chunk_001"
-        assert results.metadatas[0]["parent_doc_id"] == "doc_001"
+        r = results[0]
+        assert r.parent_doc_id == "doc_001"
+        assert r.chunk_index == 3
+        assert r.source_db == "db_a"
+        assert r.source_table == "projects"
+        assert r.metadata["char_start"] == 10
+        assert r.metadata["char_end"] == 200
+
+    def test_source_db_filter_builds_where(self):
+        retriever = make_retriever(QueryResult(ids=[], distances=[], metadatas=[]))
+
+        retriever.search_candidates("query", n_results=5, source_db_filter="db_a")
+
+        _, kwargs = retriever.chromadb_client.query.call_args
+        assert kwargs["where"] == {"source_db": "db_a"}
+        assert kwargs["n_results"] == 5
+
+    def test_no_filter_passes_none(self):
+        retriever = make_retriever(QueryResult(ids=[], distances=[], metadatas=[]))
+
+        retriever.search_candidates("query", n_results=5)
+
+        _, kwargs = retriever.chromadb_client.query.call_args
+        assert kwargs["where"] is None
+
+    def test_no_documents_requested(self):
+        """The index is metadata-only; the retriever must never ask for documents."""
+        retriever = make_retriever(QueryResult(ids=[], distances=[], metadatas=[]))
+
+        retriever.search_candidates("query", n_results=5)
+
+        _, kwargs = retriever.chromadb_client.query.call_args
+        assert "documents" not in kwargs["include"]
+
+    def test_search_wrapper_matches_candidates(self):
+        retriever = make_retriever(
+            QueryResult(ids=["c1"], distances=[0.4], metadatas=[{}])
+        )
+
+        results = retriever.search("query", k=1)
+
+        assert len(results) == 1
+        assert results[0].similarity_score == pytest.approx(0.6)
+
+
+class TestGetAvailableDatabases:
+    """Tests for source-database discovery (feeds the UI dropdown)."""
+
+    def test_reads_source_db_metadata(self):
+        retriever = make_retriever()
+        retriever.chromadb_client.iter_metadata.return_value = iter(
+            [
+                ("c1", {"source_db": "db_b"}),
+                ("c2", {"source_db": "db_a"}),
+                ("c3", {"source_db": "db_a"}),
+            ]
+        )
+
+        assert retriever.get_available_databases() == ["db_a", "db_b"]
+
+    def test_returns_empty_on_error(self):
+        retriever = make_retriever()
+        retriever.chromadb_client.iter_metadata.side_effect = RuntimeError("down")
+
+        assert retriever.get_available_databases() == []
+
+    def test_ignores_missing_metadata(self):
+        retriever = make_retriever()
+        retriever.chromadb_client.iter_metadata.return_value = iter(
+            [("c1", None), ("c2", {"other_key": "x"})]
+        )
+
+        assert retriever.get_available_databases() == []

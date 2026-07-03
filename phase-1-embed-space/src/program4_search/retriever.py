@@ -12,11 +12,8 @@ configure_paths()
 
 from phase0_infra.habitat_logging import get_logger
 
-from config.settings import RerankingConfig
 from src.shared.chromadb_client import ChromaDBClient
 from src.shared.embedding_model import EmbeddingModelManager
-
-from .reranker import SearchReranker
 
 logger = get_logger(__name__)
 
@@ -55,7 +52,6 @@ class SemanticRetriever:
         self,
         embedding_manager: EmbeddingModelManager,
         chromadb_client: ChromaDBClient,
-        reranking_config: RerankingConfig | None = None,
     ):
         """
         Initialize the retriever.
@@ -63,30 +59,26 @@ class SemanticRetriever:
         Args:
             embedding_manager: Embedding model manager.
             chromadb_client: ChromaDB client.
-            reranking_config: Optional reranking configuration.
         """
         self.embedding_manager = embedding_manager
         self.chromadb_client = chromadb_client
-        self.reranking_config = reranking_config
 
-        # Initialize reranker if enabled
-        self.reranker: SearchReranker | None = None
-        if reranking_config and reranking_config.enabled and reranking_config.model:
-            self.reranker = SearchReranker(reranking_config.model)
-            logger.info("reranking_enabled", model=reranking_config.model)
-
-    def search(
+    def search_candidates(
         self,
         query: str,
-        k: int = 5,
+        n_results: int,
         source_db_filter: str | None = None,
     ) -> list[SearchResult]:
         """
-        Search for relevant chunks.
+        Vector search returning raw candidates, ordered by similarity.
+
+        The index is metadata-only (no chunk text), so reranking and
+        deduplication happen downstream in the search app, after the parent
+        documents have been fetched from the source databases.
 
         Args:
             query: Search query text.
-            k: Number of results to return.
+            n_results: Number of candidates to retrieve.
             source_db_filter: Optional filter by source database.
 
         Returns:
@@ -100,31 +92,20 @@ class SemanticRetriever:
         if source_db_filter:
             where_filter = {"source_db": source_db_filter}
 
-        # Determine how many candidates to retrieve
-        n_candidates = k
-        if self.reranker and self.reranking_config:
-            n_candidates = k * self.reranking_config.candidate_multiplier
-
-        # Query ChromaDB (include documents if reranking)
-        include_list = ["metadatas", "distances"]
-        if self.reranker:
-            include_list.append("documents")
-
         results = self.chromadb_client.query(
             query_embeddings=[query_embedding],
-            n_results=n_candidates,
+            n_results=n_results,
             where=where_filter,
-            include=include_list,
+            include=["metadatas", "distances"],
         )
 
         # Convert to SearchResult objects
         search_results = []
         for i in range(len(results.ids)):
             metadata = results.metadatas[i]
-            # Convert distance to similarity (ChromaDB uses L2/cosine distance)
-            # For cosine, distance is 2*(1-similarity), so similarity = 1 - distance/2
+            # ChromaDB cosine distance is 1 - cosine_similarity
             distance = results.distances[i]
-            similarity = 1 - distance / 2  # Assumes cosine space
+            similarity = 1 - distance
 
             search_results.append(
                 SearchResult(
@@ -138,90 +119,33 @@ class SemanticRetriever:
                 )
             )
 
-        # Rerank if enabled
-        if self.reranker and results.documents:
-            # Convert SearchResults to dicts for reranker
-            result_dicts = [
-                {
-                    "chunk_id": r.chunk_id,
-                    "similarity_score": r.similarity_score,
-                    "parent_doc_id": r.parent_doc_id,
-                    "chunk_index": r.chunk_index,
-                    "source_db": r.source_db,
-                    "source_table": r.source_table,
-                    "metadata": r.metadata,
-                    "distance": results.distances[i],
-                }
-                for i, r in enumerate(search_results)
-            ]
-
-            # Rerank
-            reranked_dicts = self.reranker.rerank(
-                query=query,
-                results=result_dicts,
-                documents=results.documents,
-                top_k=k,
-            )
-
-            # Convert back to SearchResult objects
-            search_results = [
-                SearchResult(
-                    chunk_id=r["chunk_id"],
-                    similarity_score=r.get("rerank_score", r["similarity_score"]),
-                    parent_doc_id=r["parent_doc_id"],
-                    chunk_index=r["chunk_index"],
-                    source_db=r["source_db"],
-                    source_table=r["source_table"],
-                    metadata=r["metadata"],
-                )
-                for r in reranked_dicts
-            ]
-
         logger.debug(
-            "search_complete",
+            "search_candidates_complete",
             query=query[:50],
             results=len(search_results),
             top_score=search_results[0].similarity_score if search_results else 0,
-            reranked=self.reranker is not None,
         )
 
         return search_results
 
-    def search_with_deduplication(
+    def search(
         self,
         query: str,
         k: int = 5,
         source_db_filter: str | None = None,
     ) -> list[SearchResult]:
         """
-        Search with deduplication by parent document.
-
-        Returns at most one chunk per parent document.
+        Search for the k most relevant chunks (no reranking).
 
         Args:
             query: Search query text.
-            k: Number of unique documents to return.
+            k: Number of results to return.
             source_db_filter: Optional filter by source database.
 
         Returns:
-            List of SearchResult objects (one per unique document).
+            List of SearchResult objects.
         """
-        # Get more results than needed for deduplication
-        results = self.search(query, k=k * 3, source_db_filter=source_db_filter)
-
-        # Deduplicate by parent document, keeping highest scoring chunk
-        seen_docs = set()
-        deduplicated = []
-
-        for result in results:
-            doc_key = f"{result.source_db}_{result.parent_doc_id}"
-            if doc_key not in seen_docs:
-                seen_docs.add(doc_key)
-                deduplicated.append(result)
-                if len(deduplicated) >= k:
-                    break
-
-        return deduplicated
+        return self.search_candidates(query, n_results=k, source_db_filter=source_db_filter)
 
     def get_available_databases(self) -> list[str]:
         """
@@ -231,14 +155,11 @@ class SemanticRetriever:
             List of unique source database names.
         """
         try:
-            results = self.chroma_client.collection.get(
-                limit=1000,
-                include=["metadatas"],
-            )
-            databases = set()
-            for metadata in (results.get("metadatas") or []):
-                if metadata and "source_database" in metadata:
-                    databases.add(metadata["source_database"])
+            databases = {
+                metadata["source_db"]
+                for _, metadata in self.chromadb_client.iter_metadata()
+                if metadata and "source_db" in metadata
+            }
             return sorted(databases)
         except Exception as e:
             logger.warning("failed_to_get_databases", error=str(e))

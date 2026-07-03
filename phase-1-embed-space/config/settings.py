@@ -156,6 +156,8 @@ class GradioConfig(BaseModel):
 class RerankingConfig(BaseModel):
     """Configuration for search reranking."""
 
+    # Opt-in by design: config.yaml enables it explicitly. Reranking runs
+    # after the parent-document fetch (the index stores no chunk text).
     enabled: bool = False
     model: str | None = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     candidate_multiplier: int = 3  # Retrieve N*k candidates before reranking

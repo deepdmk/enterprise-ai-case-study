@@ -11,7 +11,7 @@ Orchestrates the full ingestion workflow:
 
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -153,12 +153,19 @@ class IngestionPipeline:
         embedding_lists = [emb.tolist() for emb in embeddings]
         metadata_dicts = [m.to_dict() for m in chunk_metadatas]
 
+        # Tag which model produced these embeddings so the search app can
+        # detect stale vectors after a model retrain
+        model_version = self.embedding_manager.model_version
+        for metadata in metadata_dicts:
+            metadata["embedding_model_version"] = model_version
+
         return ids, embedding_lists, metadata_dicts
 
     async def process_batch(
         self,
         records: list[ExtractedRecord],
         stats: IngestionStats,
+        replace_existing: bool = False,
     ) -> None:
         """
         Process a batch of records and upsert to ChromaDB.
@@ -166,6 +173,9 @@ class IngestionPipeline:
         Args:
             records: List of records to process.
             stats: Statistics tracker.
+            replace_existing: If True (incremental re-ingest), delete each
+                document's existing chunks first so documents that shrank
+                don't leave orphan chunks behind.
         """
         all_ids = []
         all_embeddings = []
@@ -174,6 +184,18 @@ class IngestionPipeline:
         for record in records:
             try:
                 ids, embeddings, metadatas = await self.process_record(record)
+
+                if replace_existing:
+                    self.chromadb_client.delete_by_metadata(
+                        {
+                            "$and": [
+                                {"parent_doc_id": str(record.doc_id)},
+                                {"source_db": record.source_db},
+                                {"source_table": record.source_table},
+                            ]
+                        }
+                    )
+
                 all_ids.extend(ids)
                 all_embeddings.extend(embeddings)
                 all_metadatas.extend(metadatas)
@@ -190,11 +212,17 @@ class IngestionPipeline:
 
         # Upsert to ChromaDB
         if all_ids:
-            self.chromadb_client.upsert_embeddings(
-                ids=all_ids,
-                embeddings=all_embeddings,
-                metadatas=all_metadatas,
-            )
+            try:
+                self.chromadb_client.upsert_embeddings(
+                    ids=all_ids,
+                    embeddings=all_embeddings,
+                    metadatas=all_metadatas,
+                )
+            except Exception as e:
+                error_msg = f"Error upserting batch of {len(all_ids)} chunks: {str(e)}"
+                logger.error("batch_upsert_error", chunks=len(all_ids), error=str(e))
+                stats.errors.append(error_msg)
+                return
             stats.total_chunks += len(all_ids)
             stats.total_embeddings += len(all_ids)
 
@@ -223,6 +251,7 @@ class IngestionPipeline:
 
             try:
                 # Extract records
+                incremental_pull = False
                 if sync_state and self.config.incremental.enabled:
                     last_sync = sync_state.get_last_sync(db_name, table_config.name)
                     if last_sync:
@@ -231,6 +260,7 @@ class IngestionPipeline:
                             table_config=table_config,
                             since_timestamp=last_sync,
                         )
+                        incremental_pull = True
                     else:
                         records = await self.db_manager.extract_records(
                             db_name=db_name,
@@ -253,21 +283,30 @@ class IngestionPipeline:
                 stats.records_by_db[db_name] += len(records)
 
                 # Process in batches
+                errors_before = len(stats.errors)
                 batch_size = self.config.batch_size
                 for i in tqdm(
                     range(0, len(records), batch_size),
                     desc=f"Processing {db_name}.{table_config.name}",
                 ):
                     batch = records[i : i + batch_size]
-                    await self.process_batch(batch, stats)
+                    await self.process_batch(batch, stats, replace_existing=incremental_pull)
 
-                # Update sync state
+                # Advance the watermark to the newest *data* timestamp seen, and
+                # only when every record in the table landed — otherwise the
+                # failed records would be silently skipped on the next sync
                 if sync_state:
-                    sync_state.set_last_sync(
-                        db_name,
-                        table_config.name,
-                        datetime.utcnow().isoformat(),
-                    )
+                    if len(stats.errors) > errors_before:
+                        logger.warning(
+                            "sync_watermark_held",
+                            db=db_name,
+                            table=table_config.name,
+                            errors=len(stats.errors) - errors_before,
+                        )
+                    else:
+                        max_timestamp = self._max_record_timestamp(records)
+                        if max_timestamp:
+                            sync_state.set_last_sync(db_name, table_config.name, max_timestamp)
 
                 logger.info(
                     "table_ingestion_complete",
@@ -280,6 +319,63 @@ class IngestionPipeline:
                 error_msg = f"Error ingesting {db_name}.{table_config.name}: {str(e)}"
                 logger.error("table_ingestion_error", db=db_name, table=table_config.name, error=str(e))
                 stats.errors.append(error_msg)
+
+    @staticmethod
+    def _max_record_timestamp(records: list[ExtractedRecord]) -> str | None:
+        """Newest source timestamp among the records, as an ISO string."""
+        timestamps = []
+        for record in records:
+            ts = record.metadata.get("timestamp")
+            if ts is None:
+                continue
+            timestamps.append(ts.isoformat() if isinstance(ts, datetime) else str(ts))
+        return max(timestamps) if timestamps else None
+
+    async def reconcile(self, databases: dict[str, DatabaseConfig]) -> dict[str, int]:
+        """
+        Remove ChromaDB chunks whose parent record no longer exists in the
+        source database. Intended to run nightly — incremental sync never
+        observes deletes, so this pass is what propagates them.
+
+        Args:
+            databases: Database configurations.
+
+        Returns:
+            Mapping of "db.table" to number of chunks deleted.
+        """
+        self.chromadb_client.get_or_create_collection()
+        deleted_by_table: dict[str, int] = {}
+
+        for db_name, db_config in databases.items():
+            for table_config in db_config.tables:
+                source_ids = await self.db_manager.get_all_ids(db_name, table_config)
+
+                orphan_chunk_ids = [
+                    chunk_id
+                    for chunk_id, metadata in self.chromadb_client.iter_metadata(
+                        where={
+                            "$and": [
+                                {"source_db": db_name},
+                                {"source_table": table_config.name},
+                            ]
+                        }
+                    )
+                    if metadata.get("parent_doc_id") not in source_ids
+                ]
+
+                if orphan_chunk_ids:
+                    self.chromadb_client.delete_by_ids(orphan_chunk_ids)
+
+                deleted_by_table[f"{db_name}.{table_config.name}"] = len(orphan_chunk_ids)
+                logger.info(
+                    "reconcile_table_complete",
+                    db=db_name,
+                    table=table_config.name,
+                    source_records=len(source_ids),
+                    orphan_chunks_deleted=len(orphan_chunk_ids),
+                )
+
+        return deleted_by_table
 
     async def run(
         self,
@@ -296,7 +392,7 @@ class IngestionPipeline:
         Returns:
             IngestionStats with results.
         """
-        start_time = datetime.utcnow()
+        start_time = datetime.now(UTC)
         stats = IngestionStats()
 
         # Load sync state if incremental
@@ -322,7 +418,7 @@ class IngestionPipeline:
             sync_state.save(state_path)
 
         # Calculate duration
-        stats.duration_seconds = (datetime.utcnow() - start_time).total_seconds()
+        stats.duration_seconds = (datetime.now(UTC) - start_time).total_seconds()
 
         logger.info(
             "ingestion_complete",

@@ -7,6 +7,7 @@ Stores feedback in JSONL format for easy processing.
 
 import json
 import uuid
+from collections import OrderedDict
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -17,6 +18,9 @@ configure_paths()
 from phase0_infra.habitat_logging import get_logger
 
 logger = get_logger(__name__)
+
+# Searches that never receive feedback are evicted oldest-first past this cap
+MAX_ACTIVE_SEARCHES = 1000
 
 
 @dataclass
@@ -58,8 +62,8 @@ class FeedbackCollector:
         self.feedback_dir.mkdir(parents=True, exist_ok=True)
         self.test_mode = test_mode
 
-        # Track active searches for feedback
-        self._active_searches: dict[str, dict] = {}
+        # Track active searches for feedback (bounded, oldest evicted first)
+        self._active_searches: OrderedDict[str, dict] = OrderedDict()
 
         logger.info(
             "feedback_collector_initialized",
@@ -104,6 +108,9 @@ class FeedbackCollector:
             "results": results,
             "timestamp": datetime.now(UTC).isoformat(),
         }
+        while len(self._active_searches) > MAX_ACTIVE_SEARCHES:
+            evicted_id, _ = self._active_searches.popitem(last=False)
+            logger.debug("active_search_evicted", feedback_id=evicted_id)
 
         logger.info(
             "search_recorded",

@@ -10,6 +10,13 @@ from typing import Any
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from src.shared.path_config import configure_paths
+configure_paths()
+
+from phase0_infra.habitat_logging import get_logger
+
+logger = get_logger(__name__)
+
 
 @dataclass
 class ChunkResult:
@@ -131,7 +138,16 @@ class TextChunker:
             # Find the start position of this chunk in original text
             start_pos = text.find(chunk_text, current_pos)
             if start_pos == -1:
+                # The splitter may normalize whitespace; retry from the top of
+                # the document before giving up and approximating
+                start_pos = text.find(chunk_text)
+            if start_pos == -1:
                 start_pos = current_pos
+                logger.warning(
+                    "chunk_offset_approximate",
+                    chunk_index=len(results),
+                    approximate_start=start_pos,
+                )
 
             end_pos = start_pos + len(chunk_text)
 

@@ -12,6 +12,7 @@ Part of the **Emergent Enterprise AI** framework - building the foundational inf
 - [Installation](#installation)
 - [Quick Start (Test Mode)](#quick-start-test-mode)
 - [Production Usage](#production-usage)
+- [Data Freshness & Sync](#data-freshness--sync)
 - [Programs](#programs)
   - [Program 1: Training Dataset Generator](#program-1-training-dataset-generator)
   - [Program 2: Embedding Fine-Tuning](#program-2-embedding-fine-tuning)
@@ -313,6 +314,70 @@ For ongoing data updates:
 ```bash
 python -m src.program3_ingestion.main --incremental
 ```
+
+See [Data Freshness & Sync](#data-freshness--sync) for the full sync model,
+including how deletes propagate.
+
+---
+
+## Data Freshness & Sync
+
+The index stays fresh through two complementary mechanisms — watermark-based
+incremental sync plus a nightly reconcile pass. There is no CDC
+infrastructure; this is a deliberate trade-off (see the accepted staleness
+window below).
+
+### Incremental sync (inserts & updates)
+
+`--incremental` ingests only records whose `timestamp_column` is newer than
+the per-table watermark stored in `data/sync_state.json`:
+
+- The watermark is the **newest data timestamp observed** in the extracted
+  records — not the wall clock — so records committed while a sync runs are
+  never skipped.
+- The watermark **only advances when every record in the table ingested
+  cleanly**. On any processing or upsert error it holds, and the failed
+  records are retried on the next run.
+- Re-ingested documents have their existing chunks deleted before upsert, so
+  documents that shrank don't leave orphan chunks behind.
+
+### Nightly reconcile (deletes)
+
+Incremental sync never observes deletes — a deleted source row simply stops
+appearing in queries. The reconcile pass removes its chunks from ChromaDB:
+
+```bash
+python -m src.program3_ingestion.main --reconcile
+```
+
+For each configured table it pulls all source IDs, pages through the
+collection's chunks for that table, and deletes any chunk whose
+`parent_doc_id` no longer exists at the source.
+
+**Accepted staleness window**: deletes propagate on the nightly pass, so
+deleted source records may keep appearing in search results for up to ~24
+hours. This is an accepted design decision — the alternative (CDC / triggers
+on the source databases) was rejected as disproportionate infrastructure for
+this phase.
+
+Example crontab (hourly incremental, nightly reconcile at 03:15):
+
+```cron
+0 * * * *  cd /path/to/phase-1-embed-space && .venv/bin/python -m src.program3_ingestion.main --incremental
+15 3 * * * cd /path/to/phase-1-embed-space && .venv/bin/python -m src.program3_ingestion.main --reconcile
+```
+
+### Embedding model versions
+
+Every chunk is tagged with `embedding_model_version` (the model path/name
+that produced its vector) at ingestion. The search app compares this tag
+against its loaded model at startup and logs
+`embedding_model_version_mismatch` if they differ.
+
+**After retraining the embedding model (Program 2), re-run a full ingestion**
+(`python -m src.program3_ingestion.main`, no `--incremental`) so every chunk
+is re-embedded with the new model — query vectors from one model are not
+comparable against index vectors from another.
 
 ---
 
@@ -804,6 +869,32 @@ If you see few training pairs, documents may be too short. The mock data generat
 - Built-in contrastive losses
 - Mature ecosystem
 - (Unsloth focuses on LLM fine-tuning, not embeddings)
+
+### 6. Rerank After Fetch
+
+**Decision**: The CrossEncoder reranker runs *after* the parent-document
+fetch, not against the vector index.
+
+Because of decision 1, ChromaDB stores no chunk text — so there is nothing
+in the index for a CrossEncoder to score. The search flow is:
+
+```
+vector search (k × candidate_multiplier candidates, metadata only)
+  → parallel parent-document fetch from source PostgreSQL
+  → recover each matched chunk by slicing at its stored char_start/char_end
+  → CrossEncoder rerank on the recovered chunk texts
+  → dedup by parent document → top-k
+```
+
+**Rationale**:
+- Preserves the metadata-only index (decision 1)
+- Reranking sees the *current* source text, not a stale indexed copy
+- Chunk recovery is exact because the fetcher reconstructs the combined
+  text with the same expression ingestion used (`COALESCE(col::text, '')`
+  joined by single spaces)
+- If stored offsets no longer fit the document (record changed since
+  ingestion), the app falls back to a window around `char_start` and logs
+  `stale_chunk_offsets`
 
 ---
 

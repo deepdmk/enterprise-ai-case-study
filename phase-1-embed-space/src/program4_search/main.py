@@ -71,7 +71,7 @@ def main() -> None:
     else:
         settings = Settings()
 
-    # Check if ChromaDB collection has data
+    # Check if ChromaDB collection has data (client is reused by the app)
     chromadb_client = ChromaDBClient(settings.chromadb)
     try:
         chromadb_client.connect()
@@ -99,6 +99,7 @@ def main() -> None:
         settings=settings,
         use_mock_fetcher=args.test_mode,
         test_mode=args.test_mode,
+        chromadb_client=chromadb_client,
     )
 
     print("\n" + "=" * 50)

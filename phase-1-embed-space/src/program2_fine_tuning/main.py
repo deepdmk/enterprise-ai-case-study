@@ -149,6 +149,11 @@ def main() -> None:
 
     # Load datasets
     train_dataset = trainer.load_dataset(train_path)
+    if len(train_dataset) == 0:
+        raise ValueError(
+            f"Training dataset at {train_path} is empty — nothing to train on. "
+            "Re-run Program 1 to generate training pairs."
+        )
     val_dataset = trainer.load_dataset(val_path) if Path(val_path).exists() else None
 
     logger.info(

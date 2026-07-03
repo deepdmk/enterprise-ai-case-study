@@ -10,6 +10,7 @@ Ingests data from PostgreSQL databases into ChromaDB:
 Usage:
     python -m src.program3_ingestion.main --config config/config.yaml
     python -m src.program3_ingestion.main --incremental  # Incremental sync
+    python -m src.program3_ingestion.main --reconcile    # Delete orphaned chunks (nightly)
     python -m src.program3_ingestion.main --test-mode    # Use mock data
 """
 
@@ -123,6 +124,41 @@ async def run_ingestion(
         await db_manager.close()
 
 
+async def run_reconcile(settings: Settings, test_mode: bool = False) -> dict[str, int]:
+    """
+    Run the reconcile pass: delete ChromaDB chunks whose source record was
+    deleted. Intended as a nightly job — see README "Data Freshness & Sync".
+
+    Args:
+        settings: Application settings.
+        test_mode: If True, use mock data.
+
+    Returns:
+        Mapping of "db.table" to number of orphan chunks deleted.
+    """
+    db_manager: DatabaseConnectionManager | MockDatabaseManager
+    if test_mode:
+        logger.info("using_mock_database")
+        db_manager = create_mock_database_manager(settings)
+    else:
+        db_manager = DatabaseConnectionManager(settings.databases)
+    await db_manager.initialize()
+
+    try:
+        chromadb_client = ChromaDBClient(settings.chromadb)
+        chromadb_client.connect()
+
+        pipeline = IngestionPipeline(
+            db_manager=db_manager,
+            chromadb_client=chromadb_client,
+            embedding_manager=EmbeddingModelManager(settings.embedding),
+            config=settings.ingestion,
+        )
+        return await pipeline.reconcile(settings.databases)
+    finally:
+        await db_manager.close()
+
+
 def print_stats(stats: IngestionStats) -> None:
     """Print ingestion statistics."""
     print("\n" + "=" * 50)
@@ -173,6 +209,11 @@ def main() -> None:
         help="Only ingest new/updated records since last sync",
     )
     parser.add_argument(
+        "--reconcile",
+        action="store_true",
+        help="Delete chunks whose source record no longer exists (nightly job)",
+    )
+    parser.add_argument(
         "--stats-only",
         action="store_true",
         help="Only show collection statistics, don't ingest",
@@ -197,6 +238,17 @@ def main() -> None:
         print(f"\nCollection: {collection_stats.name}")
         print(f"Count:      {collection_stats.count}")
         print(f"Metadata:   {json.dumps(collection_stats.metadata, indent=2)}")
+        return
+
+    if args.reconcile:
+        deleted_by_table = asyncio.run(
+            run_reconcile(settings=settings, test_mode=args.test_mode)
+        )
+        print("\n" + "=" * 50)
+        print("RECONCILE COMPLETE")
+        print("=" * 50)
+        for table, deleted in deleted_by_table.items():
+            print(f"  {table}: {deleted} orphan chunks deleted")
         return
 
     # Run ingestion

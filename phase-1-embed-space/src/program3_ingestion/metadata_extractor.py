@@ -6,7 +6,7 @@ Extracts and structures metadata for each chunk to enable parent document retrie
 
 import hashlib
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 from src.shared.chunking import ChunkResult
@@ -128,7 +128,7 @@ class MetadataExtractor:
             total_chunks=total_chunks,
             source_db=source_db,
             source_table=source_table,
-            created_at=datetime.utcnow().isoformat(),
+            created_at=datetime.now(UTC).isoformat(),
             char_start=chunk.start_char,
             char_end=chunk.end_char,
             additional=additional,

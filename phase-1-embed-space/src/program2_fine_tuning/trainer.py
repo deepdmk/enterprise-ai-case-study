@@ -127,8 +127,12 @@ class EmbeddingTrainer:
         - All other positives in the batch serve as negatives
         - Larger batch size = more negatives = better training
         """
-        loss = MultipleNegativesRankingLoss(self.model)
-        logger.info("loss_configured", type="MultipleNegativesRankingLoss")
+        loss = MultipleNegativesRankingLoss(self.model, scale=self.config.loss.scale)
+        logger.info(
+            "loss_configured",
+            type="MultipleNegativesRankingLoss",
+            scale=self.config.loss.scale,
+        )
         return loss
 
     def train(
@@ -149,9 +153,13 @@ class EmbeddingTrainer:
         training_config = self.config.training
         output_dir = Path(self.config.output_dir) / self.config.model_name
 
-        # Create training arguments
-        # Note: load_best_model_at_end requires save_strategy == eval_strategy
+        # Create training arguments, honoring the configured strategies.
+        # load_best_model_at_end requires save_strategy == eval_strategy, so
+        # it's only enabled when the configured strategies line up.
         use_eval = eval_dataset is not None
+        eval_strategy = training_config.evaluation_strategy if use_eval else "no"
+        save_strategy = training_config.save_strategy
+        load_best = use_eval and save_strategy == eval_strategy
         args = SentenceTransformerTrainingArguments(
             output_dir=str(output_dir),
             num_train_epochs=training_config.epochs,
@@ -161,11 +169,12 @@ class EmbeddingTrainer:
             fp16=training_config.fp16 and self.device == "cuda",
             bf16=False,
             batch_sampler=BatchSamplers.NO_DUPLICATES,
-            save_strategy="epoch",
+            save_strategy=save_strategy,
             logging_steps=training_config.logging_steps,
-            eval_strategy="epoch" if use_eval else "no",
+            eval_strategy=eval_strategy,
+            eval_steps=training_config.eval_steps if eval_strategy == "steps" else None,
             save_total_limit=3,
-            load_best_model_at_end=use_eval,
+            load_best_model_at_end=load_best,
         )
 
         # Set up loss
@@ -192,7 +201,8 @@ class EmbeddingTrainer:
         trainer.train()
 
         # Get final loss from training history
-        final_loss = trainer.state.log_history[-1].get("train_loss", 0.0)
+        log_history = trainer.state.log_history
+        final_loss = log_history[-1].get("train_loss", 0.0) if log_history else 0.0
 
         # Extract eval_loss if evaluation was performed
         eval_loss = None

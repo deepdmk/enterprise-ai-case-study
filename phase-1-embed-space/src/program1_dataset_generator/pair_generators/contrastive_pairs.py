@@ -70,6 +70,11 @@ class ContrastivePairGenerator:
             chunker: TextChunker instance (creates default if None).
             min_pair_length: Minimum length for each text in a pair.
         """
+        valid_strategies = ("adjacent_chunks", "title_content", "random_positive")
+        if strategy not in valid_strategies:
+            raise ValueError(
+                f"Unknown pair strategy: {strategy!r}. Valid: {valid_strategies}"
+            )
         self.strategy = strategy
         self.chunker = chunker or TextChunker(chunk_size=512, chunk_overlap=50)
         self.min_pair_length = min_pair_length
@@ -115,6 +120,24 @@ class ContrastivePairGenerator:
                             strategy="adjacent_chunks",
                         )
                     )
+
+        elif self.strategy == "title_content":
+            # First chunk (title/heading area) paired with each later chunk
+            anchor = chunks[0].text.strip()
+            if len(anchor) >= self.min_pair_length:
+                for chunk in chunks[1:]:
+                    positive = chunk.text.strip()
+                    if len(positive) >= self.min_pair_length:
+                        pairs.append(
+                            ContrastivePair(
+                                anchor=anchor,
+                                positive=positive,
+                                source_db=source_db,
+                                source_table=source_table,
+                                doc_id=doc_id,
+                                strategy="title_content",
+                            )
+                        )
 
         elif self.strategy == "random_positive":
             # Random pairs from same document

@@ -40,6 +40,7 @@ class EmbeddingModelManager:
         """
         self.config = config
         self._model: SentenceTransformer | None = None
+        self._model_path: str | None = None
         self._device: str | None = None
 
     def _select_device(self) -> str:
@@ -85,6 +86,7 @@ class EmbeddingModelManager:
 
         try:
             self._model = SentenceTransformer(model_path, device=self._device)
+            self._model_path = model_path
             logger.info(
                 "embedding_model_loaded",
                 model=model_path,
@@ -103,6 +105,13 @@ class EmbeddingModelManager:
         if self._model is None:
             self.load_model()
         return self._model
+
+    @property
+    def model_version(self) -> str:
+        """Identifier of the loaded model (fine-tuned path or base name)."""
+        if self._model_path is None:
+            self.load_model()
+        return self._model_path
 
     @property
     def device(self) -> str:
@@ -136,7 +145,7 @@ class EmbeddingModelManager:
             NumPy array of embeddings with shape (len(texts), embedding_dim).
         """
         if not texts:
-            return np.array([])
+            return np.empty((0, self.config.embedding_dimension))
 
         batch_size = batch_size or self.config.batch_size
 

@@ -1,3 +1,52 @@
+## 2026-07-02 — Phase 1 review: rerank-after-fetch redesign + sync correctness
+
+Full audit of phase-1-embed-space executed (31 fixes: critical bugs, sync
+correctness, edge cases, improvements). Two design decisions from review:
+
+Rerank-after-fetch redesign (search was broken by design — reranker asked
+ChromaDB for documents the metadata-only index never stores, scoring None):
+- ChromaDB stays metadata-only; SemanticRetriever slimmed to
+  search_candidates() (no reranker, no documents include).
+- SearchApp.search_async now orchestrates: k×multiplier candidates → parallel
+  parent fetch (asyncio.gather, per-fetch error isolation) → chunk recovery
+  by slicing content[char_start:char_end] → CrossEncoder rerank → dedup by
+  parent doc → top-k. Stale offsets fall back to a window + log.
+- Parent fetcher reconstructs combined text exactly like ingestion SQL
+  (COALESCE(col,'') joined by ' '; NULL columns still contribute separators)
+  so stored offsets can't drift.
+- Production path now builds a real ParentDocumentFetcher (lazy pool init);
+  previously always fell through to the mock.
+
+Data freshness (decision: watermark incremental sync + nightly reconcile; NO
+CDC — deletes may be visible up to ~24h, accepted and documented in README):
+- Watermark = max observed data timestamp (was wall clock at completion);
+  held on any per-table error so failed records retry next run.
+- Incremental re-ingest deletes a doc's old chunks first (shrink-safe).
+- New `--reconcile` mode in program3 deletes chunks whose source record is
+  gone; intended as nightly cron (README has example crontab).
+- Chunks tagged with embedding_model_version; search app warns on mismatch
+  at startup (re-ingest after retrain).
+
+Other fixes: similarity = 1 - distance (Chroma cosine, was /2 formula);
+get_available_databases (wrong attr + metadata key) now feeds the Gradio DB
+dropdown dynamically; per-session gr.State feedback (was shared instance
+attrs across users); bounded feedback active-search dict; title_content pair
+strategy implemented (was silent empty dataset) + unknown-strategy ValueError;
+asyncpg param casts (id::text, $1::timestamptz); quoted SQL identifiers from
+config; shared SELECT-builder dedup in database.py; parameterized LIMIT;
+trainer honors evaluation_strategy/eval_steps/save_strategy + loss.scale;
+empty-train-set guard; encode([]) returns (0, dim) array; chunk-offset
+fallback retries from doc start; asserts → RuntimeError; datetime.now(UTC);
+Gradio handlers async (sync wrapper + per-call event loop deleted);
+ChromaDBClient reused between startup check and app.
+
+Environment: phase-1-embed-space/.venv created (python3.13) with full deps —
+repo-root venv (3.14) lacks the ML stack.
+
+Tests: 71 passed (was 46; test_chunking un-mocked per fix 30, new suites for
+pipeline watermarks/reconcile, parent fetcher reconstruction, SearchApp
+orchestration, retriever candidates, empty encode).
+
 ## 2026-07-01 — Phase 0 review: bug fixes + phase0_infra namespace refactor
 
 Full review of phase-0-infrastructure; fixed behavioral bugs, stale docs, and

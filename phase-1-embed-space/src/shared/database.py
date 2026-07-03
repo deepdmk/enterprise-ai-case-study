@@ -20,6 +20,11 @@ from phase0_infra.habitat_logging import get_logger
 logger = get_logger(__name__)
 
 
+def quote_identifier(name: str) -> str:
+    """Quote a config-sourced SQL identifier (double internal quotes)."""
+    return '"' + name.replace('"', '""') + '"'
+
+
 @dataclass
 class ColumnInfo:
     """Information about a database column."""
@@ -240,7 +245,63 @@ class DatabaseConnectionManager:
 
         return schemas
 
-    def build_extraction_query(self, table_config: TableConfig, limit: int | None = None) -> str:
+    def _build_select_query(
+        self,
+        table_config: TableConfig,
+        since: bool = False,
+        limit: int | None = None,
+    ) -> tuple[str, list[Any]]:
+        """
+        Build the shared extraction SELECT for a table.
+
+        Args:
+            table_config: Configuration for the table.
+            since: If True, filter on timestamp > $1 (incremental sync) and
+                order ascending; otherwise order descending (newest first).
+            limit: Optional limit, passed as a query parameter.
+
+        Returns:
+            (query, params) — params ordered to match the placeholders.
+        """
+        text_cols = [quote_identifier(col) for col in table_config.text_columns]
+        id_col = quote_identifier(table_config.id_column)
+        ts_col = quote_identifier(table_config.timestamp_column)
+        meta_cols = [quote_identifier(col) for col in table_config.additional_metadata]
+
+        # Combine text columns with COALESCE for NULL handling
+        text_expression = " || ' ' || ".join(f"COALESCE({col}::text, '')" for col in text_cols)
+
+        select_parts = [
+            f"{id_col} AS doc_id",
+            f"({text_expression}) AS combined_text",
+            f"{ts_col} AS timestamp",
+        ]
+        select_parts.extend(meta_cols)
+
+        params: list[Any] = []
+        where_clauses = []
+        if since:
+            # Cast the ISO-string parameter: asyncpg does not coerce str to timestamp
+            params.append(None)  # placeholder value filled in by caller
+            where_clauses.append(f"{ts_col} > ${len(params)}::timestamptz")
+        where_clauses.append(f"LENGTH({text_expression}) > 50")
+
+        query = f"""
+        SELECT {', '.join(select_parts)}
+        FROM {quote_identifier(table_config.name)}
+        WHERE {' AND '.join(where_clauses)}
+        ORDER BY {ts_col} {'ASC' if since else 'DESC'}
+        """
+
+        if limit:
+            params.append(limit)
+            query += f" LIMIT ${len(params)}"
+
+        return query, params
+
+    def build_extraction_query(
+        self, table_config: TableConfig, limit: int | None = None
+    ) -> tuple[str, list[Any]]:
         """
         Build a SQL query to extract text data from a table.
 
@@ -251,35 +312,31 @@ class DatabaseConnectionManager:
             limit: Optional limit on number of records.
 
         Returns:
-            SQL query string.
+            (query, params) tuple for execute_query.
         """
-        text_cols = table_config.text_columns
-        id_col = table_config.id_column
-        ts_col = table_config.timestamp_column
-        meta_cols = table_config.additional_metadata
+        return self._build_select_query(table_config, since=False, limit=limit)
 
-        # Combine text columns with COALESCE for NULL handling
-        text_expression = " || ' ' || ".join(f"COALESCE({col}::text, '')" for col in text_cols)
+    def _rows_to_records(
+        self, rows: list[dict[str, Any]], db_name: str, table_config: TableConfig
+    ) -> list[ExtractedRecord]:
+        """Convert query rows into ExtractedRecords."""
+        records = []
+        for row in rows:
+            metadata = {
+                col: row.get(col) for col in table_config.additional_metadata if col in row
+            }
+            metadata["timestamp"] = row.get("timestamp")
 
-        # Build select clause
-        select_parts = [
-            f"{id_col} AS doc_id",
-            f"({text_expression}) AS combined_text",
-            f"{ts_col} AS timestamp",
-        ]
-        select_parts.extend(f"{col} AS {col}" for col in meta_cols)
-
-        query = f"""
-        SELECT {', '.join(select_parts)}
-        FROM {table_config.name}
-        WHERE LENGTH({text_expression}) > 50
-        ORDER BY {ts_col} DESC
-        """
-
-        if limit:
-            query += f" LIMIT {limit}"
-
-        return query
+            records.append(
+                ExtractedRecord(
+                    doc_id=str(row["doc_id"]),
+                    combined_text=row["combined_text"],
+                    source_db=db_name,
+                    source_table=table_config.name,
+                    metadata=metadata,
+                )
+            )
+        return records
 
     async def extract_records(
         self,
@@ -298,27 +355,9 @@ class DatabaseConnectionManager:
         Returns:
             List of extracted records.
         """
-        query = self.build_extraction_query(table_config, limit)
-        rows = await self.execute_query(db_name, query)
-
-        records = []
-        for row in rows:
-            metadata = {
-                col: row.get(col) for col in table_config.additional_metadata if col in row
-            }
-            metadata["timestamp"] = row.get("timestamp")
-
-            records.append(
-                ExtractedRecord(
-                    doc_id=str(row["doc_id"]),
-                    combined_text=row["combined_text"],
-                    source_db=db_name,
-                    source_table=table_config.name,
-                    metadata=metadata,
-                )
-            )
-
-        return records
+        query, params = self.build_extraction_query(table_config, limit)
+        rows = await self.execute_query(db_name, query, params or None)
+        return self._rows_to_records(rows, db_name, table_config)
 
     async def get_record_by_id(
         self, db_name: str, table_config: TableConfig, doc_id: str
@@ -334,14 +373,33 @@ class DatabaseConnectionManager:
         Returns:
             Record as dictionary, or None if not found.
         """
-        # Build query to fetch full record
+        # Cast the id column to text: the config column may be int-typed and
+        # asyncpg will not coerce a str parameter to match
         query = f"""
         SELECT *
-        FROM {table_config.name}
-        WHERE {table_config.id_column} = $1
+        FROM {quote_identifier(table_config.name)}
+        WHERE {quote_identifier(table_config.id_column)}::text = $1
         """
         rows = await self.execute_query(db_name, query, [doc_id])
         return rows[0] if rows else None
+
+    async def get_all_ids(self, db_name: str, table_config: TableConfig) -> set[str]:
+        """
+        Fetch every record ID in a table (for the nightly reconcile pass).
+
+        Args:
+            db_name: Name of the database.
+            table_config: Configuration for the table.
+
+        Returns:
+            Set of all IDs, as strings.
+        """
+        query = f"""
+        SELECT {quote_identifier(table_config.id_column)}::text AS doc_id
+        FROM {quote_identifier(table_config.name)}
+        """
+        rows = await self.execute_query(db_name, query)
+        return {row["doc_id"] for row in rows}
 
     async def get_records_since(
         self,
@@ -362,51 +420,10 @@ class DatabaseConnectionManager:
         Returns:
             List of extracted records modified since the timestamp.
         """
-        text_cols = table_config.text_columns
-        id_col = table_config.id_column
-        ts_col = table_config.timestamp_column
-        meta_cols = table_config.additional_metadata
-
-        text_expression = " || ' ' || ".join(f"COALESCE({col}::text, '')" for col in text_cols)
-
-        select_parts = [
-            f"{id_col} AS doc_id",
-            f"({text_expression}) AS combined_text",
-            f"{ts_col} AS timestamp",
-        ]
-        select_parts.extend(f"{col} AS {col}" for col in meta_cols)
-
-        query = f"""
-        SELECT {', '.join(select_parts)}
-        FROM {table_config.name}
-        WHERE {ts_col} > $1
-          AND LENGTH({text_expression}) > 50
-        ORDER BY {ts_col} ASC
-        """
-
-        if limit:
-            query += f" LIMIT {limit}"
-
-        rows = await self.execute_query(db_name, query, [since_timestamp])
-
-        records = []
-        for row in rows:
-            metadata = {
-                col: row.get(col) for col in table_config.additional_metadata if col in row
-            }
-            metadata["timestamp"] = row.get("timestamp")
-
-            records.append(
-                ExtractedRecord(
-                    doc_id=str(row["doc_id"]),
-                    combined_text=row["combined_text"],
-                    source_db=db_name,
-                    source_table=table_config.name,
-                    metadata=metadata,
-                )
-            )
-
-        return records
+        query, params = self._build_select_query(table_config, since=True, limit=limit)
+        params[0] = since_timestamp
+        rows = await self.execute_query(db_name, query, params)
+        return self._rows_to_records(rows, db_name, table_config)
 
 
 class MockDatabaseManager(DatabaseConnectionManager):
@@ -420,7 +437,7 @@ class MockDatabaseManager(DatabaseConnectionManager):
         super().__init__(databases)
         self._mock_data: dict[str, dict[str, list[dict]]] = {}
 
-    async def initialize(self) -> None:
+    async def initialize(self, *args: Any, **kwargs: Any) -> None:
         """Initialize with mock data (no actual connections)."""
         self._initialized = True
         logger.info("mock_database_initialized")
@@ -449,12 +466,15 @@ class MockDatabaseManager(DatabaseConnectionManager):
 
         records = []
         for row in table_data:
-            # Combine text columns
+            # Combine text columns exactly like the SQL builder: every column
+            # contributes (empty string for NULL), joined with single spaces
             combined = " ".join(
-                str(row.get(col, "")) for col in table_config.text_columns if row.get(col)
+                "" if row.get(col) is None else str(row.get(col))
+                for col in table_config.text_columns
             )
 
             metadata = {col: row.get(col) for col in table_config.additional_metadata}
+            metadata["timestamp"] = row.get(table_config.timestamp_column)
 
             records.append(
                 ExtractedRecord(
@@ -468,6 +488,25 @@ class MockDatabaseManager(DatabaseConnectionManager):
 
         return records
 
+    async def get_records_since(
+        self,
+        db_name: str,
+        table_config: TableConfig,
+        since_timestamp: str,
+        limit: int | None = None,
+    ) -> list[ExtractedRecord]:
+        """Extract mock records newer than the watermark."""
+        records = await self.extract_records(db_name, table_config, limit=None)
+        newer = [
+            r
+            for r in records
+            if r.metadata.get("timestamp") is not None
+            and str(r.metadata["timestamp"]) > since_timestamp
+        ]
+        if limit:
+            newer = newer[:limit]
+        return newer
+
     async def get_record_by_id(
         self, db_name: str, table_config: TableConfig, doc_id: str
     ) -> dict[str, Any] | None:
@@ -477,3 +516,8 @@ class MockDatabaseManager(DatabaseConnectionManager):
             if str(row.get(table_config.id_column)) == doc_id:
                 return row
         return None
+
+    async def get_all_ids(self, db_name: str, table_config: TableConfig) -> set[str]:
+        """Fetch all mock record IDs."""
+        table_data = self._mock_data.get(db_name, {}).get(table_config.name, [])
+        return {str(row.get(table_config.id_column)) for row in table_data}

@@ -1,19 +1,13 @@
 """Tests for text chunking utilities.
 
-These tests are designed to run with minimal dependencies by importing
-only what's needed and using mocks where appropriate.
+Runs against the real langchain splitter so offset tracking (start_char /
+end_char) is exercised against actual splitting behavior.
 """
 
-import sys
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
-# Mock langchain_text_splitters before importing chunking module
-sys.modules["langchain_text_splitters"] = MagicMock()
-
-# Now we can import our module
 from src.shared.chunking import ChunkResult, DocumentChunks, TextChunker, create_chunker_from_config
 
 
@@ -174,6 +168,57 @@ class TestTextChunkerChunking:
         assert doc_chunks.source_table == "test_table"
         assert doc_chunks.original_length == len(text)
         assert len(doc_chunks.chunks) == 1
+
+
+class TestRealSplitting:
+    """Tests exercising the real langchain splitter (no mocks)."""
+
+    def test_offsets_slice_back_to_chunk_text(self):
+        """Every chunk's stored offsets must slice the original text exactly.
+
+        Parent-document retrieval reconstructs chunk text with
+        content[char_start:char_end], so this invariant is load-bearing.
+        """
+        chunker = TextChunker(chunk_size=120, chunk_overlap=20, min_chunk_length=20)
+        text = (
+            "Funding strategy overview for the northern region. "
+            "The programme targets water infrastructure across twelve districts. "
+            "Donor interest has grown steadily since the last review cycle. "
+            "Local partners report improved delivery timelines this quarter. "
+            "The next proposal round opens in September with expanded criteria."
+        )
+        chunks = chunker.chunk_text(text)
+
+        assert len(chunks) > 1
+        for chunk in chunks:
+            assert text[chunk.start_char : chunk.end_char] == chunk.text
+
+    def test_chunk_indices_are_sequential(self):
+        """Chunk indices count filtered (kept) chunks sequentially."""
+        chunker = TextChunker(chunk_size=100, chunk_overlap=10, min_chunk_length=20)
+        text = "A meaningful sentence about enterprise data pipelines. " * 10
+        chunks = chunker.chunk_text(text)
+
+        assert [c.chunk_index for c in chunks] == list(range(len(chunks)))
+
+    def test_offset_fallback_retries_from_document_start(self):
+        """A chunk located before the search cursor is still found exactly."""
+        chunker = TextChunker(chunk_size=100, chunk_overlap=10, min_chunk_length=5)
+        chunker._splitter = MagicMock()
+        # Splitter returns chunks out of order: the second chunk appears
+        # before the first in the original text
+        chunker._splitter.split_text.return_value = [
+            "second part of the text",
+            "first part here",
+        ]
+        text = "first part here and then the second part of the text"
+
+        chunks = chunker.chunk_text(text)
+
+        assert len(chunks) == 2
+        # Retry-from-start must find the true position, not approximate
+        assert chunks[1].start_char == text.find("first part here")
+        assert text[chunks[1].start_char : chunks[1].end_char] == "first part here"
 
 
 class TestCreateChunkerFromConfig:
